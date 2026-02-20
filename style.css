@@ -475,6 +475,25 @@ select:focus {
     border-color: var(--color-primary);
 }
 
+/* Recipe Drag and Drop */
+.recipe-card.draggable {
+    cursor: grab;
+}
+
+.recipe-card.draggable:active {
+    cursor: grabbing;
+}
+
+.recipe-card.dragging {
+    opacity: 0.4;
+    transform: scale(0.95);
+}
+
+.recipe-card.drag-over {
+    border: 2px dashed var(--color-primary);
+    transform: scale(1.02);
+}
+
 .card-img-container {
     height: 200px;
     overflow: hidden;

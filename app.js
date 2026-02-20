@@ -129,6 +129,7 @@ async function loadRecipes() {
         .from('recipes')
         .select('*')
         .eq('user_id', currentUser.id) // Only load recipes for current user
+        .order('order_index', { ascending: true })
         .order('createdAt', { ascending: false });
 
     if (error) {
@@ -490,6 +491,7 @@ function renderRecipes() {
         if (sortBy === 'oldest') return a.createdAt - b.createdAt;
         if (sortBy === 'az') return a.title.localeCompare(b.title);
         if (sortBy === 'za') return b.title.localeCompare(a.title);
+        if (sortBy === 'manual') return (a.order_index || 0) - (b.order_index || 0);
         return 0;
     });
 
@@ -506,7 +508,11 @@ function renderRecipes() {
         filteredRecipes.forEach(recipe => {
             const card = document.createElement('article');
             card.className = 'recipe-card';
-            card.onclick = () => openViewModal(recipe);
+            if (sortBy === 'manual') {
+                card.classList.add('draggable');
+                card.setAttribute('draggable', 'true');
+            }
+            card.dataset.id = recipe.id;
 
             const imageHtml = recipe.imageData
                 ? `<img src="${recipe.imageData}" alt="${recipe.title}">`
@@ -522,9 +528,90 @@ function renderRecipes() {
                     <p>${recipe.ingredients.split('\n')[0]}...</p>
                 </div>
             `;
+
+            // Allow opening modal on click, but not if dragging
+            card.addEventListener('click', (e) => {
+                if (card.classList.contains('dragging')) return;
+                openViewModal(recipe);
+            });
+
             recipeGrid.appendChild(card);
         });
+
+        setupRecipeDragListeners();
     }
+}
+
+let draggedRecipeCard = null;
+
+function setupRecipeDragListeners() {
+    const cards = recipeGrid.querySelectorAll('.recipe-card.draggable');
+    if (cards.length === 0) return;
+
+    cards.forEach(card => {
+        card.addEventListener('dragstart', (e) => {
+            if (sortSelect.value !== 'manual') return;
+            draggedRecipeCard = card;
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        card.addEventListener('dragend', () => {
+            card.classList.remove('dragging');
+            cards.forEach(c => c.classList.remove('drag-over'));
+            draggedRecipeCard = null;
+        });
+
+        card.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (sortSelect.value !== 'manual' || card === draggedRecipeCard) return;
+            e.dataTransfer.dropEffect = 'move';
+            card.classList.add('drag-over');
+        });
+
+        card.addEventListener('dragleave', () => {
+            card.classList.remove('drag-over');
+        });
+
+        card.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            card.classList.remove('drag-over');
+            if (sortSelect.value !== 'manual' || card === draggedRecipeCard || !draggedRecipeCard) return;
+
+            // Determine drop position based on mouse vertical/horizontal position
+            const bounding = card.getBoundingClientRect();
+            // Checking horizontal offset for grids
+            const offset = bounding.x + (bounding.width / 2);
+            if (e.clientX - offset > 0) {
+                card.after(draggedRecipeCard);
+            } else {
+                card.before(draggedRecipeCard);
+            }
+
+            // Save new order
+            const currentCards = Array.from(recipeGrid.querySelectorAll('.recipe-card'));
+            const orderUpdates = currentCards.map((c, index) => ({
+                id: c.dataset.id,
+                order_index: index,
+                user_id: currentUser.id
+            }));
+
+            // Sync with local array immediately for snappier UI
+            orderUpdates.forEach(update => {
+                const recipe = recipes.find(r => r.id == update.id);
+                if (recipe) recipe.order_index = update.order_index;
+            });
+
+            try {
+                const { error } = await sbClient.from('recipes').upsert(orderUpdates, { onConflict: 'id', ignoreDuplicates: false });
+                if (error) throw error;
+            } catch (err) {
+                console.error("Recipe order save err:", err);
+                alert("Fehler beim Speichern der Reihenfolge.");
+                await loadRecipes(); // Revert to database state on error
+            }
+        });
+    });
 }
 
 // Setup all event listeners
