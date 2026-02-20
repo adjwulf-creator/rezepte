@@ -5,7 +5,7 @@ const SUPABASE_URL = 'https://tdexsgzinjbabiczihwj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xtguokRm66tP1SEwGC-RaQ_ifuZSJ9U';
 
 // Initialize Supabase Client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let recipes = [];
 
@@ -52,7 +52,7 @@ async function initApp() {
 }
 
 async function checkUser() {
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await sbClient.auth.getSession();
     if (session) {
         // Logged in
         currentUser = session.user;
@@ -65,7 +65,7 @@ async function checkUser() {
     }
 
     // Listen for auth changes
-    supabase.auth.onAuthStateChange((event, session) => {
+    sbClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN') {
             currentUser = session.user;
             loginOverlay.classList.add('hidden');
@@ -83,7 +83,7 @@ async function checkUser() {
 async function loadRecipes() {
     if (!currentUser) return;
 
-    const { data, error } = await supabase
+    const { data, error } = await sbClient
         .from('recipes')
         .select('*')
         .eq('user_id', currentUser.id) // Only load recipes for current user
@@ -191,13 +191,13 @@ function setupEventListeners() {
         let authError = null;
 
         if (isLoginMode) {
-            const { error } = await supabase.auth.signInWithPassword({
+            const { error } = await sbClient.auth.signInWithPassword({
                 email: email,
                 password: password,
             });
             authError = error;
         } else {
-            const { error } = await supabase.auth.signUp({
+            const { error } = await sbClient.auth.signUp({
                 email: email,
                 password: password,
             });
@@ -221,7 +221,7 @@ function setupEventListeners() {
     // Auth - Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            await supabase.auth.signOut();
+            await sbClient.auth.signOut();
         });
     }
 
@@ -286,14 +286,14 @@ function setupEventListeners() {
                 const fileExt = file.name.split('.').pop();
                 const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
 
-                const { error: uploadError } = await supabase.storage
+                const { error: uploadError } = await sbClient.storage
                     .from('recipe-images')
                     .upload(fileName, file);
 
                 if (uploadError) throw uploadError;
 
                 // Get public URL
-                const { data } = supabase.storage
+                const { data } = sbClient.storage
                     .from('recipe-images')
                     .getPublicUrl(fileName);
 
@@ -310,7 +310,7 @@ function setupEventListeners() {
                 createdAt: Date.now()
             };
 
-            const { error: insertError } = await supabase
+            const { error: insertError } = await sbClient
                 .from('recipes')
                 .insert([newRecipe]);
 
@@ -339,7 +339,7 @@ function setupEventListeners() {
                 const recipe = recipes.find(r => r.id === currentViewRecipeId);
 
                 // Delete from database
-                const { error: deleteError } = await supabase
+                const { error: deleteError } = await sbClient
                     .from('recipes')
                     .delete()
                     .eq('id', currentViewRecipeId);
@@ -351,7 +351,7 @@ function setupEventListeners() {
                     const urlParts = recipe.imageData.split('/');
                     const fileName = urlParts[urlParts.length - 1];
                     // Best effort delete without pausing the app
-                    supabase.storage.from('recipe-images').remove([fileName]).catch(e => console.log("Image cleanup error", e));
+                    sbClient.storage.from('recipe-images').remove([fileName]).catch(e => console.log("Image cleanup error", e));
                 }
 
                 await loadRecipes();
