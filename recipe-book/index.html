@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inna´s Rezepte</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Lora:ital,wght@0,400;0,500;1,400&display=swap"
+        rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fa-solid fa-seedling"></i>
+                <h1>Inna´s Rezepte</h1>
+            </div>
+            <div class="header-actions">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Rezepte durchsuchen...">
+                </div>
+                <button id="addRecipeBtn" class="primary-btn">
+                    <i class="fa-solid fa-plus"></i> Neues Rezept
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <section class="controls">
+            <div class="control-group">
+                <label for="categoryFilter">Kategorie:</label>
+                <select id="categoryFilter">
+                    <option value="all">Alle Kategorien</option>
+                    <option value="Vorspeise">Vorspeise</option>
+                    <option value="Hauptgericht">Hauptgericht</option>
+                    <option value="Dessert">Dessert</option>
+                    <option value="Backen">Backen</option>
+                    <option value="Getränk">Getränk</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="sortSelect">Sortieren nach:</label>
+                <select id="sortSelect">
+                    <option value="newest">Neueste zuerst</option>
+                    <option value="oldest">Älteste zuerst</option>
+                    <option value="az">A-Z</option>
+                    <option value="za">Z-A</option>
+                </select>
+            </div>
+        </section>
+
+        <section class="recipe-grid" id="recipeGrid">
+            <!-- Recipe Cards will be injected here via JavaScript -->
+        </section>
+
+        <div id="emptyState" class="empty-state hidden">
+            <i class="fa-solid fa-book-open"></i>
+            <p>Dein Kochbuch ist noch leer. Füge ein neues Rezept hinzu!</p>
+        </div>
+    </main>
+
+    <!-- Modal for Adding/Editing Recipe -->
+    <div id="recipeModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Neues Rezept hinzufügen</h2>
+                <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <form id="recipeForm">
+                <input type="hidden" id="recipeId">
+
+                <div class="form-group">
+                    <label for="recipeTitle">Titel</label>
+                    <input type="text" id="recipeTitle" required placeholder="z.B. Ratatouille">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeCategory">Kategorie</label>
+                    <select id="recipeCategory" required>
+                        <option value="Vorspeise">Vorspeise</option>
+                        <option value="Hauptgericht" selected>Hauptgericht</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Backen">Backen</option>
+                        <option value="Getränk">Getränk</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeImage">Bild (Optional)</label>
+                    <div class="image-upload-container">
+                        <input type="file" id="recipeImage" accept="image/*">
+                        <div class="image-preview" id="imagePreview">
+                            <span>Bild auswählen</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeIngredients">Zutaten (Eine pro Zeile)</label>
+                    <textarea id="recipeIngredients" rows="5" required
+                        placeholder="- 2 Zucchini&#10;- 1 Aubergine&#10;- 3 Tomaten"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeInstructions">Zubereitung</label>
+                    <textarea id="recipeInstructions" rows="6" required
+                        placeholder="Das Gemüse in Scheiben schneiden..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="secondary-btn" id="cancelBtn">Abbrechen</button>
+                    <button type="submit" class="primary-btn">Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal for Viewing a Recipe -->
+    <div id="viewModal" class="modal hidden">
+        <div class="modal-content view-modal-content">
+            <button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button>
+            <div id="viewRecipeDetails">
+                <!-- Recipe details injected here -->
+            </div>
+            <div class="modal-actions">
+                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> Löschen</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
