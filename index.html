@@ -44,37 +44,54 @@
         </div>
     </header>
 
-    <main class="app-main">
-        <section class="controls">
-            <div class="control-group">
-                <label for="categoryFilter">Kategorie:</label>
-                <select id="categoryFilter">
-                    <option value="all">Alle Kategorien</option>
-                    <option value="Vorspeise">Vorspeise</option>
-                    <option value="Hauptgericht">Hauptgericht</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Backen">Backen</option>
-                    <option value="Getränk">Getränk</option>
-                </select>
+    <main class="app-main main-layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2>Meine Ordner</h2>
+                <button id="addFolderBtn" class="add-folder-btn" title="Neuer Ordner">
+                    <i class="fa-solid fa-plus"></i>
+                </button>
             </div>
-            <div class="control-group">
-                <label for="sortSelect">Sortieren nach:</label>
-                <select id="sortSelect">
-                    <option value="newest">Neueste zuerst</option>
-                    <option value="oldest">Älteste zuerst</option>
-                    <option value="az">A-Z</option>
-                    <option value="za">Z-A</option>
-                </select>
+            <ul id="folderList" class="folder-list">
+                <li class="folder-item active" data-folder-id="all">
+                    <i class="fa-solid fa-layer-group"></i> <span>Alle Rezepte</span>
+                </li>
+                <!-- Dynamische Ordner kommen hier rein -->
+            </ul>
+        </aside>
+
+        <div class="content-area">
+            <section class="controls">
+                <div class="control-group">
+                    <label for="categoryFilter">Kategorie:</label>
+                    <select id="categoryFilter">
+                        <option value="all">Alle Kategorien</option>
+                        <option value="Vorspeise">Vorspeise</option>
+                        <option value="Hauptgericht">Hauptgericht</option>
+                        <option value="Dessert">Dessert</option>
+                        <option value="Backen">Backen</option>
+                        <option value="Getränk">Getränk</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label for="sortSelect">Sortieren nach:</label>
+                    <select id="sortSelect">
+                        <option value="newest">Neueste zuerst</option>
+                        <option value="oldest">Älteste zuerst</option>
+                        <option value="az">A-Z</option>
+                        <option value="za">Z-A</option>
+                    </select>
+                </div>
+            </section>
+
+            <section class="recipe-grid" id="recipeGrid">
+                <!-- Recipe Cards will be injected here via JavaScript -->
+            </section>
+
+            <div id="emptyState" class="empty-state hidden">
+                <i class="fa-solid fa-book-open"></i>
+                <p>Dein Kochbuch ist noch leer. Füge ein neues Rezept hinzu!</p>
             </div>
-        </section>
-
-        <section class="recipe-grid" id="recipeGrid">
-            <!-- Recipe Cards will be injected here via JavaScript -->
-        </section>
-
-        <div id="emptyState" class="empty-state hidden">
-            <i class="fa-solid fa-book-open"></i>
-            <p>Dein Kochbuch ist noch leer. Füge ein neues Rezept hinzu!</p>
         </div>
     </main>
 
@@ -91,6 +108,14 @@
                 <div class="form-group">
                     <label for="recipeTitle">Titel</label>
                     <input type="text" id="recipeTitle" required placeholder="z.B. Ratatouille">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeFolder">Ordner (optional)</label>
+                    <select id="recipeFolder">
+                        <option value="">Kein Ordner</option>
+                        <!-- Dynamic Folders -->
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -144,6 +169,26 @@
             <div class="modal-actions">
                 <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> Löschen</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Folder -->
+    <div id="folderModal" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Neuer Ordner</h2>
+                <button class="close-btn" id="closeFolderModalBtn"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <form id="folderForm">
+                <div class="form-group">
+                    <label for="folderName">Ordnername</label>
+                    <input type="text" id="folderName" required placeholder="z.B. Lieblingskuchen">
+                </div>
+                <div class="modal-actions" style="margin-top: 2rem;">
+                    <button type="button" class="secondary-btn" id="cancelFolderModalBtn">Abbrechen</button>
+                    <button type="submit" class="primary-btn" id="saveFolderBtn">Erstellen</button>
+                </div>
+            </form>
         </div>
     </div>
 

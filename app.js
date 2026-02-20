@@ -8,6 +8,8 @@ const SUPABASE_KEY = 'sb_publishable_xtguokRm66tP1SEwGC-RaQ_ifuZSJ9U';
 const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let recipes = [];
+let folders = [];
+let currentFolderId = 'all';
 
 // DOM Elements
 const loginOverlay = document.getElementById('loginOverlay');
@@ -27,6 +29,17 @@ let currentUser = null;
 
 const recipeGrid = document.getElementById('recipeGrid');
 const emptyState = document.getElementById('emptyState');
+
+// Folder DOM Elements
+const addFolderBtn = document.getElementById('addFolderBtn');
+const folderModal = document.getElementById('folderModal');
+const closeFolderModalBtn = document.getElementById('closeFolderModalBtn');
+const cancelFolderModalBtn = document.getElementById('cancelFolderModalBtn');
+const folderForm = document.getElementById('folderForm');
+const folderNameInput = document.getElementById('folderName');
+const folderList = document.getElementById('folderList');
+const recipeFolderSelect = document.getElementById('recipeFolder');
+
 const addRecipeBtn = document.getElementById('addRecipeBtn');
 const recipeModal = document.getElementById('recipeModal');
 const closeModalBtn = document.getElementById('closeModalBtn');
@@ -58,6 +71,7 @@ async function checkUser() {
         // Logged in
         currentUser = session.user;
         loginOverlay.classList.add('hidden');
+        await loadFolders();
         await loadRecipes();
     } else {
         // Not logged in
@@ -70,11 +84,14 @@ async function checkUser() {
         if (event === 'SIGNED_IN') {
             currentUser = session.user;
             loginOverlay.classList.add('hidden');
-            loadRecipes();
+            loadFolders().then(() => loadRecipes());
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             loginOverlay.classList.remove('hidden');
             recipes = [];
+            folders = [];
+            currentFolderId = 'all';
+            renderFolders();
             renderRecipes();
         }
     });
@@ -99,6 +116,102 @@ async function loadRecipes() {
     renderRecipes();
 }
 
+// Holen der Ordner aus Supabase
+async function loadFolders() {
+    if (!currentUser) return;
+
+    const { data, error } = await sbClient
+        .from('folders')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('createdAt', { ascending: true });
+
+    if (error) {
+        console.error("Error loading folders:", error);
+        return;
+    }
+
+    folders = data;
+    renderFolders();
+}
+
+function renderFolders() {
+    // Reset folder list except the first "All" item
+    folderList.innerHTML = `
+        <li class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
+            <div class="folder-name-container">
+                <i class="fa-solid fa-layer-group"></i> <span>Alle Rezepte</span>
+            </div>
+        </li>
+    `;
+
+    // Reset Dropdown
+    recipeFolderSelect.innerHTML = '<option value="">Kein Ordner</option>';
+
+    folders.forEach(folder => {
+        // Add to Sidebar
+        const li = document.createElement('li');
+        li.className = `folder-item ${currentFolderId === folder.id ? 'active' : ''}`;
+        li.dataset.folderId = folder.id;
+
+        li.innerHTML = `
+            <div class="folder-name-container">
+                <i class="fa-regular fa-folder"></i>
+                <span title="${folder.name}">${folder.name}</span>
+            </div>
+            <div class="folder-actions">
+                <button class="delete-folder-btn" title="Ordner löschen" data-id="${folder.id}">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        `;
+        folderList.appendChild(li);
+
+        // Add to Dropdown
+        const option = document.createElement('option');
+        option.value = folder.id;
+        option.textContent = folder.name;
+        recipeFolderSelect.appendChild(option);
+    });
+
+    setupFolderItemListeners();
+}
+
+function setupFolderItemListeners() {
+    // Sidebar Folder Clicks
+    const items = folderList.querySelectorAll('.folder-item');
+    items.forEach(item => {
+        item.addEventListener('click', (e) => {
+            // Ignore if click was on delete button
+            if (e.target.closest('.folder-actions')) return;
+
+            currentFolderId = item.dataset.folderId;
+            renderFolders(); // Update active class
+            renderRecipes(); // Filter recipes
+        });
+    });
+
+    // Delete Folder clicks
+    const deleteBtns = folderList.querySelectorAll('.delete-folder-btn');
+    deleteBtns.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const id = btn.dataset.id;
+            if (confirm('Möchtest du diesen Ordner wirklich löschen? Zugehörige Rezepte werden NICHT gelöscht, sie landen in "Alle Rezepte".')) {
+                const { error } = await sbClient.from('folders').delete().eq('id', id);
+                if (!error) {
+                    if (currentFolderId === id) currentFolderId = 'all';
+                    await sbClient.from('recipes').update({ folder_id: null }).eq('folder_id', id);
+                    await loadFolders();
+                    await loadRecipes();
+                } else {
+                    alert('Fehler beim Löschen des Ordners: ' + error.message);
+                }
+            }
+        });
+    });
+}
+
 // Render the grid based on current filters and search
 function renderRecipes() {
     const searchTerm = searchInput.value.toLowerCase();
@@ -110,7 +223,8 @@ function renderRecipes() {
         const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) ||
             recipe.ingredients.toLowerCase().includes(searchTerm);
         const matchesCategory = category === 'all' || recipe.category === category;
-        return matchesSearch && matchesCategory;
+        const matchesFolder = currentFolderId === 'all' || recipe.folder_id === currentFolderId;
+        return matchesSearch && matchesCategory && matchesFolder;
     });
 
     // Sort
@@ -237,9 +351,47 @@ function setupEventListeners() {
     categoryFilter.addEventListener('change', renderRecipes);
     sortSelect.addEventListener('change', renderRecipes);
 
+    // Folders
+    addFolderBtn.addEventListener('click', () => {
+        folderForm.reset();
+        folderModal.classList.remove('hidden');
+        setTimeout(() => folderNameInput.focus(), 100);
+    });
+
+    const closeFolderModal = () => folderModal.classList.add('hidden');
+    closeFolderModalBtn.addEventListener('click', closeFolderModal);
+    cancelFolderModalBtn.addEventListener('click', closeFolderModal);
+
+    folderForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const name = folderNameInput.value.trim();
+        if (!name) return;
+
+        const btn = folderForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Speichert...';
+
+        const { error } = await sbClient.from('folders').insert([{
+            name: name,
+            user_id: currentUser.id,
+            createdAt: Date.now()
+        }]);
+
+        btn.disabled = false;
+        btn.textContent = 'Erstellen';
+
+        if (error) {
+            alert('Fehler beim Erstellen des Ordners: ' + error.message);
+        } else {
+            closeFolderModal();
+            await loadFolders();
+        }
+    });
+
     // Add Modal
     addRecipeBtn.addEventListener('click', () => {
         recipeForm.reset();
+        recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
         imagePreview.innerHTML = '<span>Bild auswählen</span>';
         recipeModal.classList.remove('hidden');
     });
@@ -275,6 +427,7 @@ function setupEventListeners() {
 
         const title = document.getElementById('recipeTitle').value;
         const category = document.getElementById('recipeCategory').value;
+        const folder_id = document.getElementById('recipeFolder').value || null;
         const ingredients = document.getElementById('recipeIngredients').value;
         const instructions = document.getElementById('recipeInstructions').value;
 
@@ -310,6 +463,7 @@ function setupEventListeners() {
             const newRecipe = {
                 title,
                 category,
+                folder_id,
                 ingredients,
                 instructions,
                 imageData,
@@ -378,6 +532,7 @@ function setupEventListeners() {
     window.addEventListener('click', (e) => {
         if (e.target === recipeModal) closeAddModal();
         if (e.target === viewModal) viewModal.classList.add('hidden');
+        if (e.target === folderModal) closeFolderModal();
     });
 }
 
