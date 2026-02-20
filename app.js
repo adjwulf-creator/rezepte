@@ -62,6 +62,7 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 let currentViewRecipeId = null;
 let editingRecipeId = null;
 let isFolderEditMode = false;
+let currentRecipeImages = []; // Array of { url: string, file: File, isDefault: boolean }
 
 // Settings DOM Elements
 const settingsBtn = document.getElementById('settingsBtn');
@@ -853,7 +854,8 @@ function setupEventListeners() {
         recipeForm.reset();
         document.getElementById('modalTitle').textContent = 'Neues Rezept hinzufügen';
         recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
-        imagePreview.innerHTML = '<span>Bild auswählen</span>';
+        currentRecipeImages = [];
+        renderImagePreviewGrid();
         recipeModal.classList.remove('hidden');
     });
 
@@ -884,28 +886,98 @@ function setupEventListeners() {
         document.getElementById('recipeIngredients').value = recipe.ingredients;
         document.getElementById('recipeInstructions').value = recipe.instructions;
 
-        if (recipe.imageData) {
-            imagePreview.innerHTML = `<img src="${recipe.imageData}" alt="${recipe.title}">`;
+        if (recipe.images && recipe.images.length > 0) {
+            currentRecipeImages = recipe.images.map(url => ({
+                url: url,
+                file: null,
+                isDefault: recipe.imageData === url
+            }));
+            // Fallback if imageData somehow doesn't match any image in array
+            if (!currentRecipeImages.some(img => img.isDefault)) {
+                currentRecipeImages[0].isDefault = true;
+            }
+        } else if (recipe.imageData) {
+            // Legacy support for recipes with single imageData but no images array
+            currentRecipeImages = [{
+                url: recipe.imageData,
+                file: null,
+                isDefault: true
+            }];
         } else {
-            imagePreview.innerHTML = '<span>Bild auswählen</span>';
+            currentRecipeImages = [];
         }
+
+        renderImagePreviewGrid();
 
         recipeModal.classList.remove('hidden');
     });
 
-    // Image Upload Preview
-    recipeImageInput.addEventListener('change', function (e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                imagePreview.innerHTML = '';
-                imagePreview.appendChild(img);
-            }
-            reader.readAsDataURL(file);
+    // Image Upload Preview Logic
+    function renderImagePreviewGrid() {
+        imagePreview.innerHTML = '';
+        if (currentRecipeImages.length === 0) {
+            imagePreview.innerHTML = '<span>Keine Bilder ausgewählt</span>';
+            return;
         }
+
+        // Ensure exactly one default image if there are any images
+        if (currentRecipeImages.length > 0 && !currentRecipeImages.some(img => img.isDefault)) {
+            currentRecipeImages[0].isDefault = true;
+        }
+
+        currentRecipeImages.forEach((imgObj, index) => {
+            const div = document.createElement('div');
+            div.className = `image-preview-item ${imgObj.isDefault ? 'is-default' : ''}`;
+
+            const img = document.createElement('img');
+            if (imgObj.file) {
+                // Object URL for local files
+                img.src = URL.createObjectURL(imgObj.file);
+            } else {
+                img.src = imgObj.url;
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.className = 'remove-img-btn';
+            removeBtn.innerHTML = '<i class="fa-solid fa-times"></i>';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                currentRecipeImages.splice(index, 1);
+                renderImagePreviewGrid();
+            };
+
+            const defaultBadge = document.createElement('div');
+            defaultBadge.className = 'default-badge';
+            defaultBadge.innerHTML = '<i class="fa-solid fa-star"></i>';
+            defaultBadge.title = imgObj.isDefault ? "Standardbild" : "Als Standardbild setzen";
+            defaultBadge.onclick = (e) => {
+                e.stopPropagation();
+                currentRecipeImages.forEach(img => img.isDefault = false);
+                imgObj.isDefault = true;
+                renderImagePreviewGrid();
+            };
+
+            div.appendChild(img);
+            div.appendChild(removeBtn);
+            div.appendChild(defaultBadge);
+            imagePreview.appendChild(div);
+        });
+    }
+
+    recipeImageInput.addEventListener('change', function (e) {
+        const files = Array.from(e.target.files);
+        files.forEach(file => {
+            currentRecipeImages.push({
+                file: file,
+                url: null,
+                isDefault: currentRecipeImages.length === 0 // First image is default natively
+            });
+        });
+
+        // Reset input so same file can be selected again if needed
+        recipeImageInput.value = '';
+        renderImagePreviewGrid();
     });
 
     // Form Submit (Save Recipe)
@@ -923,34 +995,33 @@ function setupEventListeners() {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichern...';
 
-        let imageData = null;
-        // Keep old image if editing and no new file selected
-        if (editingRecipeId) {
-            const oldRecipe = recipes.find(r => r.id === editingRecipeId);
-            if (oldRecipe) imageData = oldRecipe.imageData;
-        }
-
-        const file = recipeImageInput.files[0];
-
         try {
-            // Upload Image to Supabase Storage if new file selected
-            if (file) {
-                // Ensure unique filename
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
+            // 1. Upload new image files
+            const uploadedUrls = [];
+            let updatedDefaultUrl = null;
 
-                const { error: uploadError } = await sbClient.storage
-                    .from('recipe-images')
-                    .upload(fileName, file);
+            for (const imgObj of currentRecipeImages) {
+                if (imgObj.file) {
+                    const fileExt = imgObj.file.name.split('.').pop();
+                    const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
 
-                if (uploadError) throw uploadError;
+                    const { error: uploadError } = await sbClient.storage
+                        .from('recipe-images')
+                        .upload(fileName, imgObj.file);
 
-                // Get public URL
-                const { data } = sbClient.storage
-                    .from('recipe-images')
-                    .getPublicUrl(fileName);
+                    if (uploadError) throw uploadError;
 
-                imageData = data.publicUrl;
+                    const { data } = sbClient.storage
+                        .from('recipe-images')
+                        .getPublicUrl(fileName);
+
+                    imgObj.url = data.publicUrl;
+                }
+
+                uploadedUrls.push(imgObj.url);
+                if (imgObj.isDefault) {
+                    updatedDefaultUrl = imgObj.url;
+                }
             }
 
             const recipeData = {
@@ -959,7 +1030,8 @@ function setupEventListeners() {
                 folder_id,
                 ingredients,
                 instructions,
-                imageData,
+                images: uploadedUrls,
+                imageData: updatedDefaultUrl, // Maintain backward compatibility
                 user_id: currentUser.id
             };
 
@@ -1043,6 +1115,29 @@ function setupEventListeners() {
             settingsModal.classList.add('hidden');
             passwordMessage.classList.add('hidden');
         }
+        if (e.target === lightboxModal) closeLightbox();
+    });
+
+    // Lightbox Controls
+    lightboxCloseBtn.addEventListener('click', closeLightbox);
+
+    lightboxPrevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        prevLightboxImage();
+    });
+
+    lightboxNextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        nextLightboxImage();
+    });
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+        if (!lightboxModal.classList.contains('hidden')) {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextLightboxImage();
+            if (e.key === 'ArrowLeft') prevLightboxImage();
+        }
     });
 }
 
@@ -1050,9 +1145,31 @@ function setupEventListeners() {
 function openViewModal(recipe) {
     currentViewRecipeId = recipe.id;
 
-    const imageHtml = recipe.imageData
-        ? `<img src="${recipe.imageData}" alt="${recipe.title}" class="recipe-detail-image">`
+    // Set up images for gallery and lightbox
+    currentLightboxImages = recipe.images && recipe.images.length > 0
+        ? recipe.images
+        : (recipe.imageData ? [recipe.imageData] : []);
+
+    // The main image is either the first in the array or the explicit standard image
+    let initialMainImageUrl = recipe.imageData || (currentLightboxImages.length > 0 ? currentLightboxImages[0] : null);
+    // Find index of the main image for the lightbox
+    currentLightboxIndex = currentLightboxImages.indexOf(initialMainImageUrl) >= 0
+        ? currentLightboxImages.indexOf(initialMainImageUrl)
+        : 0;
+
+    const mainImageHtml = initialMainImageUrl
+        ? `<img src="${initialMainImageUrl}" alt="${recipe.title}" class="recipe-detail-image" id="mainRecipeViewImage" onclick="openLightbox(${currentLightboxIndex})">`
         : '';
+
+    let galleryHtml = '';
+    if (currentLightboxImages.length > 1) {
+        galleryHtml = '<div class="recipe-gallery-thumbnails">';
+        currentLightboxImages.forEach((imgUrl, idx) => {
+            const isActive = imgUrl === initialMainImageUrl ? 'active' : '';
+            galleryHtml += `<img src="${imgUrl}" alt="Thumbnail ${idx}" class="${isActive}" onclick="updateMainViewImage('${imgUrl}', ${idx}, this)">`;
+        });
+        galleryHtml += '</div>';
+    }
 
     // Format ingredients as list
     const ingredientsList = recipe.ingredients
@@ -1063,7 +1180,8 @@ function openViewModal(recipe) {
 
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
-            ${imageHtml}
+            ${mainImageHtml}
+            ${galleryHtml}
             <h2 class="recipe-detail-title">${recipe.title}</h2>
             <div class="recipe-detail-meta">
                 <span><i class="fa-solid fa-tag"></i> ${recipe.category}</span>
@@ -1085,6 +1203,57 @@ function openViewModal(recipe) {
     `;
 
     viewModal.classList.remove('hidden');
+}
+
+// Function to handle clicking a thumbnail in the view modal
+function updateMainViewImage(url, index, element) {
+    const mainImg = document.getElementById('mainRecipeViewImage');
+    if (mainImg) {
+        mainImg.src = url;
+        mainImg.onclick = () => openLightbox(index);
+    }
+
+    // Update active state on thumbnails
+    const thumbnails = document.querySelectorAll('.recipe-gallery-thumbnails img');
+    thumbnails.forEach(thumb => thumb.classList.remove('active'));
+    element.classList.add('active');
+}
+
+// Lightbox Open/Close/Navigate Logic
+function openLightbox(index) {
+    if (currentLightboxImages.length === 0) return;
+    currentLightboxIndex = index;
+    updateLightboxView();
+    lightboxModal.classList.remove('hidden');
+}
+
+function updateLightboxView() {
+    lightboxImage.src = currentLightboxImages[currentLightboxIndex];
+    lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
+
+    // Hide prev/next if only 1 image
+    if (currentLightboxImages.length <= 1) {
+        lightboxPrevBtn.style.display = 'none';
+        lightboxNextBtn.style.display = 'none';
+    } else {
+        lightboxPrevBtn.style.display = 'block';
+        lightboxNextBtn.style.display = 'block';
+    }
+}
+
+function closeLightbox() {
+    lightboxModal.classList.add('hidden');
+    lightboxImage.src = '';
+}
+
+function nextLightboxImage() {
+    currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxImages.length;
+    updateLightboxView();
+}
+
+function prevLightboxImage() {
+    currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxImages.length) % currentLightboxImages.length;
+    updateLightboxView();
 }
 
 function applyViewState() {

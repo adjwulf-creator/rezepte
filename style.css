@@ -842,6 +842,29 @@ select:focus {
     transform: translateY(-1px);
 }
 
+.file-upload-container {
+    margin-bottom: 1rem;
+}
+
+.file-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary);
+    padding: 0.8rem 1.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.file-upload-btn:hover {
+    background-color: var(--color-primary);
+    color: white;
+}
+
 .image-upload-container {
     position: relative;
 }
@@ -855,27 +878,94 @@ select:focus {
     z-index: 2;
 }
 
-.image-preview {
-    width: 100%;
-    height: 150px;
-    border: 2px dashed var(--color-border);
-    border-radius: var(--radius-sm);
+.image-preview-grid {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    min-height: 120px;
+    border: 2px dashed var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
     align-items: center;
     justify-content: center;
+    color: var(--color-text-light);
     background-color: var(--color-bg);
-    overflow: hidden;
-    position: relative;
-    z-index: 1;
 }
 
-.image-preview img {
+.image-preview-item {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: var(--transition);
+}
+
+.image-preview-item.is-default {
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgba(133, 154, 122, 0.3);
+}
+
+.image-preview-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-.image-upload-container:hover .image-preview {
+.remove-img-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.remove-img-btn:hover {
+    background: var(--color-accent);
+}
+
+.default-badge {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.default-badge i {
+    color: #ffd700;
+}
+
+.image-preview-item:not(.is-default) .default-badge {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.image-preview-item:not(.is-default) .default-badge i {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.image-preview-item:not(.is-default) .default-badge:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+}
+
+.image-upload-container:hover .image-preview-grid {
     border-color: var(--color-primary);
     background-color: #f0ebf5;
 }
@@ -902,6 +992,41 @@ select:focus {
     object-fit: cover;
     border-radius: var(--radius-md);
     margin-bottom: 1.5rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.recipe-detail-image:hover {
+    opacity: 0.95;
+    transform: scale(1.01);
+}
+
+.recipe-gallery-thumbnails {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+}
+
+.recipe-gallery-thumbnails img {
+    height: 70px;
+    width: 100px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.recipe-gallery-thumbnails img:hover {
+    transform: translateY(-2px);
+}
+
+.recipe-gallery-thumbnails img.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 10px rgba(122, 107, 168, 0.2);
 }
 
 .recipe-detail-title {
@@ -1078,6 +1203,92 @@ select:focus {
 .auth-toggle a:hover {
     color: var(--color-secondary);
     text-decoration: underline;
+}
+
+/* Lightbox Styles */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.lightbox.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.lightbox img {
+    max-width: 90%;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 3010;
+}
+
+.lightbox-close:hover {
+    color: var(--color-accent);
+}
+
+.lightbox-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: none;
+    padding: 1.5rem 1rem;
+    cursor: pointer;
+    font-size: 2rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s;
+    z-index: 3010;
+}
+
+.lightbox-nav:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.lightbox-nav.prev {
+    left: 20px;
+}
+
+.lightbox-nav.next {
+    right: 20px;
+}
+
+.lightbox-counter {
+    position: absolute;
+    bottom: 20px;
+    color: white;
+    font-size: 1.1rem;
+    font-family: inherit;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
 }
 
 /* Responsive */

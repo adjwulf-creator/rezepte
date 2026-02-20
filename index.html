@@ -140,12 +140,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="recipeImage">Bild (Optional)</label>
-                    <div class="image-upload-container">
-                        <input type="file" id="recipeImage" accept="image/*">
-                        <div class="image-preview" id="imagePreview">
-                            <span>Bild auswählen</span>
-                        </div>
+                    <label>Bilder (Optional)</label>
+                    <div class="file-upload-container">
+                        <label for="recipeImage" class="file-upload-btn">
+                            <i class="fa-solid fa-camera"></i> Bilder auswählen
+                        </label>
+                        <input type="file" id="recipeImage" accept="image/*" multiple style="display: none;">
+                    </div>
+                    <!-- Moved Image Preview outside label for better multi-image grid support -->
+                    <div id="imagePreview" class="image-preview-grid">
+                        <span>Keine Bilder ausgewählt</span>
                     </div>
                 </div>
 
@@ -271,6 +275,15 @@
                 </div>
             </form>
         </div>
+    </div>
+
+    <!-- Lightbox Modal for Image Gallery -->
+    <div id="lightboxModal" class="lightbox hidden">
+        <button class="lightbox-close" id="lightboxCloseBtn">&times;</button>
+        <button class="lightbox-nav prev" id="lightboxPrevBtn">&#10094;</button>
+        <img id="lightboxImage" src="" alt="Fullscreen view">
+        <button class="lightbox-nav next" id="lightboxNextBtn">&#10095;</button>
+        <div id="lightboxCounter" class="lightbox-counter">1 / 1</div>
     </div>
 
     <!-- Supabase JS SDK -->
