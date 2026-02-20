@@ -913,6 +913,8 @@ function setupEventListeners() {
     });
 
     // Image Upload Preview Logic
+    let draggedImagePreviewIndex = null;
+
     function renderImagePreviewGrid() {
         imagePreview.innerHTML = '';
         if (currentRecipeImages.length === 0) {
@@ -928,6 +930,45 @@ function setupEventListeners() {
         currentRecipeImages.forEach((imgObj, index) => {
             const div = document.createElement('div');
             div.className = `image-preview-item ${imgObj.isDefault ? 'is-default' : ''}`;
+
+            // Drag and Drop Logic
+            div.setAttribute('draggable', 'true');
+
+            div.addEventListener('dragstart', (e) => {
+                draggedImagePreviewIndex = index;
+                div.classList.add('dragging');
+                e.dataTransfer.effectAllowed = 'move';
+            });
+
+            div.addEventListener('dragend', () => {
+                div.classList.remove('dragging');
+                const items = imagePreview.querySelectorAll('.image-preview-item');
+                items.forEach(c => c.classList.remove('drag-over'));
+                draggedImagePreviewIndex = null;
+            });
+
+            div.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (draggedImagePreviewIndex === null || draggedImagePreviewIndex === index) return;
+                e.dataTransfer.dropEffect = 'move';
+                div.classList.add('drag-over');
+            });
+
+            div.addEventListener('dragleave', () => {
+                div.classList.remove('drag-over');
+            });
+
+            div.addEventListener('drop', (e) => {
+                e.preventDefault();
+                div.classList.remove('drag-over');
+                if (draggedImagePreviewIndex === null || draggedImagePreviewIndex === index) return;
+
+                // Reorder array
+                const draggedItem = currentRecipeImages.splice(draggedImagePreviewIndex, 1)[0];
+                currentRecipeImages.splice(index, 0, draggedItem);
+
+                renderImagePreviewGrid();
+            });
 
             const img = document.createElement('img');
             if (imgObj.file) {

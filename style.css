@@ -902,6 +902,24 @@ select:focus {
     transition: var(--transition);
 }
 
+.image-preview-item[draggable="true"] {
+    cursor: grab;
+}
+
+.image-preview-item[draggable="true"]:active {
+    cursor: grabbing;
+}
+
+.image-preview-item.dragging {
+    opacity: 0.5;
+    transform: scale(0.95);
+}
+
+.image-preview-item.drag-over {
+    border: 2px dashed var(--color-primary);
+    transform: scale(1.05);
+}
+
 .image-preview-item.is-default {
     border-color: var(--color-secondary);
     box-shadow: 0 0 0 2px rgba(133, 154, 122, 0.3);
