@@ -281,40 +281,60 @@ button {
     text-overflow: ellipsis;
 }
 
-/* View Toggles */
-.view-toggles {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.view-btn {
-    background: transparent;
-    border: 1px solid var(--color-border);
-    color: var(--color-text-light);
-    width: 38px;
-    height: 38px;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
+/* Edit Folder Button */
+.edit-folder-btn {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    background-color: var(--color-bg);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    cursor: pointer;
     transition: var(--transition);
+    opacity: 0.6;
 }
 
-.view-btn:hover {
-    background: var(--color-bg);
-    color: var(--color-primary);
-}
-
-.view-btn.active {
-    background: var(--color-primary);
+.edit-folder-btn:hover {
+    background-color: var(--color-primary);
     color: white;
-    border-color: var(--color-primary);
+    opacity: 1;
 }
 
-.folder-item:hover .folder-actions {
+.edit-folder-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+    opacity: 1;
+    box-shadow: 0 0 0 2px rgba(122, 107, 168, 0.3);
+}
+
+.folder-actions {
+    display: none;
+}
+
+.folder-list.folder-edit-mode .folder-item .folder-actions {
     display: flex;
+}
+
+.folder-list.folder-edit-mode .folder-item {
+    cursor: grab;
+}
+
+.folder-list.folder-edit-mode .folder-item:active {
+    cursor: grabbing;
+}
+
+/* Drag and Drop Visual Feedback */
+.folder-item.dragging {
+    opacity: 0.5;
+    background: var(--color-border);
+}
+
+.folder-item.drag-over {
+    border-top: 2px solid var(--color-primary);
 }
 
 .folder-actions button {

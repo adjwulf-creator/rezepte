@@ -61,6 +61,7 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 
 let currentViewRecipeId = null;
 let editingRecipeId = null;
+let isFolderEditMode = false;
 
 // Settings DOM Elements
 const settingsBtn = document.getElementById('settingsBtn');
@@ -147,6 +148,7 @@ async function loadFolders() {
         .from('folders')
         .select('*')
         .eq('user_id', currentUser.id)
+        .order('order_index', { ascending: true })
         .order('createdAt', { ascending: true });
 
     if (error) {
@@ -297,6 +299,17 @@ function setupCategoryListeners() {
 }
 
 function renderFolders() {
+    const editFoldersBtn = document.getElementById('editFoldersBtn');
+    if (editFoldersBtn) {
+        if (isFolderEditMode) {
+            editFoldersBtn.classList.add('active');
+            folderList.classList.add('folder-edit-mode');
+        } else {
+            editFoldersBtn.classList.remove('active');
+            folderList.classList.remove('folder-edit-mode');
+        }
+    }
+
     // Reset folder list except the first "All" item
     folderList.innerHTML = `
         <li class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
@@ -309,40 +322,60 @@ function renderFolders() {
     // Reset Dropdown
     recipeFolderSelect.innerHTML = '<option value="">Kein Ordner</option>';
 
-    folders.forEach(folder => {
-        // Add to Sidebar
-        const li = document.createElement('li');
-        li.className = `folder-item ${currentFolderId === folder.id ? 'active' : ''}`;
-        li.dataset.folderId = folder.id;
+    if (folders) {
+        folders.forEach(folder => {
+            // Add to Sidebar
+            const li = document.createElement('li');
+            li.className = `folder-item sortable-folder ${currentFolderId === folder.id ? 'active' : ''}`;
+            li.dataset.folderId = folder.id;
+            if (isFolderEditMode) {
+                li.setAttribute('draggable', 'true');
+            }
 
-        li.innerHTML = `
-            <div class="folder-name-container">
-                <i class="fa-regular fa-folder"></i>
-                <span title="${folder.name}">${folder.name}</span>
-            </div>
-            <div class="folder-actions">
-                <button class="delete-folder-btn" title="Ordner löschen" data-id="${folder.id}">
-                    <i class="fa-solid fa-trash-can"></i>
-                </button>
-            </div>
-        `;
-        folderList.appendChild(li);
+            li.innerHTML = `
+                <div class="folder-name-container">
+                    <i class="fa-regular fa-folder"></i>
+                    <span title="${folder.name}">${folder.name}</span>
+                </div>
+                <div class="folder-actions">
+                    <button class="delete-folder-btn" title="Ordner löschen" data-id="${folder.id}">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            `;
+            folderList.appendChild(li);
 
-        // Add to Dropdown
-        const option = document.createElement('option');
-        option.value = folder.id;
-        option.textContent = folder.name;
-        recipeFolderSelect.appendChild(option);
-    });
+            // Add to Dropdown
+            const option = document.createElement('option');
+            option.value = folder.id;
+            option.textContent = folder.name;
+            recipeFolderSelect.appendChild(option);
+        });
+    }
 
     setupFolderItemListeners();
 }
 
+let draggedFolderItem = null;
+
 function setupFolderItemListeners() {
+    const editFoldersBtn = document.getElementById('editFoldersBtn');
+    if (editFoldersBtn) {
+        // Clone and replace to prevent duplicate listeners
+        const newBtn = editFoldersBtn.cloneNode(true);
+        editFoldersBtn.parentNode.replaceChild(newBtn, editFoldersBtn);
+        newBtn.addEventListener('click', () => {
+            isFolderEditMode = !isFolderEditMode;
+            renderFolders();
+        });
+    }
+
     // Sidebar Folder Clicks
     const items = folderList.querySelectorAll('.folder-item');
     items.forEach(item => {
         item.addEventListener('click', (e) => {
+            // Ignore logic if we are just editing/sorting folders
+            if (isFolderEditMode) return;
             // Ignore if click was on delete button
             if (e.target.closest('.folder-actions')) return;
 
@@ -368,6 +401,69 @@ function setupFolderItemListeners() {
                 } else {
                     alert('Fehler beim Löschen des Ordners: ' + error.message);
                 }
+            }
+        });
+    });
+
+    // Drag and Drop implementation
+    const sortableItems = folderList.querySelectorAll('.sortable-folder');
+    sortableItems.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            if (!isFolderEditMode) return;
+            draggedFolderItem = item;
+            item.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+
+        item.addEventListener('dragend', () => {
+            item.classList.remove('dragging');
+            sortableItems.forEach(dropItem => dropItem.classList.remove('drag-over'));
+            draggedFolderItem = null;
+        });
+
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            if (!isFolderEditMode || item === draggedFolderItem) return;
+            e.dataTransfer.dropEffect = 'move';
+            item.classList.add('drag-over');
+        });
+
+        item.addEventListener('dragleave', () => {
+            item.classList.remove('drag-over');
+        });
+
+        item.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            item.classList.remove('drag-over');
+            if (!isFolderEditMode || item === draggedFolderItem || !draggedFolderItem) return;
+
+            // Determine drop position (before or after)
+            const bounding = item.getBoundingClientRect();
+            const offset = bounding.y + (bounding.height / 2);
+            if (e.clientY - offset > 0) {
+                item.after(draggedFolderItem);
+            } else {
+                item.before(draggedFolderItem);
+            }
+
+            // Save new order
+            const currentItems = Array.from(folderList.querySelectorAll('.sortable-folder'));
+            const orderUpdates = currentItems.map((li, index) => ({
+                id: li.dataset.folderId,
+                order_index: index,
+                user_id: currentUser.id
+            }));
+
+            try {
+                // Supabase doesn't have a single bulk update endpoint without an RPC,
+                // so we upsert with id array. Given 'id' is unique, upsert acts like an update.
+                const { error } = await sbClient.from('folders').upsert(orderUpdates, { onConflict: 'id' });
+                if (error) throw error;
+                // Reload folders to match new memory state
+                await loadFolders();
+            } catch (err) {
+                console.error("Order save err:", err);
+                alert("Fehler beim Speichern der Reihenfolge.");
             }
         });
     });

@@ -50,9 +50,14 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <h2>Meine Ordner</h2>
-                <button id="addFolderBtn" class="add-folder-btn" title="Neuer Ordner">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button id="editFoldersBtn" class="edit-folder-btn" title="Ordner bearbeiten">
+                        <i class="fa-solid fa-pencil"></i>
+                    </button>
+                    <button id="addFolderBtn" class="add-folder-btn" title="Neuer Ordner">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
             </div>
             <ul id="folderList" class="folder-list">
                 <li class="folder-item active" data-folder-id="all">
