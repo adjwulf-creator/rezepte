@@ -26,7 +26,7 @@
         <div class="header-content">
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
-                <h1>Inna´s Rezepte</h1>
+                <h1 id="appHeaderTitle">Inna´s Rezepte</h1>
             </div>
             <div class="header-actions">
                 <div class="search-bar">
@@ -221,6 +221,18 @@
             </div>
 
             <div class="tab-content active" id="profileTab">
+                <h3>App Name ändern</h3>
+                <form id="appNameForm" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="appNameInput">Name (z.B. Mein Kochbuch)</label>
+                        <input type="text" id="appNameInput" required>
+                    </div>
+                    <p id="appNameMessage" class="form-message hidden"></p>
+                    <button type="submit" class="primary-btn" id="saveAppNameBtn">Name speichern</button>
+                </form>
+
+                <hr style="margin-bottom: 2rem; opacity: 0.2;">
+
                 <h3>Passwort ändern</h3>
                 <form id="passwordForm">
                     <div class="form-group">
@@ -251,7 +263,7 @@
         <div class="login-box">
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
-                <h2>Inna´s Rezepte</h2>
+                <h2 id="loginAppTitle">Inna´s Rezepte</h2>
             </div>
 
             <h2 id="authMainTitle" class="auth-main-title">Anmelden</h2>

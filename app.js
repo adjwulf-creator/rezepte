@@ -24,6 +24,8 @@ const authToggleText = document.getElementById('authToggleText');
 const authMainTitle = document.getElementById('authMainTitle');
 const loginSubtitle = document.querySelector('.login-subtitle');
 const logoutBtn = document.getElementById('logoutBtn');
+const appHeaderTitle = document.getElementById('appHeaderTitle');
+const loginAppTitle = document.getElementById('loginAppTitle');
 
 let isLoginMode = true; // Toggle between login and register
 let currentUser = null;
@@ -70,6 +72,9 @@ const settingsModal = document.getElementById('settingsModal');
 const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
 const tabBtns = document.querySelectorAll('.tab-btn');
 const tabContents = document.querySelectorAll('.tab-content');
+const appNameForm = document.getElementById('appNameForm');
+const appNameInput = document.getElementById('appNameInput');
+const appNameMessage = document.getElementById('appNameMessage');
 const passwordForm = document.getElementById('passwordForm');
 const passwordMessage = document.getElementById('passwordMessage');
 const categoryForm = document.getElementById('categoryForm');
@@ -87,11 +92,20 @@ async function initApp() {
     await checkUser();
 }
 
+function applyAppName(name) {
+    const defaultName = "Inna´s Rezepte";
+    const displayName = name && name.trim() !== '' ? name.trim() : defaultName;
+    if (appHeaderTitle) appHeaderTitle.textContent = displayName;
+    if (loginAppTitle) loginAppTitle.textContent = displayName;
+    document.title = displayName;
+}
+
 async function checkUser() {
     const { data: { session } } = await sbClient.auth.getSession();
     if (session) {
         // Logged in
         currentUser = session.user;
+        applyAppName(currentUser.user_metadata?.app_name);
         loginOverlay.classList.add('hidden');
         await loadFolders();
         await loadCategories();
@@ -99,6 +113,7 @@ async function checkUser() {
     } else {
         // Not logged in
         currentUser = null;
+        applyAppName(null);
         loginOverlay.classList.remove('hidden');
     }
 
@@ -106,10 +121,12 @@ async function checkUser() {
     sbClient.auth.onAuthStateChange((event, session) => {
         if (event === 'SIGNED_IN') {
             currentUser = session.user;
+            applyAppName(currentUser.user_metadata?.app_name);
             loginOverlay.classList.add('hidden');
             loadFolders().then(() => loadRecipes());
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
+            applyAppName(null);
             loginOverlay.classList.remove('hidden');
             recipes = [];
             folders = [];
@@ -727,8 +744,37 @@ function setupEventListeners() {
     // Settings Modal & Tabs
     settingsBtn.addEventListener('click', () => {
         settingsModal.classList.remove('hidden');
-        passwordForm.reset();
         passwordMessage.classList.add('hidden');
+        appNameMessage.classList.add('hidden');
+        appNameInput.value = currentUser?.user_metadata?.app_name || '';
+    });
+
+    // Settings - Update App Name
+    appNameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const newName = appNameInput.value.trim();
+
+        const btn = appNameForm.querySelector('button[type="submit"]');
+        btn.disabled = true;
+        btn.textContent = 'Speichert...';
+
+        const { data, error } = await sbClient.auth.updateUser({
+            data: { app_name: newName }
+        });
+
+        btn.disabled = false;
+        btn.textContent = 'Name speichern';
+        appNameMessage.classList.remove('hidden');
+
+        if (error) {
+            appNameMessage.style.color = 'var(--color-accent)';
+            appNameMessage.textContent = 'Fehler: ' + error.message;
+        } else {
+            currentUser = data.user;
+            applyAppName(currentUser.user_metadata?.app_name);
+            appNameMessage.style.color = 'var(--color-primary)';
+            appNameMessage.textContent = 'Name erfolgreich geändert!';
+        }
     });
 
     closeSettingsModalBtn.addEventListener('click', () => {
