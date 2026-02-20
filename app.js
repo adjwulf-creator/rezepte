@@ -163,14 +163,18 @@ function setupEventListeners() {
         isLoginMode = !isLoginMode;
         loginError.classList.add('hidden');
 
+        const loginBox = document.querySelector('.login-box');
+
         if (isLoginMode) {
+            loginBox.classList.remove('register-mode');
             loginSubtitle.textContent = 'Bitte melde dich an, um fortzufahren.';
             authSubmitBtn.textContent = 'Anmelden';
             authToggleText.textContent = 'Noch kein Konto?';
             authToggleLink.textContent = 'Jetzt registrieren';
         } else {
+            loginBox.classList.add('register-mode');
             loginSubtitle.textContent = 'Erstelle ein neues Konto für dein Kochbuch.';
-            authSubmitBtn.textContent = 'Registrieren';
+            authSubmitBtn.textContent = 'Konto erstellen';
             authToggleText.textContent = 'Bereits ein Konto?';
             authToggleLink.textContent = 'Hier anmelden';
         }

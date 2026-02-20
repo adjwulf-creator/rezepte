@@ -646,6 +646,24 @@ select:focus {
     display: none;
 }
 
+/* Registration Mode Styling */
+.login-box.register-mode {
+    border-color: var(--color-secondary);
+    box-shadow: 0 15px 40px rgba(133, 154, 122, 0.15);
+}
+
+.login-box.register-mode h2 {
+    color: var(--color-secondary);
+}
+
+.login-box.register-mode .login-btn {
+    background-color: var(--color-secondary);
+}
+
+.login-box.register-mode .login-btn:hover {
+    background-color: var(--color-primary);
+}
+
 .auth-toggle {
     margin-top: 1.5rem;
     text-align: center;
