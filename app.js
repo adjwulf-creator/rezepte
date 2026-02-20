@@ -423,20 +423,57 @@ function setupFolderItemListeners() {
         });
 
         item.addEventListener('dragover', (e) => {
+            // Recipe drop logic
+            if (draggedRecipeCard) {
+                e.preventDefault();
+                item.classList.add('recipe-drag-over');
+                return;
+            }
+
+            // Folder sort logic
             e.preventDefault();
             if (!isFolderEditMode || item === draggedFolderItem) return;
+            if (!item.classList.contains('sortable-folder')) return;
             e.dataTransfer.dropEffect = 'move';
             item.classList.add('drag-over');
         });
 
         item.addEventListener('dragleave', () => {
             item.classList.remove('drag-over');
+            item.classList.remove('recipe-drag-over');
         });
 
         item.addEventListener('drop', async (e) => {
             e.preventDefault();
             item.classList.remove('drag-over');
+            item.classList.remove('recipe-drag-over');
+
+            // Handling Recipe Drop onto Folder
+            if (draggedRecipeCard) {
+                const recipeId = draggedRecipeCard.dataset.id;
+                const targetFolderId = item.dataset.folderId === 'all' ? null : item.dataset.folderId;
+
+                try {
+                    const { error } = await sbClient.from('recipes')
+                        .update({ folder_id: targetFolderId })
+                        .eq('id', recipeId);
+
+                    if (error) throw error;
+
+                    // Update local state and UI
+                    const recipe = recipes.find(r => r.id == recipeId);
+                    if (recipe) recipe.folder_id = targetFolderId;
+                    renderRecipes(); // Re-render to potentially remove from current view
+                } catch (err) {
+                    console.error("Error moving recipe to folder:", err);
+                    alert("Fehler beim Verschieben des Rezepts.");
+                }
+                return;
+            }
+
+            // Handling Folder Sort logic
             if (!isFolderEditMode || item === draggedFolderItem || !draggedFolderItem) return;
+            if (!item.classList.contains('sortable-folder')) return;
 
             // Determine drop position (before or after)
             const bounding = item.getBoundingClientRect();
@@ -507,11 +544,8 @@ function renderRecipes() {
 
         filteredRecipes.forEach(recipe => {
             const card = document.createElement('article');
-            card.className = 'recipe-card';
-            if (sortBy === 'manual') {
-                card.classList.add('draggable');
-                card.setAttribute('draggable', 'true');
-            }
+            card.className = 'recipe-card draggable';
+            card.setAttribute('draggable', 'true');
             card.dataset.id = recipe.id;
 
             const imageHtml = recipe.imageData
@@ -550,7 +584,6 @@ function setupRecipeDragListeners() {
 
     cards.forEach(card => {
         card.addEventListener('dragstart', (e) => {
-            if (sortSelect.value !== 'manual') return;
             draggedRecipeCard = card;
             card.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';

@@ -337,6 +337,11 @@ button {
     border-top: 2px solid var(--color-primary);
 }
 
+.folder-item.recipe-drag-over {
+    background: var(--color-bg);
+    border: 2px dashed var(--color-primary);
+}
+
 .folder-actions button {
     background: none;
     border: none;
