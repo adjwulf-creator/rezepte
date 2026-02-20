@@ -167,7 +167,7 @@ async function loadCategories() {
         .from('categories')
         .select('*')
         .eq('user_id', currentUser.id)
-        .order('createdAt', { ascending: true });
+        .order('created_at', { ascending: true });
 
     if (error) {
         console.error("Error loading categories:", error);
@@ -180,7 +180,7 @@ async function loadCategories() {
         const seedData = defaults.map(name => ({
             name: name,
             user_id: currentUser.id,
-            createdAt: Date.now()
+            created_at: new Date().toISOString()
         }));
 
         await sbClient.from('categories').insert(seedData);
@@ -569,7 +569,7 @@ function setupEventListeners() {
         const { error } = await sbClient.from('categories').insert([{
             name: name,
             user_id: currentUser.id,
-            createdAt: Date.now()
+            created_at: new Date().toISOString()
         }]);
 
         btn.disabled = false;
