@@ -326,8 +326,8 @@ function setupEventListeners() {
             await loadRecipes();
             closeAddModal();
         } catch (error) {
-            alert('Fehler beim Speichern des Rezepts. Überprüfe die Supabase-Rechte.');
-            console.error(error);
+            alert('Fehler beim Speichern des Rezepts: ' + (error.message || 'Unbekannter Fehler') + '\n\nDetails: ' + JSON.stringify(error));
+            console.error("Superbase Save Error:", error);
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Speichern';
