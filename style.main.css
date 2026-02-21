@@ -1771,7 +1771,10 @@ select:focus {
     /* Mobile Dropdown Active Overlay */
     body.mobile-dropdown-active {
         overflow: hidden;
-        /* Prevent scrolling */
+        /* iOS Safari prevents scrolling only if body is fixed */
+        position: fixed;
+        width: 100%;
+        height: 100%;
     }
 
     body.mobile-dropdown-active .content-area {
