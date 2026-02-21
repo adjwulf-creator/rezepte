@@ -124,12 +124,6 @@ h4 {
 }
 
 
-.header-icons {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-}
-
 .logo h1 {
     font-size: 2rem;
     font-style: italic;
@@ -1434,16 +1428,7 @@ select:focus {
         gap: 1rem;
     }
 
-    .header-actions {
-        display: contents;
-    }
-
-    .header-icons {
-        order: 2;
-    }
-
     .search-actions {
-        order: 3;
         width: 100%;
         gap: 0.5rem;
     }
@@ -1467,18 +1452,24 @@ select:focus {
     }
 
     #addRecipeBtn {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 60px;
+        height: 60px;
+        min-width: 60px;
         flex-shrink: 0;
         padding: 0;
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
+        box-shadow: 0 4px 15px rgba(133, 154, 122, 0.4);
+        z-index: 1000;
     }
 
     #addRecipeBtn i {
+        font-size: 1.5rem;
         margin: 0;
     }
 
