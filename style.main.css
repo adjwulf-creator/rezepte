@@ -1743,4 +1743,16 @@ select:focus {
         border: none;
         padding: 1.5rem;
     }
+
+    .recipe-modal-content {
+        width: 100%;
+        height: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        max-width: none;
+        max-height: none;
+        border-radius: 0;
+        border: none;
+        padding: 1.5rem;
+    }
 }
