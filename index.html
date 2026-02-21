@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=4">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -34,7 +34,10 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="searchInput" placeholder="Rezepte durchsuchen...">
                     </div>
-                    <button id="mobileFilterBtn" class="icon-btn hide-on-desktop" title="Filter & Ordner">
+                    <button id="mobileFoldersBtn" class="icon-btn hide-on-desktop" title="Meine Ordner">
+                        <i class="fa-regular fa-folder-open"></i>
+                    </button>
+                    <button id="mobileControlsBtn" class="icon-btn hide-on-desktop" title="Filter & Ansicht">
                         <i class="fa-solid fa-sliders"></i>
                     </button>
                     <button id="addRecipeBtn" class="primary-btn">
@@ -50,7 +53,8 @@
                     </button>
                 </div>
             </div>
-            <div id="mobileDropdownContent" class="mobile-dropdown-content hidden"></div>
+            <div id="mobileDropdownFolders" class="mobile-dropdown-content hidden"></div>
+            <div id="mobileDropdownControls" class="mobile-dropdown-content hidden"></div>
         </div>
     </header>
 
@@ -308,7 +312,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
 </body>
 
 </html>

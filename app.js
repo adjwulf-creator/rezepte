@@ -34,8 +34,10 @@ const recipeGrid = document.getElementById('recipeGrid');
 const emptyState = document.getElementById('emptyState');
 
 // Layout DOM Elements
-const mobileFilterBtn = document.getElementById('mobileFilterBtn');
-const mobileDropdownContent = document.getElementById('mobileDropdownContent');
+const mobileFoldersBtn = document.getElementById('mobileFoldersBtn');
+const mobileControlsBtn = document.getElementById('mobileControlsBtn');
+const mobileDropdownFolders = document.getElementById('mobileDropdownFolders');
+const mobileDropdownControls = document.getElementById('mobileDropdownControls');
 const contentArea = document.getElementById('contentArea');
 const recipeControls = document.getElementById('recipeControls');
 const sidebar = document.getElementById('sidebar');
@@ -96,23 +98,29 @@ const viewModeSelect = document.getElementById('viewModeSelect');
 function adaptMobileLayout() {
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
-        if (sidebar && sidebar.parentElement !== mobileDropdownContent) {
-            mobileDropdownContent.appendChild(sidebar);
-            mobileDropdownContent.appendChild(recipeControls);
+        if (sidebar && sidebar.parentElement !== mobileDropdownFolders) {
+            mobileDropdownFolders.appendChild(sidebar);
+            mobileDropdownControls.appendChild(recipeControls);
         }
     } else {
         if (sidebar && sidebar.parentElement !== contentArea.parentElement) {
             contentArea.parentElement.insertBefore(sidebar, contentArea);
             contentArea.insertBefore(recipeControls, contentArea.firstElementChild);
-            mobileDropdownContent.classList.add('hidden');
+            mobileDropdownFolders.classList.add('hidden');
+            mobileDropdownControls.classList.add('hidden');
         }
     }
 }
 
 window.addEventListener('resize', adaptMobileLayout);
-if (mobileFilterBtn) {
-    mobileFilterBtn.addEventListener('click', () => {
-        mobileDropdownContent.classList.toggle('hidden');
+if (mobileFoldersBtn && mobileControlsBtn) {
+    mobileFoldersBtn.addEventListener('click', () => {
+        mobileDropdownFolders.classList.toggle('hidden');
+        mobileDropdownControls.classList.add('hidden'); // Close the other
+    });
+    mobileControlsBtn.addEventListener('click', () => {
+        mobileDropdownControls.classList.toggle('hidden');
+        mobileDropdownFolders.classList.add('hidden'); // Close the other
     });
 }
 
