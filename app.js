@@ -441,6 +441,7 @@ function setupFolderItemListeners() {
             currentFolderId = item.dataset.folderId;
             renderFolders(); // Update active class
             renderRecipes(); // Filter recipes
+            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
         });
     });
 
@@ -890,12 +891,19 @@ function setupEventListeners() {
     viewModeSelect.addEventListener('change', (e) => {
         currentViewMode = e.target.value;
         applyViewState();
+        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
     });
 
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
-    categoryFilter.addEventListener('change', renderRecipes);
-    sortSelect.addEventListener('change', renderRecipes);
+    categoryFilter.addEventListener('change', () => {
+        renderRecipes();
+        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+    });
+    sortSelect.addEventListener('change', () => {
+        renderRecipes();
+        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+    });
 
     // Folders
     addFolderBtn.addEventListener('click', () => {
