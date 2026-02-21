@@ -194,6 +194,14 @@ button {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    color: var(--color-text);
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.icon-btn i {
+    color: var(--color-text);
+    -webkit-text-fill-color: var(--color-text);
 }
 
 .primary-btn {
@@ -1388,7 +1396,7 @@ select:focus {
 /* Responsive */
 @media (max-width: 768px) {
     .app-header {
-        padding: 1rem;
+        padding: 0.6rem 1rem;
     }
 
     .logo {
@@ -1396,7 +1404,7 @@ select:focus {
         justify-content: center;
         gap: 0.5rem;
         order: -1;
-        margin-bottom: 1rem;
+        margin-bottom: 0.1rem;
     }
 
     .logo h1 {
