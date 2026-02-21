@@ -64,7 +64,9 @@ const searchInput = document.getElementById('searchInput');
 const categoryFilterContainer = document.getElementById('categoryFilterContainer');
 const categoryFilterHeader = document.getElementById('categoryFilterHeader');
 const categoryFilterDropdown = document.getElementById('categoryFilterDropdown');
-const sortSelect = document.getElementById('sortSelect');
+const sortSelectHeader = document.getElementById('sortSelectHeader');
+const sortSelectDropdown = document.getElementById('sortSelectDropdown');
+const sortSelectContainer = document.getElementById('sortSelectContainer');
 
 const viewModal = document.getElementById('viewModal');
 const closeViewModalBtn = document.getElementById('closeViewModalBtn');
@@ -94,7 +96,9 @@ const settingsCategoryList = document.getElementById('settingsCategoryList');
 
 // View State
 let currentViewMode = localStorage.getItem('recipeBook_viewMode') || 'grid';
-const viewModeSelect = document.getElementById('viewModeSelect');
+const viewModeHeader = document.getElementById('viewModeHeader');
+const viewModeDropdown = document.getElementById('viewModeDropdown');
+const viewModeContainer = document.getElementById('viewModeContainer');
 
 // Responsive Layout Handlers
 function adaptMobileLayout() {
@@ -323,6 +327,53 @@ function updateFilterHeader() {
 function getSelectedFilterCategories() {
     if (!categoryFilterDropdown) return [];
     return Array.from(categoryFilterDropdown.querySelectorAll('input:checked')).map(i => i.value);
+}
+
+function getCurrentSortValue() {
+    if (!sortSelectDropdown) return 'newest';
+    const active = sortSelectDropdown.querySelector('.multi-select-option.active');
+    return active ? active.dataset.value : 'newest';
+}
+
+function setupSingleSelectDropdown(header, dropdown, container, initialValue, onChange) {
+    if (!header || !dropdown) return;
+
+    // Set initial active
+    const initialOption = dropdown.querySelector(`.multi-select-option[data-value="${initialValue}"]`);
+    if (initialOption) {
+        dropdown.querySelectorAll('.multi-select-option').forEach(o => o.classList.remove('active'));
+        initialOption.classList.add('active');
+        header.querySelector('span').textContent = initialOption.querySelector('span').textContent;
+    }
+
+    // Toggle dropdown
+    header.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close other custom dropdowns
+        document.querySelectorAll('.multi-select-dropdown').forEach(d => {
+            if (d !== dropdown) d.classList.add('hidden');
+        });
+        dropdown.classList.toggle('hidden');
+    });
+
+    // Option click = select + close
+    dropdown.querySelectorAll('.multi-select-option').forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.querySelectorAll('.multi-select-option').forEach(o => o.classList.remove('active'));
+            option.classList.add('active');
+            header.querySelector('span').textContent = option.querySelector('span').textContent;
+            dropdown.classList.add('hidden');
+            if (onChange) onChange(option.dataset.value);
+        });
+    });
+
+    // Close on outside click
+    document.addEventListener('click', (e) => {
+        if (container && !container.contains(e.target)) {
+            dropdown.classList.add('hidden');
+        }
+    });
 }
 
 function renderSettingsCategoryList() {
@@ -656,7 +707,7 @@ function setupFolderItemListeners() {
 function renderRecipes() {
     const searchTerm = searchInput.value.toLowerCase();
     const selectedCategories = getSelectedFilterCategories();
-    const sortBy = sortSelect.value;
+    const sortBy = getCurrentSortValue();
 
     // Filter
     let filteredRecipes = recipes.filter(recipe => {
@@ -750,7 +801,7 @@ function setupRecipeDragListeners() {
 
         card.addEventListener('dragover', (e) => {
             e.preventDefault();
-            if (sortSelect.value !== 'manual' || card === draggedRecipeCard) return;
+            if (getCurrentSortValue() !== 'manual' || card === draggedRecipeCard) return;
             e.dataTransfer.dropEffect = 'move';
             card.classList.add('drag-over');
         });
@@ -762,7 +813,7 @@ function setupRecipeDragListeners() {
         card.addEventListener('drop', async (e) => {
             e.preventDefault();
             card.classList.remove('drag-over');
-            if (sortSelect.value !== 'manual' || card === draggedRecipeCard || !draggedRecipeCard) return;
+            if (getCurrentSortValue() !== 'manual' || card === draggedRecipeCard || !draggedRecipeCard) return;
 
             // Determine drop position based on mouse vertical/horizontal position
             const bounding = card.getBoundingClientRect();
@@ -996,10 +1047,9 @@ function setupEventListeners() {
         }
     });
 
-    // View Options
-    viewModeSelect.value = currentViewMode;
-    viewModeSelect.addEventListener('change', (e) => {
-        currentViewMode = e.target.value;
+    // View Options — custom dropdown
+    setupSingleSelectDropdown(viewModeHeader, viewModeDropdown, viewModeContainer, currentViewMode, (val) => {
+        currentViewMode = val;
         applyViewState();
         if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
     });
@@ -1007,7 +1057,9 @@ function setupEventListeners() {
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
     // Note: Category filter change events are handled in renderCategories() via checkbox listeners
-    sortSelect.addEventListener('change', () => {
+
+    // Sort — custom dropdown
+    setupSingleSelectDropdown(sortSelectHeader, sortSelectDropdown, sortSelectContainer, 'newest', (val) => {
         renderRecipes();
         if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
     });

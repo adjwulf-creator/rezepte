@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.main.css?v=10">
+    <link rel="stylesheet" href="style.main.css?v=11">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -89,24 +89,38 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label for="sortSelect" title="Sortieren nach"><i
-                            class="fa-solid fa-arrow-down-short-wide"></i></label>
-                    <select id="sortSelect">
-                        <option value="newest">Neueste zuerst</option>
-                        <option value="manual">Eigene Reihenfolge</option>
-                        <option value="oldest">Älteste zuerst</option>
-                        <option value="az">A-Z</option>
-                        <option value="za">Z-A</option>
-                    </select>
+                    <label title="Sortieren nach"><i class="fa-solid fa-arrow-down-short-wide"></i></label>
+                    <div class="multi-select" id="sortSelectContainer">
+                        <div class="multi-select-header" id="sortSelectHeader">
+                            <span>Neueste zuerst</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="multi-select-dropdown hidden" id="sortSelectDropdown">
+                            <label class="multi-select-option active" data-value="newest"><span>Neueste
+                                    zuerst</span></label>
+                            <label class="multi-select-option" data-value="manual"><span>Eigene
+                                    Reihenfolge</span></label>
+                            <label class="multi-select-option" data-value="oldest"><span>Älteste zuerst</span></label>
+                            <label class="multi-select-option" data-value="az"><span>A-Z</span></label>
+                            <label class="multi-select-option" data-value="za"><span>Z-A</span></label>
+                        </div>
+                    </div>
                 </div>
                 <div class="control-group">
-                    <label for="viewModeSelect" title="Ansicht ändern"><i
-                            class="fa-solid fa-table-cells-large"></i></label>
-                    <select id="viewModeSelect">
-                        <option value="grid">Große Kacheln</option>
-                        <option value="small-grid">Kleine Kacheln</option>
-                        <option value="list">Liste</option>
-                    </select>
+                    <label title="Ansicht ändern"><i class="fa-solid fa-table-cells-large"></i></label>
+                    <div class="multi-select" id="viewModeContainer">
+                        <div class="multi-select-header" id="viewModeHeader">
+                            <span>Große Kacheln</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="multi-select-dropdown hidden" id="viewModeDropdown">
+                            <label class="multi-select-option active" data-value="grid"><span>Große
+                                    Kacheln</span></label>
+                            <label class="multi-select-option" data-value="small-grid"><span>Kleine
+                                    Kacheln</span></label>
+                            <label class="multi-select-option" data-value="list"><span>Liste</span></label>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -318,7 +332,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=21"></script>
+    <script src="app.js?v=22"></script>
 </body>
 
 </html>

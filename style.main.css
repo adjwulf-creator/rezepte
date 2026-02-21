@@ -532,6 +532,12 @@ button {
     background-color: var(--color-bg);
 }
 
+.multi-select-option.active {
+    color: var(--color-secondary);
+    font-weight: 600;
+    background-color: rgba(133, 154, 122, 0.08);
+}
+
 .multi-select-option input[type="checkbox"] {
     cursor: pointer;
     accent-color: var(--color-primary);
@@ -1654,23 +1660,7 @@ select:focus {
         font-size: 0.85rem;
     }
 
-    /* Mobile dropdowns as centered popups */
-    .mobile-dropdown-content:not(.hidden) {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 85vw;
-        max-width: 350px;
-        max-height: 60vh;
-        border-radius: var(--radius-lg);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
-        z-index: 1100;
-        border-bottom: none;
-        overflow-y: auto;
-    }
-
-    /* Category filter as centered modal on mobile */
+    /* Custom select popups as centered modal on mobile */
     .multi-select-dropdown:not(.hidden) {
         position: fixed;
         top: 50%;
