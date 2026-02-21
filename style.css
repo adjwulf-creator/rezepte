@@ -1508,6 +1508,12 @@ select:focus {
     }
 
     .recipe-grid.list-view .card-content h3 {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
+    }
+
+    .recipe-tag {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.6rem;
+        margin-top: 0.3rem;
     }
 }
