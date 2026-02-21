@@ -617,7 +617,7 @@ function renderRecipes() {
                 </div>
                 <div class="card-content">
                     <h3>${recipe.title}</h3>
-                    <span class="recipe-tag">${recipe.category}</span>
+                    <span class="recipe-tag"><i class="fa-solid fa-tag"></i> ${recipe.category}</span>
                     <p class="recipe-description">${recipe.ingredients}</p>
                 </div>
             `;
