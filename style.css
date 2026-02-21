@@ -1392,8 +1392,11 @@ select:focus {
     }
 
     .logo {
+        width: 100%;
+        justify-content: center;
         gap: 0.5rem;
         order: 1;
+        margin-bottom: 0.5rem;
     }
 
     .logo h1 {
