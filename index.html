@@ -34,6 +34,9 @@
                         <i class="fa-solid fa-magnifying-glass"></i>
                         <input type="text" id="searchInput" placeholder="Rezepte durchsuchen...">
                     </div>
+                    <button id="mobileFilterBtn" class="icon-btn hide-on-desktop" title="Filter & Ordner">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
                     <button id="addRecipeBtn" class="primary-btn">
                         <i class="fa-solid fa-plus"></i> <span class="hide-on-mobile">Neues Rezept</span>
                     </button>
@@ -47,6 +50,7 @@
                     </button>
                 </div>
             </div>
+            <div id="mobileDropdownContent" class="mobile-dropdown-content hidden"></div>
         </div>
     </header>
 
@@ -71,8 +75,8 @@
             </ul>
         </aside>
 
-        <div class="content-area">
-            <section class="controls">
+        <div class="content-area" id="contentArea">
+            <section class="controls" id="recipeControls">
                 <div class="control-group">
                     <label for="categoryFilter" title="Kategorie filtern"><i class="fa-solid fa-tag"></i></label>
                     <select id="categoryFilter">

@@ -33,6 +33,13 @@ let currentUser = null;
 const recipeGrid = document.getElementById('recipeGrid');
 const emptyState = document.getElementById('emptyState');
 
+// Layout DOM Elements
+const mobileFilterBtn = document.getElementById('mobileFilterBtn');
+const mobileDropdownContent = document.getElementById('mobileDropdownContent');
+const contentArea = document.getElementById('contentArea');
+const recipeControls = document.getElementById('recipeControls');
+const sidebar = document.getElementById('sidebar');
+
 // Folder DOM Elements
 const addFolderBtn = document.getElementById('addFolderBtn');
 const folderModal = document.getElementById('folderModal');
@@ -85,8 +92,33 @@ const settingsCategoryList = document.getElementById('settingsCategoryList');
 let currentViewMode = localStorage.getItem('recipeBook_viewMode') || 'grid';
 const viewModeSelect = document.getElementById('viewModeSelect');
 
+// Responsive Layout Handlers
+function adaptMobileLayout() {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+        if (sidebar && sidebar.parentElement !== mobileDropdownContent) {
+            mobileDropdownContent.appendChild(sidebar);
+            mobileDropdownContent.appendChild(recipeControls);
+        }
+    } else {
+        if (sidebar && sidebar.parentElement !== contentArea.parentElement) {
+            contentArea.parentElement.insertBefore(sidebar, contentArea);
+            contentArea.insertBefore(recipeControls, contentArea.firstElementChild);
+            mobileDropdownContent.classList.add('hidden');
+        }
+    }
+}
+
+window.addEventListener('resize', adaptMobileLayout);
+if (mobileFilterBtn) {
+    mobileFilterBtn.addEventListener('click', () => {
+        mobileDropdownContent.classList.toggle('hidden');
+    });
+}
+
 // Initialize app
 async function initApp() {
+    adaptMobileLayout();
     setupEventListeners();
     applyViewState();
     await checkUser();
