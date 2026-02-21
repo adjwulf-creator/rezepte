@@ -76,7 +76,7 @@ h4 {
     top: 100%;
     left: 0;
     width: 100%;
-    background: var(--color-surface);
+    background: rgba(255, 255, 255, 0.92);
     border-bottom: 2px solid var(--color-border);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
@@ -1667,6 +1667,7 @@ select:focus {
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
         z-index: 1100;
         padding: 1rem 0;
+        background-color: rgba(255, 255, 255, 0.92);
     }
 
 }
