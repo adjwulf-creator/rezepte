@@ -1484,18 +1484,9 @@ select:focus {
         grid-template-columns: 1fr;
     }
 
-    .recipe-grid.list-view {
-        margin: 0 -1rem;
-        gap: 0;
-    }
-
     .recipe-grid.list-view .recipe-card {
         min-height: 100px;
         height: auto;
-        border-radius: 0;
-        border-left: none;
-        border-right: none;
-        margin-bottom: -1px;
     }
 
     .recipe-grid.list-view .card-img-container {
