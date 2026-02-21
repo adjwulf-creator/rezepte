@@ -854,6 +854,7 @@ select:focus {
 }
 
 .settings-modal-content {
+    width: 80%;
     max-width: 500px;
     max-height: 70vh;
 }
