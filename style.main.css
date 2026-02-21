@@ -76,7 +76,7 @@ h4 {
     top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.92);
+    background: var(--color-surface);
     border-bottom: 2px solid var(--color-border);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
@@ -1654,6 +1654,22 @@ select:focus {
         font-size: 0.85rem;
     }
 
+    /* Mobile dropdowns as centered popups */
+    .mobile-dropdown-content:not(.hidden) {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85vw;
+        max-width: 350px;
+        max-height: 60vh;
+        border-radius: var(--radius-lg);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
+        z-index: 1100;
+        border-bottom: none;
+        overflow-y: auto;
+    }
+
     /* Category filter as centered modal on mobile */
     .multi-select-dropdown:not(.hidden) {
         position: fixed;
@@ -1667,7 +1683,6 @@ select:focus {
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.25);
         z-index: 1100;
         padding: 1rem 0;
-        background-color: rgba(255, 255, 255, 0.92);
     }
 
 }
