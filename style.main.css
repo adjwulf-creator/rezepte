@@ -1369,9 +1369,10 @@ select:focus {
 }
 
 #closeViewModalBtn {
-    position: absolute;
+    position: sticky;
     top: 1rem;
-    right: 1rem;
+    left: 100%;
+    margin-right: 1rem;
     z-index: 10;
     background: var(--color-surface);
     box-shadow: 0 2px 10px var(--color-shadow);

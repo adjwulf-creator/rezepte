@@ -1578,6 +1578,12 @@ function openViewModal(recipe) {
         </div>
     `;
 
+    // Reset scroll position
+    const viewModalContent = viewModal.querySelector('.view-modal-content');
+    if (viewModalContent) {
+        viewModalContent.scrollTop = 0;
+    }
+
     viewModal.classList.remove('hidden');
 }
 
