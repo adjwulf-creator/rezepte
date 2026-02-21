@@ -88,6 +88,20 @@ h4 {
     color: var(--color-primary);
 }
 
+.logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex: 1;
+}
+
+.header-icons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
 .logo h1 {
     font-size: 2rem;
     font-style: italic;
@@ -103,12 +117,16 @@ h4 {
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex: 1;
+    justify-content: flex-end;
 }
 
-.header-buttons {
+.search-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 1rem;
     align-items: center;
+    width: 100%;
+    justify-content: flex-end;
 }
 
 .search-bar {
@@ -1328,23 +1346,30 @@ select:focus {
 
     .header-content {
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
+        flex-direction: column;
+        align-items: flex-start;
         gap: 1rem;
     }
 
-    .header-actions {
-        display: contents;
+    .logo-area {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
-    .header-buttons {
-        order: 2;
+    .header-actions {
+        width: 100%;
+    }
+
+    .search-actions {
+        width: 100%;
+        gap: 0.5rem;
     }
 
     .search-bar {
         width: 100%;
-        order: 3;
+        flex: 1;
     }
 
     .search-bar input,
