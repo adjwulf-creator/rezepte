@@ -256,7 +256,8 @@ button {
     color: var(--color-text);
 }
 
-.active-dropdown-btn {
+.active-dropdown-btn,
+.active-dropdown-btn i {
     background-color: var(--color-secondary) !important;
     color: white !important;
 }
