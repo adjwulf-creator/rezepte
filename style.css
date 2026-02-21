@@ -1477,7 +1477,7 @@ select:focus {
     }
 
     .recipe-grid.list-view .recipe-card {
-        height: 100px;
+        min-height: 100px;
     }
 
     .recipe-grid.list-view .card-img-container {
@@ -1486,6 +1486,15 @@ select:focus {
 
     .recipe-grid.list-view .card-content {
         padding: 0.8rem;
+        overflow: hidden;
+    }
+
+    .recipe-grid.list-view .card-content p {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .recipe-grid.list-view .card-content h3 {
