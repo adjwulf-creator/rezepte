@@ -828,12 +828,12 @@ select:focus {
 .recipe-grid.list-view .recipe-card {
     flex-direction: row;
     align-items: stretch;
-    min-height: 120px;
+    height: 160px;
 }
 
 .recipe-grid.list-view .card-img-container {
-    width: 200px;
-    height: auto;
+    width: 220px;
+    height: 100%;
     flex-shrink: 0;
 }
 
@@ -1778,12 +1778,12 @@ select:focus {
     }
 
     .recipe-grid.list-view .recipe-card {
-        height: auto;
-        min-height: 100px;
+        height: 100px;
     }
 
     .recipe-grid.list-view .card-img-container {
         width: 100px;
+        height: 100%;
     }
 
     .recipe-grid.list-view .card-content {
