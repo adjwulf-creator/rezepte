@@ -12,6 +12,39 @@ let folders = [];
 let categories = [];
 let currentFolderId = 'all';
 
+let currentLang = localStorage.getItem('appLang') || 'de';
+
+function t(key) {
+    if (!window.translations || !window.translations[currentLang]) return key;
+    return window.translations[currentLang][key] || key;
+}
+
+function applyLanguage() {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        el.textContent = t(el.dataset.i18n);
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        el.placeholder = t(el.dataset.i18nPlaceholder);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach(el => {
+        el.title = t(el.dataset.i18nTitle);
+    });
+
+    document.documentElement.lang = currentLang;
+
+    // Resync select headers
+    if (sortSelectHeader) {
+        const activeSort = sortSelectDropdown?.querySelector('.multi-select-option.active span');
+        if (activeSort) sortSelectHeader.querySelector('span').textContent = activeSort.textContent;
+    }
+    if (viewModeHeader) {
+        const activeView = viewModeDropdown?.querySelector('.multi-select-option.active span');
+        if (activeView) viewModeHeader.querySelector('span').textContent = activeView.textContent;
+    }
+
+    updateFilterHeader();
+}
+
 // DOM Elements
 const loginOverlay = document.getElementById('loginOverlay');
 const loginForm = document.getElementById('loginForm');
@@ -93,6 +126,7 @@ const passwordMessage = document.getElementById('passwordMessage');
 const categoryForm = document.getElementById('categoryForm');
 const newCategoryNameInput = document.getElementById('newCategoryName');
 const settingsCategoryList = document.getElementById('settingsCategoryList');
+const languageSelect = document.getElementById('languageSelect');
 
 // View State
 let currentViewMode = localStorage.getItem('recipeBook_viewMode') || 'grid';
@@ -145,13 +179,28 @@ document.addEventListener('touchmove', closeMobileDropdowns, { passive: true });
 // Initialize app
 async function initApp() {
     adaptMobileLayout();
+
+    if (languageSelect) {
+        languageSelect.value = currentLang;
+        languageSelect.addEventListener('change', (e) => {
+            currentLang = e.target.value;
+            localStorage.setItem('appLang', currentLang);
+            applyLanguage();
+            // Re-render components with dynamic translated text
+            applyAppName(currentUser?.user_metadata?.app_name);
+            renderFolders();
+            renderRecipes();
+        });
+    }
+
+    applyLanguage(); // Execute initial
     setupEventListeners();
     applyViewState();
     await checkUser();
 }
 
 function applyAppName(name) {
-    const defaultName = "Inna´s Rezepte";
+    const defaultName = t("app_title");
     const displayName = name && name.trim() !== '' ? name.trim() : defaultName;
     if (appHeaderTitle) appHeaderTitle.textContent = displayName;
     if (loginAppTitle) loginAppTitle.textContent = displayName;
@@ -325,7 +374,7 @@ function updateFilterHeader() {
     const checked = Array.from(categoryFilterDropdown.querySelectorAll('input:checked')).map(i => i.value);
     const span = categoryFilterHeader.querySelector('span');
     if (checked.length === 0) {
-        span.textContent = 'Alle Kategorien';
+        span.textContent = t('filter_category');
     } else {
         span.textContent = checked.join(', ');
     }
@@ -468,7 +517,7 @@ function setupCategoryListeners() {
             const input = settingsCategoryList.querySelector(`.category-input[data-id="${id}"]`);
             const nameToDelete = input.dataset.original;
 
-            if (confirm(`Möchtest du die Kategorie "${nameToDelete}" wirklich löschen? Sie wird aus allen Rezepten entfernt.`)) {
+            if (confirm(t('confirm_delete_category').replace('{name}', nameToDelete))) {
                 btn.disabled = true;
                 const { error } = await sbClient.from('categories').delete().eq('id', id);
                 if (!error) {
@@ -517,13 +566,13 @@ function renderFolders() {
     folderList.innerHTML = `
         <li class="folder-item ${currentFolderId === 'all' ? 'active' : ''}" data-folder-id="all">
             <div class="folder-name-container">
-                <i class="fa-solid fa-layer-group"></i> <span>Alle Rezepte</span>
+                <i class="fa-solid fa-layer-group"></i> <span data-i18n="all_recipes">${t('all_recipes')}</span>
             </div>
         </li>
     `;
 
     // Reset Dropdown
-    recipeFolderSelect.innerHTML = '<option value="">Kein Ordner</option>';
+    recipeFolderSelect.innerHTML = `<option value="">${t('no_folder')}</option>`;
 
     if (folders) {
         folders.forEach(folder => {
@@ -596,7 +645,7 @@ function setupFolderItemListeners() {
         btn.addEventListener('click', async (e) => {
             e.stopPropagation();
             const id = btn.dataset.id;
-            if (confirm('Möchtest du diesen Ordner wirklich löschen? Zugehörige Rezepte werden NICHT gelöscht, sie landen in "Alle Rezepte".')) {
+            if (confirm(t('confirm_delete_folder'))) {
                 const { error } = await sbClient.from('folders').delete().eq('id', id);
                 if (!error) {
                     if (currentFolderId === id) currentFolderId = 'all';
@@ -604,7 +653,7 @@ function setupFolderItemListeners() {
                     await loadFolders();
                     await loadRecipes();
                 } else {
-                    alert('Fehler beim Löschen des Ordners: ' + error.message);
+                    alert(t('err_delete_folder') + error.message);
                 }
             }
         });
@@ -886,18 +935,18 @@ function setupEventListeners() {
 
         if (isLoginMode) {
             loginBox.classList.remove('register-mode');
-            authMainTitle.textContent = 'Anmelden';
-            loginSubtitle.textContent = 'Bitte melde dich an, um fortzufahren.';
-            authSubmitBtn.textContent = 'Anmelden';
-            authToggleText.textContent = 'Noch kein Konto?';
-            authToggleLink.textContent = 'Jetzt registrieren';
+            authMainTitle.textContent = t('login_title');
+            loginSubtitle.textContent = t('login_subtitle');
+            authSubmitBtn.textContent = t('btn_login');
+            authToggleText.textContent = t('no_account');
+            authToggleLink.textContent = t('btn_register');
         } else {
             loginBox.classList.add('register-mode');
-            authMainTitle.textContent = 'Registrieren';
-            loginSubtitle.textContent = 'Erstelle ein neues Konto für dein Kochbuch.';
-            authSubmitBtn.textContent = 'Konto erstellen';
-            authToggleText.textContent = 'Bereits ein Konto?';
-            authToggleLink.textContent = 'Hier anmelden';
+            authMainTitle.textContent = t('register_title');
+            loginSubtitle.textContent = t('register_subtitle');
+            authSubmitBtn.textContent = t('btn_register_submit');
+            authToggleText.textContent = t('has_account');
+            authToggleLink.textContent = t('has_account_link');
         }
     });
 
@@ -911,7 +960,7 @@ function setupEventListeners() {
 
         const origText = authSubmitBtn.textContent;
         authSubmitBtn.disabled = true;
-        authSubmitBtn.textContent = 'Lädt...';
+        authSubmitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
         let authError = null;
 
@@ -928,7 +977,7 @@ function setupEventListeners() {
             });
             authError = error;
             if (!error) {
-                alert('Registrierung erfolgreich! Je nach deinen Supabase-Einstellungen musst du evtl. noch deine E-Mail bestätigen. Falls Auto-Confirm an ist, bist du jetzt eingeloggt!');
+                alert(t('msg_register_success'));
             }
         }
 
@@ -1115,7 +1164,7 @@ function setupEventListeners() {
         recipeForm.reset();
         // Uncheck all category checkboxes
         document.querySelectorAll('#recipeCategoryCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
-        document.getElementById('modalTitle').textContent = 'Neues Rezept hinzufügen';
+        document.getElementById('modalTitle').textContent = t('add_recipe_title');
         recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
         currentRecipeImages = [];
         renderImagePreviewGrid();
@@ -1140,7 +1189,7 @@ function setupEventListeners() {
 
         viewModal.classList.add('hidden');
         editingRecipeId = recipe.id;
-        document.getElementById('modalTitle').textContent = 'Rezept bearbeiten';
+        document.getElementById('modalTitle').textContent = t('edit_recipe_title') || 'Rezept bearbeiten';
 
         // Populate Form
         document.getElementById('recipeTitle').value = recipe.title;
@@ -1185,7 +1234,7 @@ function setupEventListeners() {
     function renderImagePreviewGrid() {
         imagePreview.innerHTML = '';
         if (currentRecipeImages.length === 0) {
-            imagePreview.innerHTML = '<span>Keine Bilder ausgewählt</span>';
+            imagePreview.innerHTML = `<span>${t('no_images')}</span>`;
             return;
         }
 
@@ -1406,7 +1455,7 @@ function setupEventListeners() {
                 viewModal.classList.add('hidden');
                 currentViewRecipeId = null;
             } catch (error) {
-                alert('Fehler beim Löschen des Rezepts.');
+                alert(t('err_delete_recipe') || 'Fehler beim Löschen des Rezepts.');
                 console.error(error);
             } finally {
                 deleteBtn.disabled = false;
@@ -1490,7 +1539,7 @@ function openViewModal(recipe) {
             .join('');
         ingredientsHtml = `
             <div class="ingredients-list">
-                <h4>Zutaten</h4>
+                <h4>${t('ingredients')}</h4>
                 <ul>
                     ${ingredientsItems}
                 </ul>
@@ -1502,7 +1551,7 @@ function openViewModal(recipe) {
     if (recipe.instructions && recipe.instructions.trim() !== '') {
         instructionsHtml = `
             <div class="instructions-section">
-                <h4>Zubereitung</h4>
+                <h4>${t('instructions')}</h4>
                 <p>${recipe.instructions}</p>
             </div>
         `;
@@ -1520,7 +1569,7 @@ function openViewModal(recipe) {
             <h2 class="recipe-detail-title">${recipe.title}</h2>
             <div class="recipe-detail-meta">
                 <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
-                <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString('de-DE')}</span>
+                <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'de-DE')}</span>
             </div>
         </div>
         <div class="recipe-detail-body">

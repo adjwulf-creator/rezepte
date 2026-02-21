@@ -26,25 +26,30 @@
         <div class="header-content">
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
-                <h1 id="appHeaderTitle">Inna´s Rezepte</h1>
+                <h1 id="appHeaderTitle" data-i18n="app_title">Inna´s Rezepte</h1>
             </div>
             <div class="header-actions">
                 <div class="search-actions">
                     <div class="search-bar">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <input type="text" id="searchInput" placeholder="Suche...">
+                        <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder"
+                            placeholder="Suche...">
                     </div>
-                    <button id="mobileFoldersBtn" class="icon-btn hide-on-desktop" title="Meine Ordner">
+                    <button id="mobileFoldersBtn" class="icon-btn hide-on-desktop" data-i18n-title="folders_title"
+                        title="Meine Ordner">
                         <i class="fa-regular fa-folder-open"></i>
                     </button>
-                    <button id="mobileControlsBtn" class="icon-btn hide-on-desktop" title="Filter & Ansicht">
+                    <button id="mobileControlsBtn" class="icon-btn hide-on-desktop" data-i18n-title="tooltip_filter"
+                        title="Filter & Ansicht">
                         <i class="fa-solid fa-sliders"></i>
                     </button>
-                    <button id="settingsBtn" class="icon-btn settings-btn" title="Einstellungen">
+                    <button id="settingsBtn" class="icon-btn settings-btn" data-i18n-title="settings_title"
+                        title="Einstellungen">
                         <i class="fa-solid fa-gear"></i>
                     </button>
                     <button id="addRecipeBtn" class="primary-btn">
-                        <i class="fa-solid fa-plus"></i> <span class="hide-on-mobile">Neues Rezept</span>
+                        <i class="fa-solid fa-plus"></i> <span class="hide-on-mobile" data-i18n="add_recipe_title">Neues
+                            Rezept</span>
                     </button>
                 </div>
             </div>
@@ -56,19 +61,20 @@
     <main class="app-main main-layout">
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <h2>Meine Ordner</h2>
+                <h2 data-i18n="folders_title">Meine Ordner</h2>
                 <div style="display: flex; gap: 0.5rem;">
-                    <button id="editFoldersBtn" class="edit-folder-btn" title="Ordner bearbeiten">
+                    <button id="editFoldersBtn" class="edit-folder-btn" data-i18n-title="edit_folders"
+                        title="Ordner bearbeiten">
                         <i class="fa-solid fa-pencil"></i>
                     </button>
-                    <button id="addFolderBtn" class="add-folder-btn" title="Neuer Ordner">
+                    <button id="addFolderBtn" class="add-folder-btn" data-i18n-title="new_folder" title="Neuer Ordner">
                         <i class="fa-solid fa-plus"></i>
                     </button>
                 </div>
             </div>
             <ul id="folderList" class="folder-list">
                 <li class="folder-item active" data-folder-id="all">
-                    <i class="fa-solid fa-layer-group"></i> <span>Alle Rezepte</span>
+                    <i class="fa-solid fa-layer-group"></i> <span data-i18n="all_recipes">Alle Rezepte</span>
                 </li>
                 <!-- Dynamische Ordner kommen hier rein -->
             </ul>
@@ -77,10 +83,11 @@
         <div class="content-area" id="contentArea">
             <section class="controls" id="recipeControls">
                 <div class="control-group">
-                    <label title="Kategorie filtern"><i class="fa-solid fa-tag"></i></label>
+                    <label data-i18n-title="tooltip_filter_category" title="Kategorie filtern"><i
+                            class="fa-solid fa-tag"></i></label>
                     <div class="multi-select" id="categoryFilterContainer">
                         <div class="multi-select-header" id="categoryFilterHeader">
-                            <span>Alle Kategorien</span>
+                            <span data-i18n="filter_category">Alle Kategorien</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </div>
                         <div class="multi-select-dropdown hidden" id="categoryFilterDropdown">
@@ -89,36 +96,45 @@
                     </div>
                 </div>
                 <div class="control-group">
-                    <label title="Sortieren nach"><i class="fa-solid fa-arrow-down-short-wide"></i></label>
+                    <label data-i18n-title="tooltip_sort" title="Sortieren nach"><i
+                            class="fa-solid fa-arrow-down-short-wide"></i></label>
                     <div class="multi-select" id="sortSelectContainer">
                         <div class="multi-select-header" id="sortSelectHeader">
-                            <span>Neueste zuerst</span>
+                            <span data-i18n="sort_newest">Neueste zuerst</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </div>
                         <div class="multi-select-dropdown hidden" id="sortSelectDropdown">
-                            <label class="multi-select-option active" data-value="newest"><span>Neueste
+                            <label class="multi-select-option active" data-value="newest"><span
+                                    data-i18n="sort_newest">Neueste
                                     zuerst</span></label>
-                            <label class="multi-select-option" data-value="manual"><span>Eigene
+                            <label class="multi-select-option" data-value="manual"><span data-i18n="sort_manual">Eigene
                                     Reihenfolge</span></label>
-                            <label class="multi-select-option" data-value="oldest"><span>Älteste zuerst</span></label>
-                            <label class="multi-select-option" data-value="az"><span>A-Z</span></label>
-                            <label class="multi-select-option" data-value="za"><span>Z-A</span></label>
+                            <label class="multi-select-option" data-value="oldest"><span data-i18n="sort_oldest">Älteste
+                                    zuerst</span></label>
+                            <label class="multi-select-option" data-value="az"><span
+                                    data-i18n="sort_az">A-Z</span></label>
+                            <label class="multi-select-option" data-value="za"><span
+                                    data-i18n="sort_za">Z-A</span></label>
                         </div>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label title="Ansicht ändern"><i class="fa-solid fa-table-cells-large"></i></label>
+                    <label data-i18n-title="tooltip_view" title="Ansicht ändern"><i
+                            class="fa-solid fa-table-cells-large"></i></label>
                     <div class="multi-select" id="viewModeContainer">
                         <div class="multi-select-header" id="viewModeHeader">
-                            <span>Große Kacheln</span>
+                            <span data-i18n="view_large">Große Kacheln</span>
                             <i class="fa-solid fa-chevron-down"></i>
                         </div>
                         <div class="multi-select-dropdown hidden" id="viewModeDropdown">
-                            <label class="multi-select-option active" data-value="grid"><span>Große
+                            <label class="multi-select-option active" data-value="grid"><span
+                                    data-i18n="view_large">Große
                                     Kacheln</span></label>
-                            <label class="multi-select-option" data-value="small-grid"><span>Kleine
+                            <label class="multi-select-option" data-value="small-grid"><span
+                                    data-i18n="view_small">Kleine
                                     Kacheln</span></label>
-                            <label class="multi-select-option" data-value="list"><span>Liste</span></label>
+                            <label class="multi-select-option" data-value="list"><span
+                                    data-i18n="view_list">Liste</span></label>
                         </div>
                     </div>
                 </div>
@@ -130,7 +146,7 @@
 
             <div id="emptyState" class="empty-state hidden">
                 <i class="fa-solid fa-book-open"></i>
-                <p>Dein Kochbuch ist noch leer. Füge ein neues Rezept hinzu!</p>
+                <p data-i18n="no_recipes">Dein Kochbuch ist noch leer. Füge ein neues Rezept hinzu!</p>
             </div>
         </div>
     </main>
@@ -139,37 +155,39 @@
     <div id="recipeModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Neues Rezept hinzufügen</h2>
+                <h2 id="modalTitle" data-i18n="add_recipe_title">Neues Rezept hinzufügen</h2>
                 <button class="close-btn" id="closeModalBtn"><i class="fa-solid fa-times"></i></button>
             </div>
             <form id="recipeForm">
                 <input type="hidden" id="recipeId">
 
                 <div class="form-group">
-                    <label for="recipeTitle">Titel (Pflichtfeld)</label>
-                    <input type="text" id="recipeTitle" required placeholder="z.B. Ratatouille">
+                    <label for="recipeTitle" data-i18n="recipe_title_label">Titel (Pflichtfeld)</label>
+                    <input type="text" id="recipeTitle" required data-i18n-placeholder="recipe_title_placeholder"
+                        placeholder="z.B. Ratatouille">
                 </div>
 
                 <div class="form-group">
-                    <label for="recipeFolder">Ordner</label>
+                    <label for="recipeFolder" data-i18n="recipe_folder_label">Ordner</label>
                     <select id="recipeFolder">
-                        <option value="">Kein Ordner</option>
+                        <option value="" data-i18n="no_folder">Kein Ordner</option>
                         <!-- Dynamic Folders -->
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>Kategorie(n)</label>
+                    <label data-i18n="recipe_category_label">Kategorie(n)</label>
                     <div id="recipeCategoryCheckboxes" class="checkbox-grid">
                         <!-- Dynamic checkboxes via JS -->
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Bilder</label>
+                    <label data-i18n="recipe_image_label">Bilder</label>
                     <div class="file-upload-container">
                         <label for="recipeImage" class="file-upload-btn">
-                            <i class="fa-solid fa-camera"></i> Bilder auswählen
+                            <i class="fa-solid fa-camera"></i> <span data-i18n="recipe_image_btn">Bilder
+                                auswählen</span>
                         </label>
                         <input type="file" id="recipeImage" accept="image/*" multiple style="display: none;">
                     </div>
@@ -180,20 +198,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="recipeIngredients">Zutaten (Eine pro Zeile)</label>
-                    <textarea id="recipeIngredients" rows="5"
+                    <label for="recipeIngredients" data-i18n="recipe_ingredients_label">Zutaten (Eine pro Zeile)</label>
+                    <textarea id="recipeIngredients" rows="5" data-i18n-placeholder="recipe_ingredients_placeholder"
                         placeholder="- 2 Zucchini&#10;- 1 Aubergine&#10;- 3 Tomaten"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="recipeInstructions">Zubereitung</label>
-                    <textarea id="recipeInstructions" rows="6"
+                    <label for="recipeInstructions" data-i18n="recipe_instructions_label">Zubereitung</label>
+                    <textarea id="recipeInstructions" rows="6" data-i18n-placeholder="recipe_instructions_placeholder"
                         placeholder="Das Gemüse in Scheiben schneiden..."></textarea>
                 </div>
 
                 <div class="modal-actions">
-                    <button type="button" class="secondary-btn" id="cancelBtn">Abbrechen</button>
-                    <button type="submit" class="primary-btn">Speichern</button>
+                    <button type="button" class="secondary-btn" id="cancelBtn" data-i18n="btn_cancel">Abbrechen</button>
+                    <button type="submit" class="primary-btn" data-i18n="btn_save_recipe">Speichern</button>
                 </div>
             </form>
         </div>
@@ -207,8 +225,10 @@
                 <!-- Recipe details injected here -->
             </div>
             <div class="modal-actions" style="justify-content: space-between;">
-                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> Bearbeiten</button>
-                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> Löschen</button>
+                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span
+                        data-i18n="edit_recipe">Bearbeiten</span></button>
+                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span
+                        data-i18n="delete_recipe">Löschen</span></button>
             </div>
         </div>
     </div>
@@ -217,17 +237,20 @@
     <div id="folderModal" class="modal hidden">
         <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
-                <h2>Neuer Ordner</h2>
+                <h2 data-i18n="folder_modal_title">Neuer Ordner</h2>
                 <button class="close-btn" id="closeFolderModalBtn"><i class="fa-solid fa-times"></i></button>
             </div>
             <form id="folderForm">
                 <div class="form-group">
-                    <label for="folderName">Ordnername</label>
-                    <input type="text" id="folderName" required placeholder="z.B. Lieblingskuchen">
+                    <label for="folderName" data-i18n="folder_name_label">Ordnername</label>
+                    <input type="text" id="folderName" required data-i18n-placeholder="folder_name_placeholder"
+                        placeholder="z.B. Lieblingskuchen">
                 </div>
                 <div class="modal-actions" style="margin-top: 2rem;">
-                    <button type="button" class="secondary-btn" id="cancelFolderModalBtn">Abbrechen</button>
-                    <button type="submit" class="primary-btn" id="saveFolderBtn">Erstellen</button>
+                    <button type="button" class="secondary-btn" id="cancelFolderModalBtn"
+                        data-i18n="btn_cancel">Abbrechen</button>
+                    <button type="submit" class="primary-btn" id="saveFolderBtn"
+                        data-i18n="btn_create_folder">Erstellen</button>
                 </div>
             </form>
         </div>
@@ -237,51 +260,67 @@
     <div id="settingsModal" class="modal hidden">
         <div class="modal-content settings-modal-content">
             <div class="modal-header">
-                <h2>Einstellungen</h2>
+                <h2 data-i18n="settings_title">Einstellungen</h2>
                 <button class="close-btn" id="closeSettingsModalBtn"><i class="fa-solid fa-times"></i></button>
             </div>
 
             <div class="settings-tabs">
-                <button class="tab-btn active" data-tab="profileTab">Profil</button>
-                <button class="tab-btn" data-tab="categoriesTab">Kategorien</button>
+                <button class="tab-btn active" data-tab="profileTab" data-i18n="tab_profile">Profil</button>
+                <button class="tab-btn" data-tab="categoriesTab" data-i18n="tab_categories">Kategorien</button>
             </div>
 
             <div class="tab-content active" id="profileTab">
-                <h3>App Name ändern</h3>
-                <form id="appNameForm" style="margin-bottom: 2rem;">
+                <h3 data-i18n="setting_language">Sprache / Мова</h3>
+                <form id="languageForm" style="margin-bottom: 2rem;">
                     <div class="form-group">
-                        <label for="appNameInput">Name (z.B. Mein Kochbuch)</label>
-                        <input type="text" id="appNameInput" required>
+                        <select id="languageSelect">
+                            <option value="de">Deutsch</option>
+                            <option value="ua">Українська</option>
+                        </select>
                     </div>
-                    <p id="appNameMessage" class="form-message hidden"></p>
-                    <button type="submit" class="primary-btn" id="saveAppNameBtn">Name speichern</button>
                 </form>
 
                 <hr style="margin-bottom: 2rem; opacity: 0.2;">
 
-                <h3>Passwort ändern</h3>
+                <h3 data-i18n="setting_app_name">App Name ändern</h3>
+                <form id="appNameForm" style="margin-bottom: 2rem;">
+                    <div class="form-group">
+                        <label for="appNameInput" data-i18n="app_name_label">Name (z.B. Mein Kochbuch)</label>
+                        <input type="text" id="appNameInput" required>
+                    </div>
+                    <p id="appNameMessage" class="form-message hidden"></p>
+                    <button type="submit" class="primary-btn" id="saveAppNameBtn" data-i18n="btn_save_app_name">Name
+                        speichern</button>
+                </form>
+
+                <hr style="margin-bottom: 2rem; opacity: 0.2;">
+
+                <h3 data-i18n="setting_password">Passwort ändern</h3>
                 <form id="passwordForm">
                     <div class="form-group">
-                        <label for="newPassword">Neues Passwort</label>
+                        <label for="newPassword" data-i18n="password_label">Neues Passwort</label>
                         <input type="password" id="newPassword" required minlength="6"
-                            placeholder="Mindestens 6 Zeichen">
+                            data-i18n-placeholder="password_placeholder" placeholder="Mindestens 6 Zeichen">
                     </div>
                     <p id="passwordMessage" class="form-message hidden"></p>
-                    <button type="submit" class="primary-btn" id="savePasswordBtn">Passwort speichern</button>
+                    <button type="submit" class="primary-btn" id="savePasswordBtn"
+                        data-i18n="btn_save_password">Passwort speichern</button>
                 </form>
 
                 <hr style="margin-top: 2rem; margin-bottom: 2rem; opacity: 0.2;">
 
                 <button id="logoutBtn" class="danger-btn" style="width: 100%; justify-content: center;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Abmelden
+                    <i class="fa-solid fa-right-from-bracket"></i> <span data-i18n="btn_logout">Abmelden</span>
                 </button>
             </div>
 
             <div class="tab-content" id="categoriesTab">
-                <h3>Kategorien verwalten</h3>
+                <h3 data-i18n="setting_manage_categories">Kategorien verwalten</h3>
                 <form id="categoryForm" class="add-category-form">
-                    <input type="text" id="newCategoryName" required placeholder="Neue Kategorie...">
-                    <button type="submit" class="primary-btn"><i class="fa-solid fa-plus"></i> Hinzufügen</button>
+                    <input type="text" id="newCategoryName" required data-i18n-placeholder="new_category_placeholder"
+                        placeholder="Neue Kategorie...">
+                    <button type="submit" class="primary-btn"><i class="fa-solid fa-plus"></i> <span
+                            data-i18n="btn_add_category">Hinzufügen</span></button>
                 </form>
                 <ul id="settingsCategoryList" class="settings-list">
                     <!-- Dynamic categories injected here -->
@@ -295,27 +334,27 @@
         <div class="login-box">
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
-                <h2 id="loginAppTitle">Inna´s Rezepte</h2>
+                <h2 id="loginAppTitle" data-i18n="app_title">Inna´s Rezepte</h2>
             </div>
 
-            <h2 id="authMainTitle" class="auth-main-title">Anmelden</h2>
+            <h2 id="authMainTitle" class="auth-main-title" data-i18n="login_title">Anmelden</h2>
             <p class="login-subtitle">Bitte melde dich an, um fortzufahren.</p>
 
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginEmail">E-Mail</label>
+                    <label for="loginEmail" data-i18n="auth_email">E-Mail</label>
                     <input type="email" id="loginEmail" required placeholder="deine@email.de">
                 </div>
                 <div class="form-group">
-                    <label for="loginPassword">Passwort</label>
+                    <label for="loginPassword" data-i18n="auth_password">Passwort</label>
                     <input type="password" id="loginPassword" required placeholder="••••••••">
                 </div>
                 <div id="loginError" class="login-error hidden">Fehler beim Anmelden.</div>
                 <button type="submit" id="authSubmitBtn" class="primary-btn login-btn"
-                    style="width: 100%; justify-content: center;">Anmelden</button>
+                    style="width: 100%; justify-content: center;" data-i18n="btn_login">Anmelden</button>
                 <div class="auth-toggle">
-                    <span id="authToggleText">Noch kein Konto?</span>
-                    <a href="#" id="authToggleLink">Jetzt registrieren</a>
+                    <span id="authToggleText" data-i18n="no_account">Noch kein Konto?</span>
+                    <a href="#" id="authToggleLink" data-i18n="btn_register">Jetzt registrieren</a>
                 </div>
             </form>
         </div>
@@ -332,6 +371,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="translations.js?v=1"></script>
     <script src="app.js?v=24"></script>
 </body>
 

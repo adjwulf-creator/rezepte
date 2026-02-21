@@ -1,0 +1,222 @@
+window.translations = {
+    de: {
+        // Sidebar & Navigation
+        app_title: "Inna´s Rezepte",
+        search_placeholder: "Suche...",
+        folders_title: "Meine Ordner",
+        all_recipes: "Alle Rezepte",
+        edit_folders: "Ordner bearbeiten",
+        new_folder: "Neuer Ordner",
+
+        // Controls
+        filter_category: "Alle Kategorien",
+        sort_newest: "Neueste zuerst",
+        sort_manual: "Eigene Reihenfolge",
+        sort_oldest: "Älteste zuerst",
+        sort_az: "A-Z",
+        sort_za: "Z-A",
+        view_large: "Große Kacheln",
+        view_small: "Kleine Kacheln",
+        view_list: "Liste",
+
+        // Empty States & Badges
+        no_recipes: "Keine Rezepte gefunden.",
+        new_badge: "NEU",
+
+        // Recipe Modal (View)
+        prep_time: "Zubereitungszeit",
+        portions: "Portionen",
+        ingredients: "Zutaten",
+        instructions: "Zubereitung",
+        edit_recipe: "Bearbeiten",
+        delete_recipe: "Löschen",
+
+        // Recipe Form Modal (Add/Edit)
+        add_recipe_title: "Neues Rezept",
+        edit_recipe_title: "Rezept bearbeiten",
+        recipe_title_label: "Titel",
+        recipe_title_placeholder: "z.B. Käsekuchen",
+        recipe_category_label: "Kategorien",
+        recipe_folder_label: "Ordner",
+        no_folder: "Kein Ordner",
+        recipe_time_label: "ZZ (Minuten)",
+        recipe_portions_label: "Portionen",
+        recipe_ingredients_label: "Zutaten (eine pro Zeile)",
+        recipe_ingredients_placeholder: "z.B. 200g Mehl\n2 Eier",
+        recipe_instructions_label: "Zubereitung",
+        recipe_instructions_placeholder: "Schritt für Schritt...",
+        recipe_image_label: "Bild hochladen",
+        recipe_image_btn: "Bild auswählen",
+        btn_cancel: "Abbrechen",
+        btn_save_recipe: "Speichern",
+
+        // Folder Modal
+        folder_modal_title: "Neuer Ordner",
+        folder_name_label: "Ordnername",
+        folder_name_placeholder: "z.B. Lieblingskuchen",
+        btn_create_folder: "Erstellen",
+
+        // Settings Modal
+        settings_title: "Einstellungen",
+        tab_profile: "Profil",
+        tab_categories: "Kategorien",
+        setting_language: "Sprache / Мова",
+        setting_app_name: "App Name ändern",
+        app_name_label: "Name (z.B. Mein Kochbuch)",
+        btn_save_app_name: "Name speichern",
+        setting_password: "Passwort ändern",
+        password_label: "Neues Passwort",
+        password_placeholder: "Mindestens 6 Zeichen",
+        btn_save_password: "Passwort speichern",
+        btn_logout: "Abmelden",
+        setting_manage_categories: "Kategorien verwalten",
+        new_category_placeholder: "Neue Kategorie...",
+        btn_add_category: "Hinzufügen",
+        btn_rename: "Umbenennen",
+        delete_category_title: "Kategorie löschen",
+
+        tooltip_filter: "Filter & Ansicht",
+        tooltip_filter_category: "Kategorie filtern",
+        tooltip_sort: "Sortieren nach",
+        tooltip_view: "Ansicht ändern",
+        no_images: "Keine Bilder ausgewählt",
+
+        // Auth / Login
+        login_title: "Willkommen zurück",
+        register_title: "Neu registrieren",
+        auth_email: "E-Mail",
+        auth_password: "Passwort",
+        btn_login: "Anmelden",
+        btn_register: "Registrieren",
+        no_account: "Noch keinen Account?",
+        has_account: "Bereits einen Account?",
+        login_subtitle: "Bitte melde dich an, um fortzufahren.",
+        register_subtitle: "Erstelle ein neues Konto für dein Kochbuch.",
+        btn_register_submit: "Konto erstellen",
+        has_account_link: "Hier anmelden",
+
+        // JS Alerts & Confirms
+        confirm_delete_recipe: "Möchtest du dieses Rezept wirklich löschen?",
+        confirm_delete_folder: "Möchtest du diesen Ordner wirklich löschen? Zugehörige Rezepte werden NICHT gelöscht, sie landen in 'Alle Rezepte'.",
+        confirm_delete_category: "Möchtest du die Kategorie '{name}' wirklich löschen? Sie wird aus allen bestehenden Rezepten entfernt.",
+        prompt_rename_category: "Neuer Name für Kategorie '{name}':",
+        err_delete_folder: "Fehler beim Löschen des Ordners: ",
+        err_upload_image: "Fehler beim Upload: ",
+        err_save_recipe: "Fehler beim Speichern des Rezepts: ",
+        err_category_exists: "Diese Kategorie existiert bereits!",
+        msg_recipe_saved: "Rezept erfolgreich gespeichert!",
+        msg_profile_saved: "Profil aktualisiert!",
+        msg_password_saved: "Passwort erfolgreich geändert!",
+        msg_register_success: "Registrierung erfolgreich! Je nach deinen Supabase-Einstellungen musst du evtl. noch deine E-Mail bestätigen. Falls Auto-Confirm an ist, bist du jetzt eingeloggt!"
+    },
+    ua: {
+        // Sidebar & Navigation
+        app_title: "Рецепти Інни",
+        search_placeholder: "Пошук...",
+        folders_title: "Мої папки",
+        all_recipes: "Всі рецепти",
+        edit_folders: "Редагувати папки",
+        new_folder: "Нова папка",
+
+        // Controls
+        filter_category: "Всі категорії",
+        sort_newest: "Спочатку нові",
+        sort_manual: "Власний порядок",
+        sort_oldest: "Спочатку старі",
+        sort_az: "А-Я",
+        sort_za: "Я-А",
+        view_large: "Великі плитки",
+        view_small: "Малі плитки",
+        view_list: "Список",
+
+        // Empty States & Badges
+        no_recipes: "Рецептів не знайдено.",
+        new_badge: "НОВИЙ",
+
+        // Recipe Modal (View)
+        prep_time: "Час приготування",
+        portions: "Порції",
+        ingredients: "Інгредієнти",
+        instructions: "Приготування",
+        edit_recipe: "Редагувати",
+        delete_recipe: "Видалити",
+
+        // Recipe Form Modal (Add/Edit)
+        add_recipe_title: "Новий рецепт",
+        edit_recipe_title: "Редагувати рецепт",
+        recipe_title_label: "Назва",
+        recipe_title_placeholder: "напр. Сирник",
+        recipe_category_label: "Категорії",
+        recipe_folder_label: "Папка",
+        no_folder: "Без папки",
+        recipe_time_label: "Час (хвилини)",
+        recipe_portions_label: "Порції",
+        recipe_ingredients_label: "Інгредієнти (по одному на рядок)",
+        recipe_ingredients_placeholder: "напр. 200г борошна\n2 яйця",
+        recipe_instructions_label: "Приготування",
+        recipe_instructions_placeholder: "Крок за кроком...",
+        recipe_image_label: "Завантажити фото",
+        recipe_image_btn: "Вибрати фото",
+        btn_cancel: "Скасувати",
+        btn_save_recipe: "Зберегти",
+
+        // Folder Modal
+        folder_modal_title: "Нова папка",
+        folder_name_label: "Назва папки",
+        folder_name_placeholder: "напр. Улюблені торти",
+        btn_create_folder: "Створити",
+
+        // Settings Modal
+        settings_title: "Налаштування",
+        tab_profile: "Профіль",
+        tab_categories: "Категорії",
+        setting_language: "Мова / Sprache",
+        setting_app_name: "Змінити назву додатку",
+        app_name_label: "Назва (напр. Моя кулінарна книга)",
+        btn_save_app_name: "Зберегти назву",
+        setting_password: "Змінити пароль",
+        password_label: "Новий пароль",
+        password_placeholder: "Мінімум 6 символів",
+        btn_save_password: "Зберегти пароль",
+        btn_logout: "Вийти",
+        setting_manage_categories: "Керування категоріями",
+        new_category_placeholder: "Нова категорія...",
+        btn_add_category: "Додати",
+        btn_rename: "Перейменувати",
+        delete_category_title: "Видалити категорію",
+
+        tooltip_filter: "Фільтр та вигляд",
+        tooltip_filter_category: "Фільтр категорій",
+        tooltip_sort: "Сортувати за",
+        tooltip_view: "Змінити вигляд",
+        no_images: "Немає вибраних фото",
+
+        // Auth / Login
+        login_title: "З поверненням",
+        register_title: "Реєстрація",
+        auth_email: "Ел. пошта",
+        auth_password: "Пароль",
+        btn_login: "Увійти",
+        btn_register: "Зареєструватися",
+        no_account: "Ще не маєте акаунту?",
+        has_account: "Вже є акаунт?",
+        login_subtitle: "Увійдіть, щоб продовжити.",
+        register_subtitle: "Створіть новий акаунт для кулінарної книги.",
+        btn_register_submit: "Створити акаунт",
+        has_account_link: "Увійти тут",
+
+        // JS Alerts & Confirms
+        confirm_delete_recipe: "Ви дійсно хочете видалити цей рецепт?",
+        confirm_delete_folder: "Ви дійсно хочете видалити цю папку? Відповідні рецепти НЕ будуть видалені, вони перейдуть у розділ 'Всі рецепти'.",
+        confirm_delete_category: "Ви дійсно хочете видалити категорію '{name}'? Вона буде видалена зі всіх існуючих рецептів.",
+        prompt_rename_category: "Нова назва для категорії '{name}':",
+        err_delete_folder: "Помилка видалення папки: ",
+        err_upload_image: "Помилка завантаження: ",
+        err_save_recipe: "Помилка збереження рецепту: ",
+        err_category_exists: "Ця категорія вже існує!",
+        msg_recipe_saved: "Рецепт успішно збережено!",
+        msg_profile_saved: "Профіль оновлено!",
+        msg_password_saved: "Пароль успішно змінено!",
+        msg_register_success: "Реєстрація успішна! Залежно від налаштувань Supabase, можливо, вам доведеться підтвердити електронну пошту. Якщо увімкнено Auto-Confirm, ви вже увійшли!"
+    }
+};
