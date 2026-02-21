@@ -80,7 +80,16 @@
             </ul>
         </aside>
 
+
         <div class="content-area" id="contentArea">
+            <!-- Active Folder Breadcrumb -->
+            <div id="activeFolderDisplay" class="active-folder-display hidden">
+                <span class="breadcrumb-link" id="breadcrumbHome" data-i18n="folders_title">Meine Ordner</span>
+                <i class="fa-solid fa-chevron-right breadcrumb-separator"></i>
+                <i class="fa-regular fa-folder-open folder-icon"></i>
+                <span id="activeFolderName"></span>
+            </div>
+
             <section class="controls" id="recipeControls">
                 <div class="control-group">
                     <label data-i18n-title="tooltip_filter_category" title="Kategorie filtern"><i
@@ -139,12 +148,6 @@
                     </div>
                 </div>
             </section>
-
-            <!-- Active Folder Breadcrumb -->
-            <div id="activeFolderDisplay" class="active-folder-display hidden">
-                <i class="fa-regular fa-folder-open"></i>
-                <span id="activeFolderName"></span>
-            </div>
 
             <section class="recipe-grid" id="recipeGrid">
                 <!-- Recipe Cards will be injected here via JavaScript -->

@@ -690,7 +690,7 @@ function renderFolders() {
         if (currentFolderId === 'all') {
             activeFolderDisplay.classList.add('hidden');
         } else {
-            const currentFolder = folders.find(f => f.id === currentFolderId);
+            const currentFolder = folders.find(f => String(f.id) === String(currentFolderId));
             if (currentFolder) {
                 activeFolderName.textContent = currentFolder.name;
                 activeFolderDisplay.classList.remove('hidden');
@@ -740,6 +740,20 @@ function setupFolderItemListeners() {
             }
         });
     });
+
+    // Breadcrumb Home Click
+    const breadcrumbHome = document.getElementById('breadcrumbHome');
+    if (breadcrumbHome) {
+        // Remove old listeners to prevent duplicates on re-render
+        const newBreadcrumbHome = breadcrumbHome.cloneNode(true);
+        breadcrumbHome.parentNode.replaceChild(newBreadcrumbHome, breadcrumbHome);
+        newBreadcrumbHome.addEventListener('click', () => {
+            if (isFolderEditMode) return;
+            currentFolderId = 'all';
+            renderFolders();
+            renderRecipes();
+        });
+    }
 
     // Delete Folder clicks
     const deleteBtns = folderList.querySelectorAll('.delete-folder-btn');
