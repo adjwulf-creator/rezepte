@@ -618,7 +618,7 @@ function renderRecipes() {
                 <div class="card-content">
                     <span class="recipe-tag">${recipe.category}</span>
                     <h3>${recipe.title}</h3>
-                    <p style="white-space: pre-line; margin-top: 0.5rem; color: var(--color-text-light); line-height: 1.5; font-size: 0.95rem;">${recipe.ingredients}</p>
+                    <p class="recipe-description">${recipe.ingredients}</p>
                 </div>
             `;
 
