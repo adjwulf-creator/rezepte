@@ -61,7 +61,9 @@ const imagePreview = document.getElementById('imagePreview');
 const recipeImageInput = document.getElementById('recipeImage');
 
 const searchInput = document.getElementById('searchInput');
-const categoryFilter = document.getElementById('categoryFilter');
+const categoryFilterContainer = document.getElementById('categoryFilterContainer');
+const categoryFilterHeader = document.getElementById('categoryFilterHeader');
+const categoryFilterDropdown = document.getElementById('categoryFilterDropdown');
 const sortSelect = document.getElementById('sortSelect');
 
 const viewModal = document.getElementById('viewModal');
@@ -253,26 +255,65 @@ async function loadCategories() {
 }
 
 function renderCategories() {
-    // Populate Filter Dropdown
-    categoryFilter.innerHTML = '<option value="all">Alle Kategorien</option>';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.name;
-        option.textContent = cat.name;
-        categoryFilter.appendChild(option);
-    });
+    // Populate Filter multi-select dropdown
+    if (categoryFilterDropdown) {
+        categoryFilterDropdown.innerHTML = '';
+        categories.forEach(cat => {
+            const label = document.createElement('label');
+            label.className = 'multi-select-option';
+            label.innerHTML = `<input type="checkbox" value="${cat.name}"><span>${cat.name}</span>`;
+            label.querySelector('input').addEventListener('change', () => {
+                updateFilterHeader();
+                renderRecipes();
+            });
+            categoryFilterDropdown.appendChild(label);
+        });
+    }
 
-    // Populate Recipe Form Dropdown
-    const recipeCategorySelect = document.getElementById('recipeCategory');
-    recipeCategorySelect.innerHTML = '';
-    categories.forEach(cat => {
-        const option = document.createElement('option');
-        option.value = cat.name;
-        option.textContent = cat.name;
-        recipeCategorySelect.appendChild(option);
-    });
+    // Toggle filter dropdown open/close
+    if (categoryFilterHeader && !categoryFilterHeader._hasListener) {
+        categoryFilterHeader._hasListener = true;
+        categoryFilterHeader.addEventListener('click', (e) => {
+            e.stopPropagation();
+            categoryFilterDropdown.classList.toggle('hidden');
+        });
+        // Close when clicking outside
+        document.addEventListener('click', (e) => {
+            if (categoryFilterContainer && !categoryFilterContainer.contains(e.target)) {
+                categoryFilterDropdown.classList.add('hidden');
+            }
+        });
+    }
+
+    // Populate Recipe Form checkbox grid
+    const checkboxGrid = document.getElementById('recipeCategoryCheckboxes');
+    if (checkboxGrid) {
+        checkboxGrid.innerHTML = '';
+        categories.forEach(cat => {
+            const label = document.createElement('label');
+            const id = `cat-cb-${cat.name.replace(/\s+/g, '-')}`;
+            label.innerHTML = `<input type="checkbox" id="${id}" value="${cat.name}"><span>${cat.name}</span>`;
+            checkboxGrid.appendChild(label);
+        });
+    }
 
     renderSettingsCategoryList();
+}
+
+function updateFilterHeader() {
+    if (!categoryFilterHeader) return;
+    const checked = Array.from(categoryFilterDropdown.querySelectorAll('input:checked')).map(i => i.value);
+    const span = categoryFilterHeader.querySelector('span');
+    if (checked.length === 0) {
+        span.textContent = 'Alle Kategorien';
+    } else {
+        span.textContent = checked.join(', ');
+    }
+}
+
+function getSelectedFilterCategories() {
+    if (!categoryFilterDropdown) return [];
+    return Array.from(categoryFilterDropdown.querySelectorAll('input:checked')).map(i => i.value);
 }
 
 function renderSettingsCategoryList() {
@@ -323,12 +364,28 @@ function setupCategoryListeners() {
 
             btn.disabled = true;
 
-            // Update category
+            // Update category name in categories table
             const { error } = await sbClient.from('categories').update({ name: newName }).eq('id', id);
 
             if (!error) {
-                // Cascade update to recipes
-                await sbClient.from('recipes').update({ category: newName }).eq('category', oldName);
+                // Cascade update: replace oldName within comma-separated category strings
+                const { data: affectedRecipes } = await sbClient
+                    .from('recipes')
+                    .select('id, category')
+                    .eq('user_id', currentUser.id);
+
+                if (affectedRecipes) {
+                    const updates = affectedRecipes
+                        .filter(r => r.category && r.category.split(',').map(c => c.trim()).includes(oldName))
+                        .map(r => ({
+                            id: r.id,
+                            category: r.category.split(',').map(c => c.trim() === oldName ? newName : c.trim()).join(',')
+                        }));
+                    for (const upd of updates) {
+                        await sbClient.from('recipes').update({ category: upd.category }).eq('id', upd.id);
+                    }
+                }
+
                 await loadCategories();
                 await loadRecipes();
             } else {
@@ -342,12 +399,32 @@ function setupCategoryListeners() {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
             const input = settingsCategoryList.querySelector(`.category-input[data-id="${id}"]`);
+            const nameToDelete = input.dataset.original;
 
-            if (confirm(`Möchtest du die Kategorie "${input.dataset.original}" wirklich löschen? Zugehörige Rezepte behalten den Text, können aber nicht mehr gefiltert werden, bis du sie einer neuen Kategorie zuweist.`)) {
+            if (confirm(`Möchtest du die Kategorie "${nameToDelete}" wirklich löschen? Sie wird aus allen Rezepten entfernt.`)) {
                 btn.disabled = true;
                 const { error } = await sbClient.from('categories').delete().eq('id', id);
                 if (!error) {
+                    // Remove deleted category from all recipe category strings
+                    const { data: affectedRecipes } = await sbClient
+                        .from('recipes')
+                        .select('id, category')
+                        .eq('user_id', currentUser.id);
+
+                    if (affectedRecipes) {
+                        const updates = affectedRecipes
+                            .filter(r => r.category && r.category.split(',').map(c => c.trim()).includes(nameToDelete))
+                            .map(r => ({
+                                id: r.id,
+                                category: r.category.split(',').map(c => c.trim()).filter(c => c !== nameToDelete).join(',')
+                            }));
+                        for (const upd of updates) {
+                            await sbClient.from('recipes').update({ category: upd.category }).eq('id', upd.id);
+                        }
+                    }
+
                     await loadCategories();
+                    await loadRecipes();
                 } else {
                     alert('Fehler beim Löschen: ' + error.message);
                     btn.disabled = false;
@@ -569,14 +646,17 @@ function setupFolderItemListeners() {
 // Render the grid based on current filters and search
 function renderRecipes() {
     const searchTerm = searchInput.value.toLowerCase();
-    const category = categoryFilter.value;
+    const selectedCategories = getSelectedFilterCategories();
     const sortBy = sortSelect.value;
 
     // Filter
     let filteredRecipes = recipes.filter(recipe => {
         const matchesSearch = recipe.title.toLowerCase().includes(searchTerm) ||
-            recipe.ingredients.toLowerCase().includes(searchTerm);
-        const matchesCategory = category === 'all' || recipe.category === category;
+            (recipe.ingredients || '').toLowerCase().includes(searchTerm);
+        // AND logic: recipe must contain ALL selected filter categories
+        const recipeCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
+        const matchesCategory = selectedCategories.length === 0 ||
+            selectedCategories.every(sel => recipeCategories.includes(sel));
         const matchesFolder = currentFolderId === 'all' || String(recipe.folder_id) === String(currentFolderId);
         return matchesSearch && matchesCategory && matchesFolder;
     });
@@ -611,13 +691,18 @@ function renderRecipes() {
                 ? `<img src="${recipe.imageData}" alt="${recipe.title}">`
                 : `<i class="fa-solid fa-utensils"></i>`;
 
+            const recipeCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
+            const tagsHtml = recipeCategories.length > 0
+                ? `<div class="recipe-tags-container">${recipeCategories.map(c => `<span class="recipe-tag"><i class="fa-solid fa-tag"></i> ${c}</span>`).join('')}</div>`
+                : '';
+
             card.innerHTML = `
                 <div class="card-img-container">
                     ${imageHtml}
                 </div>
                 <div class="card-content">
                     <h3>${recipe.title}</h3>
-                    <span class="recipe-tag"><i class="fa-solid fa-tag"></i> ${recipe.category}</span>
+                    ${tagsHtml}
                     <p class="recipe-description">${recipe.ingredients}</p>
                 </div>
             `;
@@ -962,6 +1047,8 @@ function setupEventListeners() {
     addRecipeBtn.addEventListener('click', () => {
         editingRecipeId = null;
         recipeForm.reset();
+        // Uncheck all category checkboxes
+        document.querySelectorAll('#recipeCategoryCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         document.getElementById('modalTitle').textContent = 'Neues Rezept hinzufügen';
         recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
         currentRecipeImages = [];
@@ -991,7 +1078,11 @@ function setupEventListeners() {
 
         // Populate Form
         document.getElementById('recipeTitle').value = recipe.title;
-        document.getElementById('recipeCategory').value = recipe.category;
+        // Pre-check the categories for this recipe
+        const savedCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
+        document.querySelectorAll('#recipeCategoryCheckboxes input[type="checkbox"]').forEach(cb => {
+            cb.checked = savedCategories.includes(cb.value);
+        });
         document.getElementById('recipeFolder').value = recipe.folder_id || '';
         document.getElementById('recipeIngredients').value = recipe.ingredients;
         document.getElementById('recipeInstructions').value = recipe.instructions;
@@ -1136,7 +1227,8 @@ function setupEventListeners() {
         e.preventDefault();
 
         const title = document.getElementById('recipeTitle').value;
-        const category = document.getElementById('recipeCategory').value;
+        const checkedBoxes = document.querySelectorAll('#recipeCategoryCheckboxes input:checked');
+        const category = Array.from(checkedBoxes).map(cb => cb.value).join(',');
         const folder_id = document.getElementById('recipeFolder').value || null;
         const ingredients = document.getElementById('recipeIngredients').value;
         const instructions = document.getElementById('recipeInstructions').value;
@@ -1350,13 +1442,18 @@ function openViewModal(recipe) {
         `;
     }
 
+    const viewCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
+    const viewTagsHtml = viewCategories.length > 0
+        ? viewCategories.map(c => `<span class="recipe-tag"><i class="fa-solid fa-tag"></i> ${c}</span>`).join('')
+        : '';
+
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
             ${mainImageHtml}
             ${galleryHtml}
             <h2 class="recipe-detail-title">${recipe.title}</h2>
             <div class="recipe-detail-meta">
-                <span><i class="fa-solid fa-tag"></i> ${recipe.category}</span>
+                <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
                 <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString('de-DE')}</span>
             </div>
         </div>

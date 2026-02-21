@@ -430,6 +430,113 @@ button {
     font-size: 1.1rem;
 }
 
+/* Checkbox Grid (for multi-category form) */
+.checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-grid label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--color-border);
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background: var(--color-bg);
+    transition: var(--transition);
+}
+
+.checkbox-grid label:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+.checkbox-grid input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-grid input[type="checkbox"]:checked+span {
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+.checkbox-grid label:has(input:checked) {
+    border-color: var(--color-secondary);
+    background: rgba(133, 154, 122, 0.12);
+    color: var(--color-secondary);
+    font-weight: 600;
+}
+
+/* Multi-Select Dropdown */
+.multi-select {
+    position: relative;
+    user-select: none;
+    min-width: 180px;
+}
+
+.multi-select-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-bg);
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--color-text);
+}
+
+.multi-select-header:hover {
+    border-color: var(--color-primary);
+}
+
+.multi-select-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 15px var(--color-shadow);
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 100;
+    margin-top: 5px;
+    padding: 0.5rem 0;
+}
+
+.multi-select-dropdown.hidden {
+    display: none;
+}
+
+.multi-select-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.multi-select-option:hover {
+    background-color: var(--color-bg);
+}
+
+.multi-select-option input[type="checkbox"] {
+    cursor: pointer;
+    accent-color: var(--color-primary);
+}
+
 /* Controls */
 .controls {
     display: flex;
@@ -637,6 +744,15 @@ select:focus {
     margin-bottom: 0.3rem;
 }
 
+.recipe-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.8rem;
+    margin-top: 0.2rem;
+    align-self: flex-start;
+}
+
 .recipe-tag {
     display: flex;
     align-items: center;
@@ -644,9 +760,6 @@ select:focus {
     color: var(--color-secondary);
     font-size: 0.85rem;
     font-weight: 500;
-    margin-bottom: 0.8rem;
-    margin-top: 0.2rem;
-    align-self: flex-start;
 }
 
 .card-content h3 {
@@ -942,6 +1055,34 @@ select:focus {
 .file-upload-btn:hover {
     background-color: var(--color-primary);
     color: white;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.8rem;
+    padding: 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-bg);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    cursor: pointer;
+}
+
+.checkbox-item input[type="checkbox"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
 }
 
 .image-upload-container {
@@ -1511,6 +1652,5 @@ select:focus {
 
     .recipe-tag {
         font-size: 0.85rem;
-        margin-top: 0.1rem;
     }
 }

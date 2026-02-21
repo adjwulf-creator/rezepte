@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.main.css?v=3">
+    <link rel="stylesheet" href="style.main.css?v=5">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -77,11 +77,16 @@
         <div class="content-area" id="contentArea">
             <section class="controls" id="recipeControls">
                 <div class="control-group">
-                    <label for="categoryFilter" title="Kategorie filtern"><i class="fa-solid fa-tag"></i></label>
-                    <select id="categoryFilter">
-                        <option value="all">Alle Kategorien</option>
-                        <!-- Dynamic options via JS -->
-                    </select>
+                    <label title="Kategorie filtern"><i class="fa-solid fa-tag"></i></label>
+                    <div class="multi-select" id="categoryFilterContainer">
+                        <div class="multi-select-header" id="categoryFilterHeader">
+                            <span>Alle Kategorien</span>
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </div>
+                        <div class="multi-select-dropdown hidden" id="categoryFilterDropdown">
+                            <!-- Checkboxes injected via JS -->
+                        </div>
+                    </div>
                 </div>
                 <div class="control-group">
                     <label for="sortSelect" title="Sortieren nach"><i
@@ -140,10 +145,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="recipeCategory">Kategorie</label>
-                    <select id="recipeCategory">
-                        <!-- Dynamic options via JS -->
-                    </select>
+                    <label>Kategorie(n)</label>
+                    <div id="recipeCategoryCheckboxes" class="checkbox-grid">
+                        <!-- Dynamic checkboxes via JS -->
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -313,7 +318,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=17"></script>
+    <script src="app.js?v=18"></script>
 </body>
 
 </html>
