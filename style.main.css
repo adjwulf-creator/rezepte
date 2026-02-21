@@ -839,14 +839,21 @@ select:focus {
 
 .recipe-grid.list-view .card-content {
     justify-content: center;
-    padding: 1rem 1.5rem;
+    padding: 1.2rem 1.8rem;
+    overflow: hidden;
+}
+
+.recipe-grid.list-view .recipe-description {
+    display: none;
 }
 
 .recipe-grid.list-view h3 {
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.5rem;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1.4;
+    padding-top: 0.1rem;
 }
 
 .recipe-tags-container {
@@ -1771,7 +1778,8 @@ select:focus {
     }
 
     .recipe-grid.list-view .recipe-card {
-        height: 100px;
+        height: auto;
+        min-height: 100px;
     }
 
     .recipe-grid.list-view .card-img-container {
@@ -1779,7 +1787,8 @@ select:focus {
     }
 
     .recipe-grid.list-view .card-content {
-        padding: 0.8rem;
+        padding: 1rem;
+        justify-content: center;
     }
 
     .recipe-grid.list-view .card-content h3 {
