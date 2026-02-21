@@ -154,14 +154,23 @@ function adaptMobileLayout() {
 
 window.addEventListener('resize', adaptMobileLayout);
 if (mobileFoldersBtn && mobileControlsBtn) {
+    function positionDropdown(dropdown) {
+        const header = document.querySelector('.app-header');
+        if (header) {
+            dropdown.style.top = header.offsetHeight + 'px';
+            dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
+        }
+    }
     mobileFoldersBtn.addEventListener('click', () => {
         mobileDropdownFolders.classList.toggle('hidden');
-        mobileDropdownControls.classList.add('hidden'); // Close the other
+        mobileDropdownControls.classList.add('hidden');
+        if (!mobileDropdownFolders.classList.contains('hidden')) positionDropdown(mobileDropdownFolders);
         document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
     });
     mobileControlsBtn.addEventListener('click', () => {
         mobileDropdownControls.classList.toggle('hidden');
-        mobileDropdownFolders.classList.add('hidden'); // Close the other
+        mobileDropdownFolders.classList.add('hidden');
+        if (!mobileDropdownControls.classList.contains('hidden')) positionDropdown(mobileDropdownControls);
         if (mobileDropdownControls.classList.contains('hidden')) {
             document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
         }
