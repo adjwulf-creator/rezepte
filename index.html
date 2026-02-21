@@ -48,9 +48,6 @@
                     <button id="settingsBtn" class="icon-btn settings-btn" title="Einstellungen">
                         <i class="fa-solid fa-gear"></i>
                     </button>
-                    <button id="logoutBtn" class="icon-btn logout-btn" title="Abmelden">
-                        <i class="fa-solid fa-right-from-bracket"></i>
-                    </button>
                 </div>
             </div>
             <div id="mobileDropdownFolders" class="mobile-dropdown-content hidden"></div>
@@ -255,6 +252,12 @@
                     <p id="passwordMessage" class="form-message hidden"></p>
                     <button type="submit" class="primary-btn" id="savePasswordBtn">Passwort speichern</button>
                 </form>
+
+                <hr style="margin-top: 2rem; margin-bottom: 2rem; opacity: 0.2;">
+
+                <button id="logoutBtn" class="danger-btn" style="width: 100%; justify-content: center;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Abmelden
+                </button>
             </div>
 
             <div class="tab-content" id="categoriesTab">
@@ -312,7 +315,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=11"></script>
+    <script src="app.js?v=12"></script>
 </body>
 
 </html>

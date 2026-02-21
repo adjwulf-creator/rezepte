@@ -793,6 +793,7 @@ function setupEventListeners() {
     // Auth - Logout
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
+            if (settingsModal) settingsModal.classList.add('hidden');
             await sbClient.auth.signOut();
         });
     }
