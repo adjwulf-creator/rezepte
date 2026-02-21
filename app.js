@@ -191,6 +191,19 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             document.querySelectorAll('.multi-select-dropdown').forEach(d => d.classList.add('hidden'));
         }
     });
+
+    // Observer to handle body scroll lock and blur effect when dropdowns are open
+    const overlayObserver = new MutationObserver(() => {
+        const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
+        const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
+        if (foldersOpen || controlsOpen) {
+            document.body.classList.add('mobile-dropdown-active');
+        } else {
+            document.body.classList.remove('mobile-dropdown-active');
+        }
+    });
+    if (mobileDropdownFolders) overlayObserver.observe(mobileDropdownFolders, { attributes: true, attributeFilter: ['class'] });
+    if (mobileDropdownControls) overlayObserver.observe(mobileDropdownControls, { attributes: true, attributeFilter: ['class'] });
 }
 
 // isTouchScrolling flag for iOS Safari phantom click prevention
