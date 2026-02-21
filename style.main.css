@@ -1087,18 +1087,26 @@ select:focus {
 }
 
 .close-btn {
-    background: none;
+    background: white;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: var(--color-text-light);
     cursor: pointer;
-    padding: 0.5rem;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: var(--transition);
 }
 
 .close-btn:hover {
     background-color: var(--color-bg);
     color: var(--color-accent);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
 }
 
 /* Forms */
