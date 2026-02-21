@@ -170,6 +170,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
 
 // Close mobile dropdowns on touchmove (mobile only)
 // Skip if any modal is currently open (user is scrolling inside a popup)
+let isTouchScrolling = false;
 function closeMobileDropdowns() {
     // Check if any modal is currently visible
     const openModal = document.querySelector('.modal:not(.hidden)');
@@ -177,7 +178,8 @@ function closeMobileDropdowns() {
     if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
     if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
 }
-document.addEventListener('touchmove', closeMobileDropdowns, { passive: true });
+document.addEventListener('touchmove', () => { isTouchScrolling = true; closeMobileDropdowns(); }, { passive: true });
+document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { passive: true });
 
 // Initialize app
 async function initApp() {
@@ -1468,7 +1470,9 @@ function setupEventListeners() {
     });
 
     // Close modals on outside click
+    // On iOS Safari, a scroll gesture can fire a phantom click on the backdrop
     window.addEventListener('click', (e) => {
+        if (isTouchScrolling) return;
         if (e.target === recipeModal) closeAddModal();
         if (e.target === viewModal) viewModal.classList.add('hidden');
         if (e.target === folderModal) closeFolderModal();
