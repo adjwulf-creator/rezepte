@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inna´s Rezepte</title>
-    <link rel="stylesheet" href="style.css?v=17">
+    <link rel="stylesheet" href="style.css?v=18">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -141,7 +141,7 @@
 
                 <div class="form-group">
                     <label for="recipeCategory">Kategorie</label>
-                    <select id="recipeCategory" required>
+                    <select id="recipeCategory">
                         <!-- Dynamic options via JS -->
                     </select>
                 </div>
@@ -162,13 +162,13 @@
 
                 <div class="form-group">
                     <label for="recipeIngredients">Zutaten (Eine pro Zeile)</label>
-                    <textarea id="recipeIngredients" rows="5" required
+                    <textarea id="recipeIngredients" rows="5"
                         placeholder="- 2 Zucchini&#10;- 1 Aubergine&#10;- 3 Tomaten"></textarea>
                 </div>
 
                 <div class="form-group">
                     <label for="recipeInstructions">Zubereitung</label>
-                    <textarea id="recipeInstructions" rows="6" required
+                    <textarea id="recipeInstructions" rows="6"
                         placeholder="Das Gemüse in Scheiben schneiden..."></textarea>
                 </div>
 
@@ -313,7 +313,7 @@
 
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="app.js?v=12"></script>
+    <script src="app.js?v=13"></script>
 </body>
 
 </html>
