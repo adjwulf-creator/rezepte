@@ -997,10 +997,7 @@ function setupEventListeners() {
 
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
-    categoryFilter.addEventListener('change', () => {
-        renderRecipes();
-        if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-    });
+    // Note: Category filter change events are handled in renderCategories() via checkbox listeners
     sortSelect.addEventListener('change', () => {
         renderRecipes();
         if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
