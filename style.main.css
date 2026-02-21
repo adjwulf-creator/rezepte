@@ -263,6 +263,15 @@ button {
     -webkit-text-fill-color: white !important;
 }
 
+.has-active-filters,
+.has-active-filters i {
+    background-color: #6c8261 !important;
+    /* A darker shade of Olive Green */
+    color: white !important;
+    -webkit-text-fill-color: white !important;
+    border-color: #6c8261 !important;
+}
+
 .danger-btn {
     background-color: transparent;
     color: var(--color-accent);

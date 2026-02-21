@@ -458,8 +458,10 @@ function updateFilterHeader() {
     const span = categoryFilterHeader.querySelector('span');
     if (checked.length === 0) {
         span.textContent = t('filter_category');
+        if (mobileControlsBtn) mobileControlsBtn.classList.remove('has-active-filters');
     } else {
         span.textContent = checked.join(', ');
+        if (mobileControlsBtn) mobileControlsBtn.classList.add('has-active-filters');
     }
 }
 
