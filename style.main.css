@@ -526,11 +526,11 @@ button {
     padding: 0.5rem 1rem;
     cursor: pointer;
     transition: var(--transition);
-    font-size: 0.8rem !important;
+    font-size: 0.85rem !important;
 }
 
 .multi-select-option span {
-    font-size: 0.8rem !important;
+    font-size: 0.85rem !important;
 }
 
 .multi-select-option:hover {
@@ -1667,7 +1667,7 @@ select:focus {
 
     .multi-select-option,
     .multi-select-option span {
-        font-size: 0.85rem !important;
+        font-size: 0.9rem !important;
     }
 
     /* Custom select popups as centered modal on mobile */
