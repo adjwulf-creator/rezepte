@@ -1335,6 +1335,22 @@ select:focus {
 
 /* Responsive */
 @media (max-width: 768px) {
+    .app-header {
+        padding: 1rem;
+    }
+
+    .logo {
+        gap: 0.5rem;
+    }
+
+    .logo h1 {
+        font-size: 1.4rem;
+    }
+
+    .logo i {
+        font-size: 1.3rem;
+    }
+
     .main-layout {
         flex-direction: column;
     }
@@ -1356,6 +1372,7 @@ select:focus {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 0.5rem;
     }
 
     .header-actions {
@@ -1384,6 +1401,8 @@ select:focus {
     #addRecipeBtn {
         width: 40px;
         height: 40px;
+        min-width: 40px;
+        flex-shrink: 0;
         padding: 0;
         border-radius: 50%;
         display: flex;
