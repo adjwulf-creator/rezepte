@@ -200,8 +200,8 @@ button {
 }
 
 .icon-btn i {
-    color: var(--color-text);
-    -webkit-text-fill-color: var(--color-text);
+    color: var(--color-secondary);
+    -webkit-text-fill-color: var(--color-secondary);
 }
 
 .primary-btn {
