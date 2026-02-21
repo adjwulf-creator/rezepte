@@ -491,7 +491,7 @@ button {
     background-color: var(--color-bg);
     cursor: pointer;
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 0.85rem;
     color: var(--color-text);
 }
 
@@ -526,6 +526,7 @@ button {
     padding: 0.5rem 1rem;
     cursor: pointer;
     transition: var(--transition);
+    font-size: 0.85rem;
 }
 
 .multi-select-option:hover {
