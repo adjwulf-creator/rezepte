@@ -616,8 +616,8 @@ function renderRecipes() {
                     ${imageHtml}
                 </div>
                 <div class="card-content">
-                    <span class="recipe-tag">${recipe.category}</span>
                     <h3>${recipe.title}</h3>
+                    <span class="recipe-tag">${recipe.category}</span>
                     <p class="recipe-description">${recipe.ingredients}</p>
                 </div>
             `;
