@@ -491,7 +491,7 @@ button {
     background-color: var(--color-bg);
     cursor: pointer;
     font-family: var(--font-body);
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     color: var(--color-text);
 }
 
@@ -1661,7 +1661,6 @@ select:focus {
         font-size: 0.85rem;
     }
 
-    .multi-select-header,
     .multi-select-option {
         font-size: 0.8rem;
     }
