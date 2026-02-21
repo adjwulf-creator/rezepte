@@ -168,17 +168,9 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     });
 }
 
-// Close mobile dropdowns on touchmove (mobile only)
-// Skip if any modal is currently open (user is scrolling inside a popup)
+// isTouchScrolling flag for iOS Safari phantom click prevention
 let isTouchScrolling = false;
-function closeMobileDropdowns() {
-    // Check if any modal is currently visible
-    const openModal = document.querySelector('.modal:not(.hidden)');
-    if (openModal) return;
-    if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
-    if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-}
-document.addEventListener('touchmove', () => { isTouchScrolling = true; closeMobileDropdowns(); }, { passive: true });
+document.addEventListener('touchmove', () => { isTouchScrolling = true; }, { passive: true });
 document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { passive: true });
 
 // Initialize app
