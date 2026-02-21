@@ -1469,10 +1469,11 @@ function setupEventListeners() {
         }
     });
 
-    // Close modals on outside click
-    // On iOS Safari, a scroll gesture can fire a phantom click on the backdrop
+    // Close modals on outside click (desktop only)
+    // On mobile, modals are fullscreen so there's no backdrop to click.
+    // iOS Safari also fires phantom clicks during scroll gestures which would close modals.
     window.addEventListener('click', (e) => {
-        if (isTouchScrolling) return;
+        if (window.innerWidth <= 768) return;
         if (e.target === recipeModal) closeAddModal();
         if (e.target === viewModal) viewModal.classList.add('hidden');
         if (e.target === folderModal) closeFolderModal();
