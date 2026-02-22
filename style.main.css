@@ -751,6 +751,10 @@ select:focus {
     justify-content: center;
 }
 
+.recipe-grid.list-view .recipe-instructions-intro {
+    display: none !important;
+}
+
 .recipe-grid.hidden {
     display: none;
 }
