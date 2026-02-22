@@ -126,7 +126,14 @@ const passwordMessage = document.getElementById('passwordMessage');
 const categoryForm = document.getElementById('categoryForm');
 const newCategoryNameInput = document.getElementById('newCategoryName');
 const settingsCategoryList = document.getElementById('settingsCategoryList');
-const languageSelectors = document.querySelectorAll('.language-select');
+// Custom Language Selectors
+const loginLanguageHeader = document.getElementById('loginLanguageHeader');
+const loginLanguageDropdown = document.getElementById('loginLanguageDropdown');
+const loginLanguageContainer = document.getElementById('loginLanguageContainer');
+
+const settingsLanguageHeader = document.getElementById('settingsLanguageHeader');
+const settingsLanguageDropdown = document.getElementById('settingsLanguageDropdown');
+const settingsLanguageContainer = document.getElementById('settingsLanguageContainer');
 
 // View State
 let currentViewMode = localStorage.getItem('recipeBook_viewMode') || 'grid';
@@ -263,27 +270,45 @@ document.addEventListener('click', (e) => {
 async function initApp() {
     adaptMobileLayout();
 
-    if (languageSelectors.length > 0) {
-        languageSelectors.forEach(sel => {
-            sel.value = currentLang;
-            sel.addEventListener('change', (e) => {
-                currentLang = e.target.value;
-                localStorage.setItem('appLang', currentLang);
-                applyLanguage();
-                // Sync all selectors
-                languageSelectors.forEach(s => s.value = currentLang);
-                // Re-render components with dynamic translated text
-                applyAppName(currentUser?.user_metadata?.app_name);
-                renderFolders();
-                renderRecipes();
-            });
-        });
-    }
+    // Initialize Custom Language Selectors
+    const onLanguageChange = (lang) => {
+        currentLang = lang;
+        localStorage.setItem('appLang', currentLang);
+        applyLanguage();
+        // Sync custom headers manually
+        syncLanguageHeaders();
+        // Re-render components
+        applyAppName(currentUser?.user_metadata?.app_name);
+        renderFolders();
+        renderRecipes();
+    };
+
+    setupSingleSelectDropdown(loginLanguageHeader, loginLanguageDropdown, loginLanguageContainer, currentLang, onLanguageChange);
+    setupSingleSelectDropdown(settingsLanguageHeader, settingsLanguageDropdown, settingsLanguageContainer, currentLang, onLanguageChange);
+
+    syncLanguageHeaders();
 
     applyLanguage(); // Execute initial
     setupEventListeners();
     applyViewState();
     await checkUser();
+}
+
+function syncLanguageHeaders() {
+    const selectors = [
+        { header: loginLanguageHeader, dropdown: loginLanguageDropdown },
+        { header: settingsLanguageHeader, dropdown: settingsLanguageDropdown }
+    ];
+
+    selectors.forEach(({ header, dropdown }) => {
+        if (!header || !dropdown) return;
+        const option = dropdown.querySelector(`.multi-select-option[data-value="${currentLang}"]`);
+        if (option) {
+            dropdown.querySelectorAll('.multi-select-option').forEach(o => o.classList.remove('active'));
+            option.classList.add('active');
+            header.innerHTML = `${option.innerHTML} <i class="fa-solid fa-chevron-down"></i>`;
+        }
+    });
 }
 
 function applyAppName(name) {

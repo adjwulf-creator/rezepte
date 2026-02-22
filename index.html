@@ -282,10 +282,29 @@
                 <h3 data-i18n="setting_language">Sprache / Мова</h3>
                 <form id="languageForm" style="margin-bottom: 2rem;">
                     <div class="form-group">
-                        <select id="languageSelect" class="language-select">
-                            <option value="de">🇩🇪 Deutsch</option>
-                            <option value="ua">🇺🇦 Українська</option>
-                        </select>
+                        <div class="multi-select" id="settingsLanguageContainer">
+                            <div class="multi-select-header" id="settingsLanguageHeader">
+                                <span>🇩🇪 Deutsch</span>
+                                <i class="fa-solid fa-chevron-down"></i>
+                            </div>
+                            <div class="multi-select-dropdown hidden" id="settingsLanguageDropdown">
+                                <label class="multi-select-option" data-value="de">
+                                    <svg viewBox="0 0 512 512" width="16" height="12">
+                                        <path fill="#000" d="M0 0h512v170.7H0z" />
+                                        <path fill="#D00" d="M0 170.7h512v170.6H0z" />
+                                        <path fill="#FFCE00" d="M0 341.3h512V512H0z" />
+                                    </svg>
+                                    <span>Deutsch</span>
+                                </label>
+                                <label class="multi-select-option" data-value="ua">
+                                    <svg viewBox="0 0 512 512" width="16" height="12">
+                                        <path fill="#FFD500" d="M0 256h512v256H0z" />
+                                        <path fill="#005BBB" d="M0 0h512v256H0z" />
+                                    </svg>
+                                    <span>Українська</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                 </form>
 
@@ -343,10 +362,29 @@
         <div class="login-box">
             <div class="login-language-selector">
                 <span class="language-label">Sprache / Мова:</span>
-                <select class="language-select">
-                    <option value="de">🇩🇪 DE</option>
-                    <option value="ua">🇺🇦 UA</option>
-                </select>
+                <div class="multi-select" id="loginLanguageContainer">
+                    <div class="multi-select-header" id="loginLanguageHeader">
+                        <span>DE</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="multi-select-dropdown hidden" id="loginLanguageDropdown">
+                        <label class="multi-select-option" data-value="de">
+                            <svg viewBox="0 0 512 512" width="16" height="12">
+                                <path fill="#000" d="M0 0h512v170.7H0z" />
+                                <path fill="#D00" d="M0 170.7h512v170.6H0z" />
+                                <path fill="#FFCE00" d="M0 341.3h512V512H0z" />
+                            </svg>
+                            <span>DE</span>
+                        </label>
+                        <label class="multi-select-option" data-value="ua">
+                            <svg viewBox="0 0 512 512" width="16" height="12">
+                                <path fill="#FFD500" d="M0 256h512v256H0z" />
+                                <path fill="#005BBB" d="M0 0h512v256H0z" />
+                            </svg>
+                            <span>UA</span>
+                        </label>
+                    </div>
+                </div>
             </div>
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
