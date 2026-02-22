@@ -126,7 +126,7 @@ const passwordMessage = document.getElementById('passwordMessage');
 const categoryForm = document.getElementById('categoryForm');
 const newCategoryNameInput = document.getElementById('newCategoryName');
 const settingsCategoryList = document.getElementById('settingsCategoryList');
-const languageSelect = document.getElementById('languageSelect');
+const languageSelectors = document.querySelectorAll('.language-select');
 
 // View State
 let currentViewMode = localStorage.getItem('recipeBook_viewMode') || 'grid';
@@ -263,16 +263,20 @@ document.addEventListener('click', (e) => {
 async function initApp() {
     adaptMobileLayout();
 
-    if (languageSelect) {
-        languageSelect.value = currentLang;
-        languageSelect.addEventListener('change', (e) => {
-            currentLang = e.target.value;
-            localStorage.setItem('appLang', currentLang);
-            applyLanguage();
-            // Re-render components with dynamic translated text
-            applyAppName(currentUser?.user_metadata?.app_name);
-            renderFolders();
-            renderRecipes();
+    if (languageSelectors.length > 0) {
+        languageSelectors.forEach(sel => {
+            sel.value = currentLang;
+            sel.addEventListener('change', (e) => {
+                currentLang = e.target.value;
+                localStorage.setItem('appLang', currentLang);
+                applyLanguage();
+                // Sync all selectors
+                languageSelectors.forEach(s => s.value = currentLang);
+                // Re-render components with dynamic translated text
+                applyAppName(currentUser?.user_metadata?.app_name);
+                renderFolders();
+                renderRecipes();
+            });
         });
     }
 

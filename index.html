@@ -282,7 +282,7 @@
                 <h3 data-i18n="setting_language">Sprache / Мова</h3>
                 <form id="languageForm" style="margin-bottom: 2rem;">
                     <div class="form-group">
-                        <select id="languageSelect">
+                        <select id="languageSelect" class="language-select">
                             <option value="de">Deutsch</option>
                             <option value="ua">Українська</option>
                         </select>
@@ -341,6 +341,12 @@
     <!-- Login Overlay -->
     <div id="loginOverlay" class="login-overlay">
         <div class="login-box">
+            <div class="login-language-selector">
+                <select class="language-select">
+                    <option value="de">DE</option>
+                    <option value="ua">UA</option>
+                </select>
+            </div>
             <div class="logo">
                 <i class="fa-solid fa-seedling"></i>
                 <h2 id="loginAppTitle" data-i18n="app_title">Inna´s Rezepte</h2>
