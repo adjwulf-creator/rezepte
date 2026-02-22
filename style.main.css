@@ -873,7 +873,7 @@ select:focus {
 
 .recipe-grid.list-view .card-content {
     justify-content: center;
-    padding: 1.2rem 1.8rem;
+    padding: 1rem 1.5rem;
     overflow: hidden;
 }
 
@@ -1921,7 +1921,7 @@ select:focus {
     }
 
     .recipe-grid.list-view .card-content {
-        padding: 1rem;
+        padding: 0.6rem 0.8rem;
         justify-content: center;
     }
 
