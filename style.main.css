@@ -467,12 +467,12 @@ button {
 
 .folder-item[data-folder-id="all"] {
     position: sticky;
-    top: 0;
+    top: -0.1px;
+    /* Slight offset to prevent sub-pixel gaps */
     z-index: 10;
     background: var(--color-surface);
-    margin-bottom: 0.8rem;
-    border-bottom: 1px dashed var(--color-border);
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    margin-bottom: 0.5rem;
+    border-radius: var(--radius-sm);
 }
 
 .folder-item[data-folder-id="all"].active {
