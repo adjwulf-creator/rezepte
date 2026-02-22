@@ -1513,15 +1513,24 @@ select:focus {
 
 .login-language-selector {
     position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
+    bottom: 1rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.language-label {
+    font-size: 0.75rem;
+    color: var(--color-text-light);
+    opacity: 0.8;
 }
 
 .login-language-selector .language-select {
-    padding: 0.35rem 1.6rem 0.35rem 0.75rem;
-    font-size: 0.82rem;
+    padding: 0.25rem 1.4rem 0.25rem 0.6rem;
+    font-size: 0.78rem;
     border-radius: 20px;
-    background-position: right 0.6rem center;
+    background-position: right 0.5rem center;
     background-color: transparent;
     border: 1px solid var(--color-border);
     color: var(--color-text-light);
