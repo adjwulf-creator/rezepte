@@ -754,10 +754,12 @@ select:focus {
     flex-direction: column;
 }
 
-.recipe-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(122, 107, 168, 0.15);
-    border-color: var(--color-primary);
+@media (hover: hover) {
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(122, 107, 168, 0.15);
+        border-color: var(--color-primary);
+    }
 }
 
 /* Recipe Drag and Drop */
@@ -795,8 +797,10 @@ select:focus {
     transition: transform 0.5s ease;
 }
 
-.recipe-card:hover .card-img-container img {
-    transform: scale(1.05);
+@media (hover: hover) {
+    .recipe-card:hover .card-img-container img {
+        transform: scale(1.05);
+    }
 }
 
 .card-img-container i {
