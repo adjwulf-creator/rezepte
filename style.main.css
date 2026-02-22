@@ -311,12 +311,43 @@ button {
 
 .sidebar-sticky-section {
     position: sticky;
-    top: -1.51rem;
+    top: -1.5rem;
     /* Offset sidebar padding */
     background: var(--color-surface);
     z-index: 10;
     margin: 0 -1.5rem 0 -1.5rem;
     padding: 1.5rem 1.5rem 0.5rem 1.5rem;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.sidebar-title-btn {
+    background: none;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--color-text-light);
+    font-family: var(--font-heading);
+    font-style: italic;
+    cursor: pointer;
+    padding: 0;
+    transition: var(--transition);
+    border-bottom: 2px solid transparent;
+    font-weight: 600;
+}
+
+.sidebar-title-btn:hover {
+    color: var(--color-primary);
+}
+
+.sidebar-title-btn.active {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
 }
 
 .content-area {
@@ -359,33 +390,6 @@ button {
     background: var(--color-primary);
     color: white;
     transform: scale(1.05);
-}
-
-.all-recipes-btn {
-    background: var(--color-bg);
-    border: none;
-    color: var(--color-primary);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.9rem;
-}
-
-.all-recipes-btn:hover {
-    background: var(--color-primary);
-    color: white;
-    transform: scale(1.05);
-}
-
-.all-recipes-btn.active {
-    background: var(--color-primary);
-    color: white;
-    box-shadow: 0 0 0 2px rgba(122, 107, 168, 0.3);
 }
 
 .folder-list {

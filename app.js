@@ -749,9 +749,31 @@ function renderFolders() {
     setupFolderItemListeners();
 }
 
-let draggedFolderItem = null;
-
 function setupFolderItemListeners() {
+    // 1. "All Recipes" Title Button Click (Direct listener since it's now in header)
+    const allRecipesBtn = document.getElementById('allRecipesBtn');
+    if (allRecipesBtn) {
+        // Clone and replace to prevent duplicate listeners
+        const newAllBtn = allRecipesBtn.cloneNode(true);
+        allRecipesBtn.parentNode.replaceChild(newAllBtn, allRecipesBtn);
+        newAllBtn.addEventListener('click', () => {
+            if (isFolderEditMode) return;
+            currentFolderId = 'all';
+            renderFolders();
+            renderRecipes();
+
+            // Auto-close mobile dropdown if open
+            if (mobileDropdownFolders) {
+                mobileDropdownFolders.classList.add('hidden');
+                if (mobileFoldersBtn) {
+                    const icon = mobileFoldersBtn.querySelector('i');
+                    if (icon) icon.className = 'fa-regular fa-folder-open';
+                    mobileFoldersBtn.classList.remove('active-dropdown-btn');
+                }
+            }
+        });
+    }
+
     const editFoldersBtn = document.getElementById('editFoldersBtn');
     if (editFoldersBtn) {
         // Clone and replace to prevent duplicate listeners
