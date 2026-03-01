@@ -108,7 +108,6 @@ const sortSelectDropdown = document.getElementById('sortSelectDropdown');
 const sortSelectContainer = document.getElementById('sortSelectContainer');
 
 const viewModal = document.getElementById('viewModal');
-const closeViewModalBtn = document.getElementById('closeViewModalBtn');
 const viewRecipeDetails = document.getElementById('viewRecipeDetails');
 const editRecipeBtn = document.getElementById('editRecipeBtn');
 const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
@@ -1719,8 +1718,12 @@ function setupEventListeners() {
         viewModal.classList.add('hidden');
         currentViewRecipeId = null;
     };
-    closeViewModalBtn.addEventListener('click', closeViewModal);
-    closeViewModalBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); closeViewModal(); });
+
+    // Utilize Event Delegation for the dynamically injected close button
+    viewModal.addEventListener('click', (e) => {
+        const closeBtn = e.target.closest('#closeViewModalBtn');
+        if (closeBtn) closeViewModal();
+    });
 
     // Click outside to close (disabled per user request)
     // viewModal.addEventListener('pointerdown', (e) => {
