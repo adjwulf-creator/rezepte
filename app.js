@@ -381,7 +381,13 @@ async function checkUser() {
             currentUser = session.user;
             applyAppName(currentUser.user_metadata?.app_name);
             loginOverlay.classList.add('hidden');
-            Promise.all([loadFolders(), loadCategories()]).then(() => loadRecipes());
+
+            // Execute synchronously sequentially to prevent Supabase connection/token race conditions
+            (async () => {
+                await loadFolders();
+                await loadCategories();
+                await loadRecipes();
+            })();
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             applyAppName(null);
