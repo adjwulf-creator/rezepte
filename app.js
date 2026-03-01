@@ -4,8 +4,14 @@
 const SUPABASE_URL = 'https://tdexsgzinjbabiczihwj.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_xtguokRm66tP1SEwGC-RaQ_ifuZSJ9U';
 
-// Initialize Supabase Client
-const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+// Initialize Supabase Client with strict cache busting
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    global: {
+        fetch: (url, options) => {
+            return fetch(url, { ...options, cache: 'no-store' });
+        }
+    }
+});
 
 let recipes = [];
 let folders = [];
@@ -512,6 +518,11 @@ function renderCategories() {
                 if (d !== categoryFilterDropdown) d.classList.add('hidden');
             });
             categoryFilterDropdown.classList.toggle('hidden');
+
+            // Force iOS Safari repaint by rendering while visible
+            if (!categoryFilterDropdown.classList.contains('hidden')) {
+                renderCategories();
+            }
         });
         // Close when clicking outside
         document.addEventListener('click', (e) => {
@@ -1508,6 +1519,9 @@ function setupEventListeners() {
         if (isMobile) {
             positionDropdown(settingsModal.querySelector('.modal-content'));
         }
+
+        // Force iOS Safari repaint by rendering while visible
+        renderCategories();
     });
 
     // Settings - Update App Name
