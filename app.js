@@ -175,13 +175,9 @@ function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
-        // Only cap height for controls, allow folders to bleed to the bottom (bottom:0 in CSS)
-        if (dropdown.id === 'mobileDropdownControls') {
-            dropdown.style.maxHeight = 'calc(100dvh - ' + header.offsetHeight + 'px)';
-        } else {
-            // Let CSS handle the max-height for folders
-            dropdown.style.maxHeight = '';
-        }
+        // Ensure dropdowns never exceed the visible screen area (95dvh total) minus the header height.
+        // This mathematically guarantees the bottom scrolling edge stays on-screen and fully reachable.
+        dropdown.style.maxHeight = `calc(95dvh - ${header.offsetHeight}px)`;
     }
 }
 
