@@ -1225,14 +1225,13 @@ select:focus {
     padding: 2rem;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     border: 2px solid var(--color-border);
-    transform: scale(1);
-    transition: transform 0.3s ease;
+    transition: opacity 0.3s ease;
     touch-action: pan-y;
     /* Re-enable scrolling inside the modal content */
 }
 
 .modal.hidden .modal-content {
-    transform: scale(0.95);
+    opacity: 0;
 }
 
 .settings-modal-content {
