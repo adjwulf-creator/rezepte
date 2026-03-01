@@ -1197,7 +1197,7 @@ select:focus {
     /* Higher than header and dropdowns */
     opacity: 1;
     visibility: visible;
-    transition: var(--transition);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
     overscroll-behavior: contain;
     touch-action: none;
 }
@@ -1650,7 +1650,28 @@ select:focus {
     flex-direction: column;
     margin-bottom: 2rem;
     position: relative;
-    /* Anchor for the absolute close button */
+}
+
+.recipe-detail-image-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* Explicit rule for the button when inside the image wrapper */
+.recipe-detail-image-wrapper #closeViewModalBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+}
+
+/* Fallback if no image */
+.recipe-detail-header>#closeViewModalBtn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
 }
 
 .recipe-detail-image {
@@ -1658,8 +1679,8 @@ select:focus {
     height: 300px;
     object-fit: cover;
     border-radius: var(--radius-md);
-    margin-bottom: 1.5rem;
     cursor: pointer;
+    display: block;
     transition: transform 0.3s ease, opacity 0.3s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
