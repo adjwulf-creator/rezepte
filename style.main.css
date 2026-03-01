@@ -1379,9 +1379,9 @@ select:focus {
 
 .close-btn {
     background: white;
-    border: none;
+    border: 1.5px solid #e53935;
     font-size: 1.2rem;
-    color: var(--color-text-light);
+    color: #e53935;
     cursor: pointer;
     width: 36px;
     height: 36px;
@@ -1390,16 +1390,18 @@ select:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px solid rgba(0, 0, 0, 0.15);
-    box-shadow: 0 3px 16px rgba(0, 0, 0, 0.45), 0 1px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: none;
     transition: var(--transition);
 }
 
 @media (hover: hover) {
     .close-btn:hover {
-        background-color: var(--color-bg);
-        color: var(--color-accent);
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 2px 6px rgba(0, 0, 0, 0.25);
+        background-color: #ffebee;
+        /* Light red background on hover */
+        color: #c62828;
+        /* Darker red on hover */
+        border-color: #c62828;
+        box-shadow: none;
     }
 }
 
@@ -1798,8 +1800,10 @@ select:focus {
     left: 100%;
     margin-right: 1rem;
     z-index: 10;
-    background: var(--color-surface);
-    box-shadow: 0 2px 10px var(--color-shadow);
+    background: white;
+    border: 1.5px solid #e53935;
+    color: #e53935;
+    box-shadow: none;
 }
 
 /* Login Overlay */
@@ -2016,18 +2020,30 @@ select:focus {
     position: absolute;
     top: 20px;
     right: 30px;
-    color: white;
+    color: #e53935;
     font-size: 3rem;
     font-weight: bold;
-    background: none;
-    border: none;
+    background: white;
+    border: 2px solid #e53935;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.2s;
     z-index: 3010;
+    box-shadow: none;
+    line-height: 1;
+    padding-bottom: 5px;
+    /* Visual center adjustment for &times; */
 }
 
 .lightbox-close:hover {
-    color: var(--color-accent);
+    color: #c62828;
+    border-color: #c62828;
+    background-color: #ffebee;
 }
 
 .lightbox-nav {
