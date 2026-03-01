@@ -381,7 +381,7 @@ async function checkUser() {
             currentUser = session.user;
             applyAppName(currentUser.user_metadata?.app_name);
             loginOverlay.classList.add('hidden');
-            loadFolders().then(() => loadRecipes());
+            Promise.all([loadFolders(), loadCategories()]).then(() => loadRecipes());
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
             applyAppName(null);
