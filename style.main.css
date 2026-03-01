@@ -2355,9 +2355,9 @@ select:focus {
         height: auto;
         bottom: auto;
         /* Allow height limiting */
-        max-height: 95vh;
+        max-height: 98vh;
         /* Adjust height limit */
-        max-height: 95dvh;
+        max-height: 98dvh;
         border-bottom-left-radius: var(--radius-lg);
         border-bottom-right-radius: var(--radius-lg);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
@@ -2399,7 +2399,7 @@ select:focus {
         padding: 0.15rem 1rem 1rem 1rem;
         /* Adjusted top padding to precisely 0.15rem. 
            (0.15rem + 0.6rem tab-btn padding = 0.75rem visually matched to "Meine Ordner") */
-        max-height: 95dvh;
+        max-height: 98dvh;
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
         border: none;

@@ -175,9 +175,9 @@ function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
-        // Ensure dropdowns never exceed the visible screen area (95dvh total) minus the header height.
+        // Ensure dropdowns never exceed the visible screen area (98dvh total) minus the header height.
         // This mathematically guarantees the bottom scrolling edge stays on-screen and fully reachable.
-        dropdown.style.maxHeight = `calc(95dvh - ${header.offsetHeight}px)`;
+        dropdown.style.maxHeight = `calc(98dvh - ${header.offsetHeight}px)`;
     }
 }
 
