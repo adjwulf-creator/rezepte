@@ -1797,8 +1797,7 @@ select:focus {
 #closeViewModalBtn {
     position: sticky;
     top: 1rem;
-    left: 100%;
-    margin-right: 1rem;
+    float: right;
     z-index: 10;
     background: white;
     border: 1.5px solid #e53935;
