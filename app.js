@@ -2144,6 +2144,7 @@ function openViewModal(recipe) {
 
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
+            <button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button>
             ${mainImageHtml}
             ${galleryHtml}
             <h2 class="recipe-detail-title">${recipe.title}</h2>

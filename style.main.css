@@ -1650,6 +1650,8 @@ select:focus {
     display: flex;
     flex-direction: column;
     margin-bottom: 2rem;
+    position: relative;
+    /* Anchor for the absolute close button */
 }
 
 .recipe-detail-image {
@@ -1795,14 +1797,16 @@ select:focus {
 }
 
 #closeViewModalBtn {
-    position: sticky;
-    top: 1rem;
-    float: right;
-    z-index: 10;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 20;
+    /* Ensure it stays above the image */
     background: white;
     border: 1.5px solid #e53935;
     color: #e53935;
-    box-shadow: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    /* Slight shadow to ensure visibility over light images */
 }
 
 /* Login Overlay */
