@@ -2290,3 +2290,40 @@ function applyViewState() {
 
 // Boot up
 document.addEventListener('DOMContentLoaded', initApp);
+
+// Service Worker Registration and Auto-Update Logic
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').then(registration => {
+            console.log('ServiceWorker registration successful with scope: ', registration.scope);
+
+            // Listen for waiting service workers (updates ready)
+            registration.addEventListener('updatefound', () => {
+                const newWorker = registration.installing;
+                if (!newWorker) return;
+
+                newWorker.addEventListener('statechange', () => {
+                    // Has the new worker installed successfully?
+                    if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                        // There's a new update ready! Force the waiting worker to activate immediately.
+                        console.log("New PWA update installed. Forcing activation...");
+                        newWorker.postMessage({ type: 'SKIP_WAITING' });
+                    }
+                });
+            });
+        }).catch(err => {
+            console.log('ServiceWorker registration failed: ', err);
+        });
+
+        // Whenever the controlling service worker changes (a new version took over),
+        // forcefully reload the entire page to apply the new assets.
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+            if (!refreshing) {
+                console.log("New Service Worker activated. Reloading app...");
+                refreshing = true;
+                window.location.reload(true);
+            }
+        });
+    });
+}

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recipe-book-v3';
+const CACHE_NAME = 'recipe-book-v4';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -27,31 +27,23 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
+    // Network-First Strategy for HTML, CSS, JS, and Navigation
+    // This ensures the PWA ALWAYS gets the latest version if online, bypassing stubborn iOS caches
     event.respondWith(
-        caches.match(event.request)
-            .then((response) => {
-                if (response) {
-                    return response; // Return cached version
+        fetch(event.request)
+            .then((networkResponse) => {
+                // Return network response if valid, and update the cache in the background
+                if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then((cache) => {
+                        cache.put(event.request, responseToCache);
+                    });
                 }
-                // Fallback to network
-                return fetch(event.request).then(
-                    (response) => {
-                        // Don't cache if not a valid response
-                        if (!response || response.status !== 200 || response.type !== 'basic') {
-                            return response;
-                        }
-
-                        // Clone the response because it's a stream
-                        var responseToCache = response.clone();
-
-                        caches.open(CACHE_NAME)
-                            .then((cache) => {
-                                cache.put(event.request, responseToCache);
-                            });
-
-                        return response;
-                    }
-                );
+                return networkResponse;
+            })
+            .catch(() => {
+                // If offline or network fails, fallback to the cache
+                return caches.match(event.request);
             })
     );
 });
