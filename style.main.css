@@ -1229,6 +1229,23 @@ select:focus {
     /* Re-enable scrolling inside the modal content */
 }
 
+/* Re-trigger animation cleanly when modal opens */
+.modal:not(.hidden) .modal-content {
+    animation: modalPopUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalPopUp {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
 .modal.hidden .modal-content {
     opacity: 0;
 }
@@ -1699,6 +1716,7 @@ select:focus {
     /* Fix weird iOS Safari image height jumps by strictly rendering bounds */
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     /* Remove shadow here, moved to wrapper */
 }
 
@@ -2320,6 +2338,23 @@ select:focus {
         border: none;
         padding: 1.5rem;
         padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+    }
+
+    body.modal-active .view-modal-content,
+    body.modal-active .recipe-modal-content {
+        animation: mobileModalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes mobileModalSlideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
     body.mobile-dropdown-active,
