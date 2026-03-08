@@ -1318,7 +1318,7 @@ function renderRecipes() {
             card.dataset.id = recipe.id;
 
             const imageHtml = recipe.imageData
-                ? `<img src="${recipe.imageData}" alt="${recipe.title}">`
+                ? `<img src="${recipe.imageData}" alt="${recipe.title}" loading="lazy">`
                 : `<i class="fa-solid fa-utensils"></i>`;
 
             const recipeCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
@@ -1931,6 +1931,7 @@ function setupEventListeners() {
             });
 
             const img = document.createElement('img');
+            img.loading = 'lazy';
             if (imgObj.file) {
                 // Object URL for local files
                 img.src = URL.createObjectURL(imgObj.file);
@@ -1966,19 +1967,92 @@ function setupEventListeners() {
         });
     }
 
-    recipeImageInput.addEventListener('change', function (e) {
-        const files = Array.from(e.target.files);
-        files.forEach(file => {
-            currentRecipeImages.push({
-                file: file,
-                url: null,
-                isDefault: currentRecipeImages.length === 0 // First image is default natively
-            });
-        });
+    // Helper function to compress images
+    const compressImage = (file, maxWidth, maxHeight, quality) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = event => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    let width = img.width;
+                    let height = img.height;
 
-        // Reset input so same file can be selected again if needed
-        recipeImageInput.value = '';
-        renderImagePreviewGrid();
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height *= maxWidth / width));
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width *= maxHeight / height));
+                            height = maxHeight;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    canvas.toBlob((blob) => {
+                        if (blob) {
+                            // Create a new File object from the Blob
+                            const compressedFile = new File([blob], file.name, {
+                                type: 'image/jpeg',
+                                lastModified: Date.now()
+                            });
+                            resolve(compressedFile);
+                        } else {
+                            reject(new Error('Canvas to Blob failed'));
+                        }
+                    }, 'image/jpeg', quality);
+                };
+                img.onerror = error => reject(error);
+            };
+            reader.onerror = error => reject(error);
+        });
+    };
+
+    recipeImageInput.addEventListener('change', async function (e) {
+        const files = Array.from(e.target.files);
+        
+        // Disable the form temporarily to prevent saving while compressing
+        const saveBtn = recipeForm.querySelector('button[type="submit"]');
+        const origText = saveBtn.textContent;
+        saveBtn.disabled = true;
+        saveBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Komprimiere Bilder...';
+
+        try {
+            for (const file of files) {
+                // Compress image if it's an image file (e.g., JPEG, PNG, HEIC converted to JPEG)
+                let processedFile = file;
+                if (file.type.startsWith('image/')) {
+                    try {
+                        // Max 1600x1600 resolution, 0.8 quality jpeg
+                        processedFile = await compressImage(file, 1600, 1600, 0.8);
+                    } catch (err) {
+                        console.error('Image compression failed for', file.name, err);
+                        // Fallback to original file if compression fails
+                    }
+                }
+
+                currentRecipeImages.push({
+                    file: processedFile,
+                    url: null,
+                    isDefault: currentRecipeImages.length === 0
+                });
+            }
+        } finally {
+            // Restore button
+            saveBtn.disabled = false;
+            saveBtn.textContent = origText;
+            
+            recipeImageInput.value = '';
+            renderImagePreviewGrid();
+        }
     });
 
     // Form Submit (Save Recipe)
@@ -2184,7 +2258,7 @@ function openViewModal(recipe) {
 
     const mainImageHtml = initialMainImageUrl
         ? `<div class="recipe-detail-image-wrapper">
-            <img src="${initialMainImageUrl}" alt="${recipe.title}" class="recipe-detail-image" id="mainRecipeViewImage" onclick="openLightbox(${currentLightboxIndex})">
+            <img src="${initialMainImageUrl}" alt="${recipe.title}" loading="lazy" class="recipe-detail-image" id="mainRecipeViewImage" onclick="openLightbox(${currentLightboxIndex})">
            </div>`
         : '';
 
@@ -2193,7 +2267,7 @@ function openViewModal(recipe) {
         galleryHtml = '<div class="recipe-gallery-thumbnails">';
         currentLightboxImages.forEach((imgUrl, idx) => {
             const isActive = imgUrl === initialMainImageUrl ? 'active' : '';
-            galleryHtml += `<img src="${imgUrl}" alt="Thumbnail ${idx}" class="${isActive}" onclick="updateMainViewImage('${imgUrl}', ${idx}, this)">`;
+            galleryHtml += `<img src="${imgUrl}" alt="Thumbnail ${idx}" loading="lazy" class="${isActive}" onclick="updateMainViewImage('${imgUrl}', ${idx}, this)">`;
         });
         galleryHtml += '</div>';
     }
