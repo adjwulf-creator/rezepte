@@ -1833,11 +1833,7 @@ select:focus {
 }
 
 #closeViewModalBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 20;
-    /* Ensure it stays above the image */
+    /* No position:absolute - button is in its own flex row above the image */
     background: white;
     border: 1.5px solid #e53935;
     color: #e53935;
