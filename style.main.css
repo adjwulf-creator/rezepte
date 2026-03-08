@@ -363,7 +363,7 @@ button {
     flex-direction: column;
     position: sticky;
     top: 100px; /* Accounts for header height + padding */
-    max-height: calc(100vh - 120px); /* Leaves space at the bottom */
+    max-height: calc(100vh - 150px); /* Leaves more space at the bottom */
 }
 
 .sidebar-sticky-section {
