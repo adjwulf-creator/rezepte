@@ -1725,7 +1725,13 @@ function setupEventListeners() {
         document.getElementById('modalTitle').textContent = t('add_recipe_title');
         recipeFolderSelect.value = currentFolderId === 'all' ? '' : currentFolderId;
         currentRecipeImages = [];
-        renderImagePreviewGrid();
+        
+        // Reset scroll position
+        const recipeModalContent = recipeModal.querySelector('.modal-content');
+        if (recipeModalContent) {
+            recipeModalContent.scrollTop = 0;
+        }
+
         recipeModal.classList.remove('hidden');
     });
 
@@ -1856,6 +1862,12 @@ function setupEventListeners() {
         }
 
         renderImagePreviewGrid();
+
+        // Reset scroll position
+        const recipeModalContent = recipeModal.querySelector('.modal-content');
+        if (recipeModalContent) {
+            recipeModalContent.scrollTop = 0;
+        }
 
         recipeModal.classList.remove('hidden');
     });
