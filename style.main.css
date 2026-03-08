@@ -1416,6 +1416,28 @@ select:focus {
     -webkit-text-stroke: 1.5px var(--color-secondary);
 }
 
+.edit-cat-btn,
+.delete-cat-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem; /* Noticeably larger icons */
+    padding: 0.5rem; /* Larger tap target */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-light); /* Default color for trash icon */
+    transition: var(--transition);
+}
+
+.delete-cat-btn:hover {
+    color: #e53935;
+}
+
+.edit-cat-btn:hover i {
+    opacity: 0.7;
+}
+
 .close-btn {
     background: white;
     border: 1.5px solid #e53935;
