@@ -2333,7 +2333,7 @@ select:focus {
     }
 
     .content-area {
-        transition: filter 0.3s ease, opacity 0.3s ease;
+        transition: opacity 0.3s ease;
     }
 
     /* Ensure no double scrolling: only .folder-list should scroll */
