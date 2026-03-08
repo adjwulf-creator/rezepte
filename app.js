@@ -2611,6 +2611,7 @@ function updateMainViewImage(url, index, element) {
 function openLightbox(index) {
     if (currentLightboxImages.length === 0) return;
     currentLightboxIndex = index;
+    updateLightboxView();
     lightboxModal.classList.remove('hidden');
 }
 
