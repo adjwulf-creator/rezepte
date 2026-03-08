@@ -659,9 +659,9 @@ function renderSettingsCategoryList() {
         li.className = 'settings-list-item';
 
         li.innerHTML = `
-            <input type="text" class="category-input" value="${cat.name}" data-id="${cat.id}" data-original="${cat.name}">
-            <div class="folder-actions" style="display:flex">
-                <button class="save-cat-btn hidden" title="Umbenennen" data-id="${cat.id}"><i class="fa-solid fa-pen" style="color:var(--color-primary)"></i></button>
+            <input type="text" class="category-input" value="${cat.name}" data-id="${cat.id}" data-original="${cat.name}" readonly>
+            <div class="folder-actions" style="display:flex; gap: 0.8rem; align-items: center;">
+                <button class="edit-cat-btn" title="Umbenennen" data-id="${cat.id}"><i class="fa-solid fa-pen" style="color:var(--color-primary)"></i></button>
                 <button class="delete-cat-btn" title="Löschen" data-id="${cat.id}"><i class="fa-solid fa-trash-can"></i></button>
             </div>
         `;
@@ -674,58 +674,76 @@ function renderSettingsCategoryList() {
 
 function setupCategoryListeners() {
     const inputs = settingsCategoryList.querySelectorAll('.category-input');
-    const saveBtns = settingsCategoryList.querySelectorAll('.save-cat-btn');
+    const editBtns = settingsCategoryList.querySelectorAll('.edit-cat-btn');
     const deleteBtns = settingsCategoryList.querySelectorAll('.delete-cat-btn');
 
-    inputs.forEach(input => {
-        input.addEventListener('input', () => {
-            const id = input.dataset.id;
-            const btn = settingsCategoryList.querySelector(`.save-cat-btn[data-id="${id}"]`);
-            if (input.value.trim() !== input.dataset.original) {
-                btn.classList.remove('hidden');
-            } else {
-                btn.classList.add('hidden');
-            }
-        });
-    });
-
-    saveBtns.forEach(btn => {
+    editBtns.forEach(btn => {
         btn.addEventListener('click', async () => {
             const id = btn.dataset.id;
             const input = settingsCategoryList.querySelector(`.category-input[data-id="${id}"]`);
-            const newName = input.value.trim();
-            const oldName = input.dataset.original;
+            const icon = btn.querySelector('i');
 
-            if (!newName || newName === oldName) return;
+            if (input.hasAttribute('readonly')) {
+                // Enter Edit Mode
+                input.removeAttribute('readonly');
+                input.focus();
+                
+                // Move cursor to end of text
+                const val = input.value;
+                input.value = '';
+                input.value = val;
 
-            btn.disabled = true;
+                // Change icon to save checkmark
+                icon.classList.remove('fa-pen');
+                icon.classList.add('fa-check');
+                icon.style.color = 'var(--color-secondary)';
+                
+            } else {
+                // Save Mode triggered
+                const newName = input.value.trim();
+                const oldName = input.dataset.original;
 
-            // Update category name in categories table
-            const { error } = await sbClient.from('categories').update({ name: newName }).eq('id', id);
+                // Lock again visually right away
+                input.setAttribute('readonly', 'true');
+                icon.classList.remove('fa-check');
+                icon.classList.add('fa-pen');
+                icon.style.color = 'var(--color-primary)';
 
-            if (!error) {
-                // Cascade update: replace oldName within comma-separated category strings
-                const { data: affectedRecipes } = await sbClient
-                    .from('recipes')
-                    .select('id, category')
-                    .eq('user_id', currentUser.id);
-
-                if (affectedRecipes) {
-                    const updates = affectedRecipes
-                        .filter(r => r.category && r.category.split(',').map(c => c.trim()).includes(oldName))
-                        .map(r => ({
-                            id: r.id,
-                            category: r.category.split(',').map(c => c.trim() === oldName ? newName : c.trim()).join(',')
-                        }));
-                    for (const upd of updates) {
-                        await sbClient.from('recipes').update({ category: upd.category }).eq('id', upd.id);
-                    }
+                if (!newName || newName === oldName) {
+                    input.value = oldName; // Reset
+                    return;
                 }
 
-                await loadCategories();
-                await loadRecipes();
-            } else {
-                alert('Fehler beim Ändern der Kategorie: ' + error.message);
+                btn.disabled = true;
+
+                // Update category name in categories table
+                const { error } = await sbClient.from('categories').update({ name: newName }).eq('id', id);
+
+                if (!error) {
+                    // Cascade update: replace oldName within comma-separated category strings
+                    const { data: affectedRecipes } = await sbClient
+                        .from('recipes')
+                        .select('id, category')
+                        .eq('user_id', currentUser.id);
+
+                    if (affectedRecipes) {
+                        const updates = affectedRecipes
+                            .filter(r => r.category && r.category.split(',').map(c => c.trim()).includes(oldName))
+                            .map(r => ({
+                                id: r.id,
+                                category: r.category.split(',').map(c => c.trim() === oldName ? newName : c.trim()).join(',')
+                            }));
+                        for (const upd of updates) {
+                            await sbClient.from('recipes').update({ category: upd.category }).eq('id', upd.id);
+                        }
+                    }
+
+                    await loadCategories();
+                    await loadRecipes();
+                } else {
+                    alert('Fehler beim Ändern der Kategorie: ' + error.message);
+                    input.value = oldName;
+                }
                 btn.disabled = false;
             }
         });
