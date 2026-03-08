@@ -181,10 +181,17 @@ function updateLayoutVariables() {
 // Global Modal Transition Helpers
 function showModal(modal) {
     if (!modal) return;
+    
+    // 1. Remove hidden to apply 'display: flex'
     modal.classList.remove('hidden');
-    // Force DOM reflow so browser registers display:flex before transitioning opacity/blur
-    void modal.offsetHeight; 
-    modal.classList.add('show');
+    
+    // 2. Wait for the browser to actually paint the block
+    requestAnimationFrame(() => {
+        setTimeout(() => {
+            // 3. Apply the class that triggers the CSS opacity/blur transition
+            modal.classList.add('show');
+        }, 10);
+    });
 }
 
 function hideModal(modal) {

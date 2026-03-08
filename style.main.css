@@ -1201,7 +1201,7 @@ select:focus {
     justify-content: center;
     z-index: 2100;
     opacity: 0;
-    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
     overscroll-behavior: contain;
     touch-action: none;
 }
@@ -1211,6 +1211,7 @@ select:focus {
     opacity: 1;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Specific styling for folder modal to match header color */
@@ -2114,12 +2115,15 @@ select:focus {
     flex-direction: column;
     opacity: 0;
     display: none;
-    transition: opacity 0.4s ease, backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease;
+    transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
 }
 
 .lightbox.show {
     display: flex;
     opacity: 1;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .lightbox.hidden {
