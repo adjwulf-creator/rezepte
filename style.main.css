@@ -1194,18 +1194,23 @@ select:focus {
     width: 100%;
     height: 100%;
     background-color: rgba(44, 62, 80, 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    display: flex;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+    display: none;
     align-items: center;
     justify-content: center;
     z-index: 2100;
-    /* Higher than header and dropdowns */
-    opacity: 1;
-    visibility: visible;
-    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.4s, backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    opacity: 0;
+    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     overscroll-behavior: contain;
     touch-action: none;
+}
+
+.modal.show {
+    display: flex;
+    opacity: 1;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
 /* Specific styling for folder modal to match header color */
@@ -1217,10 +1222,7 @@ select:focus {
 }
 
 .modal.hidden {
-    opacity: 0;
-    visibility: hidden;
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
+    display: none !important;
 }
 
 .modal-content {
@@ -1237,9 +1239,8 @@ select:focus {
     /* Re-enable scrolling inside the modal content */
 }
 
-/* Re-trigger animation cleanly when modal opens */
 .modal:not(.hidden) .modal-content {
-    animation: modalFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+    animation: modalFadeIn 0.4s ease forwards;
 }
 
 @keyframes modalFadeIn {
@@ -1249,10 +1250,6 @@ select:focus {
     to {
         opacity: 1;
     }
-}
-
-.modal.hidden .modal-content {
-    opacity: 0;
 }
 
 .settings-modal-content {
@@ -2115,13 +2112,18 @@ select:focus {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    opacity: 0;
+    display: none;
+    transition: opacity 0.4s ease, backdrop-filter 0.4s ease, -webkit-backdrop-filter 0.4s ease;
+}
+
+.lightbox.show {
+    display: flex;
     opacity: 1;
-    transition: opacity 0.3s ease;
 }
 
 .lightbox.hidden {
-    opacity: 0;
-    pointer-events: none;
+    display: none !important;
 }
 
 .lightbox img {

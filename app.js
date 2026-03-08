@@ -178,6 +178,26 @@ function updateLayoutVariables() {
     }
 }
 
+// Global Modal Transition Helpers
+function showModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    // Force DOM reflow so browser registers display:flex before transitioning opacity/blur
+    void modal.offsetHeight; 
+    modal.classList.add('show');
+}
+
+function hideModal(modal) {
+    if (!modal) return;
+    modal.classList.remove('show');
+    // Wait for the 0.7s transition to finish before actually hiding
+    setTimeout(() => {
+        if (!modal.classList.contains('show')) {
+            modal.classList.add('hidden');
+        }
+    }, 700);
+}
+
 window.addEventListener('resize', updateLayoutVariables);
 document.addEventListener('DOMContentLoaded', updateLayoutVariables);
 // Call once immediately in case DOMContentLoaded already fired or for initial parsing
@@ -1533,7 +1553,7 @@ function setupEventListeners() {
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
         }
 
-        settingsModal.classList.remove('hidden');
+        showModal(settingsModal);
         passwordMessage.classList.add('hidden');
         appNameMessage.classList.add('hidden');
         appNameInput.value = currentUser?.user_metadata?.app_name || '';
@@ -1576,18 +1596,18 @@ function setupEventListeners() {
     });
 
     closeSettingsModalBtn.addEventListener('click', () => {
-        settingsModal.classList.add('hidden');
+        hideModal(settingsModal);
     });
 
     // Support instant pointer interaction for Safari/mobile
     closeSettingsModalBtn.addEventListener('pointerdown', (e) => {
         e.preventDefault();
-        settingsModal.classList.add('hidden');
+        hideModal(settingsModal);
     });
 
     // Click outside to close
     settingsModal.addEventListener('pointerdown', (e) => {
-        if (e.target === settingsModal) settingsModal.classList.add('hidden');
+        if (e.target === settingsModal) hideModal(settingsModal);
     });
 
     tabBtns.forEach(btn => {
@@ -1849,11 +1869,11 @@ function setupEventListeners() {
     // Folders
     addFolderBtn.addEventListener('click', () => {
         folderForm.reset();
-        folderModal.classList.remove('hidden');
+        showModal(folderModal);
         setTimeout(() => folderNameInput.focus(), 100);
     });
 
-    const closeFolderModal = () => folderModal.classList.add('hidden');
+    const closeFolderModal = () => hideModal(folderModal);
     closeFolderModalBtn.addEventListener('click', closeFolderModal);
     cancelFolderModalBtn.addEventListener('click', closeFolderModal);
 
@@ -1909,11 +1929,16 @@ function setupEventListeners() {
             recipeModalContent.scrollTop = 0;
         }
 
-        recipeModal.classList.remove('hidden');
+        showModal(recipeModal);
     });
 
     const closeAddModal = () => {
-        recipeModal.classList.add('hidden');
+        hideModal(recipeModal);
+        recipeForm.reset();
+        // Clear Quill
+        if (quill) quill.setContents([{ insert: '\n' }]);
+        currentRecipeImages = [];
+        renderImagePreviewGrid();
         // Reset fullscreen state if active
         const container = document.querySelector('.textarea-container.fullscreen');
         if (container) {
@@ -1972,11 +1997,11 @@ function setupEventListeners() {
 
     // View Modal
     const closeViewModal = () => {
-        viewModal.classList.add('hidden');
+        hideModal(viewModal);
         currentViewRecipeId = null;
+        closeLightbox();
+        stopAutoScroll();
     };
-
-    // Utilize Event Delegation for the dynamically injected close button
     viewModal.addEventListener('click', (e) => {
         const closeBtn = e.target.closest('#closeViewModalBtn');
         if (closeBtn) closeViewModal();
@@ -1995,7 +2020,7 @@ function setupEventListeners() {
         const recipe = recipes.find(r => r.id === currentViewRecipeId);
         if (!recipe) return;
 
-        viewModal.classList.add('hidden');
+        hideModal(viewModal);
         editingRecipeId = recipe.id;
         document.getElementById('modalTitle').textContent = t('edit_recipe_title') || 'Rezept bearbeiten';
 
@@ -2046,7 +2071,7 @@ function setupEventListeners() {
             recipeModalContent.scrollTop = 0;
         }
 
-        recipeModal.classList.remove('hidden');
+        showModal(recipeModal);
     });
 
     // Image Upload Preview Logic
@@ -2351,7 +2376,7 @@ function setupEventListeners() {
                 }
 
                 await loadRecipes();
-                viewModal.classList.add('hidden');
+                hideModal(viewModal);
                 currentViewRecipeId = null;
             } catch (error) {
                 alert(t('err_delete_recipe') || 'Fehler beim Löschen des Rezepts.');
@@ -2368,11 +2393,11 @@ function setupEventListeners() {
     // iOS Safari also fires phantom clicks during scroll gestures which would close modals.
     window.addEventListener('click', (e) => {
         if (window.innerWidth <= 768) return;
-        if (e.target === recipeModal) closeAddModal();
-        if (e.target === viewModal) viewModal.classList.add('hidden');
+        if (e.target === recipeModal) hideModal(recipeModal);
+        if (e.target === viewModal) closeViewModal();
         if (e.target === folderModal) closeFolderModal();
         if (e.target === settingsModal) {
-            settingsModal.classList.add('hidden');
+            hideModal(settingsModal);
             passwordMessage.classList.add('hidden');
         }
         if (e.target === lightboxModal) closeLightbox();
@@ -2575,6 +2600,9 @@ function openViewModal(recipe) {
     }
 
     viewModal.classList.remove('hidden');
+    // Force reflow and add trigger class to trigger CSS transition correctly
+    void viewModal.offsetHeight;
+    viewModal.classList.add('show');
 }
 
 // Function to handle clicking a thumbnail in the view modal
@@ -2595,8 +2623,9 @@ function updateMainViewImage(url, index, element) {
 function openLightbox(index) {
     if (currentLightboxImages.length === 0) return;
     currentLightboxIndex = index;
-    updateLightboxView();
     lightboxModal.classList.remove('hidden');
+    void lightboxModal.offsetHeight;
+    lightboxModal.classList.add('show');
 }
 
 function updateLightboxView() {
@@ -2614,7 +2643,10 @@ function updateLightboxView() {
 }
 
 function closeLightbox() {
-    lightboxModal.classList.add('hidden');
+    lightboxModal.classList.remove('show');
+    setTimeout(() => {
+        if (!lightboxModal.classList.contains('show')) lightboxModal.classList.add('hidden');
+    }, 700);
     lightboxImage.src = '';
 }
 
