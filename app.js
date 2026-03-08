@@ -2087,8 +2087,8 @@ function openViewModal(recipe) {
         : 0;
 
     const mainImageHtml = initialMainImageUrl
-        ? `<div class="recipe-detail-image-wrapper">
-            <button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button>
+        ? `<div class="recipe-detail-image-wrapper" style="position:relative;width:100%;display:block;">
+            <button class="close-btn" id="closeViewModalBtn" style="position:absolute;top:10px;right:10px;z-index:9999;"><i class="fa-solid fa-times"></i></button>
             <img src="${initialMainImageUrl}" alt="${recipe.title}" class="recipe-detail-image" id="mainRecipeViewImage" onclick="openLightbox(${currentLightboxIndex})">
            </div>`
         : `<button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button>`;
