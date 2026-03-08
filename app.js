@@ -1707,6 +1707,7 @@ function setupEventListeners() {
     addRecipeBtn.addEventListener('click', () => {
         editingRecipeId = null;
         recipeForm.reset();
+        if (quill) quill.setContents([]); // Clear Rich Text Editor
         // Uncheck all category checkboxes
         document.querySelectorAll('#recipeCategoryCheckboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         document.getElementById('modalTitle').textContent = t('add_recipe_title');
@@ -1767,7 +1768,14 @@ function setupEventListeners() {
         });
         document.getElementById('recipeFolder').value = recipe.folder_id || '';
         document.getElementById('recipeIngredients').value = recipe.ingredients;
-        document.getElementById('recipeInstructions').value = recipe.instructions;
+        
+        if (quill) {
+            // Load HTML content into Quill editor safely
+            quill.clipboard.dangerouslyPasteHTML(recipe.instructions || '');
+        } else {
+            // Fallback
+            document.getElementById('recipeInstructions').value = recipe.instructions;
+        }
 
         if (recipe.images && recipe.images.length > 0) {
             currentRecipeImages = recipe.images.map(url => ({
@@ -1913,7 +1921,8 @@ function setupEventListeners() {
         const category = Array.from(checkedBoxes).map(cb => cb.value).join(',');
         const folder_id = document.getElementById('recipeFolder').value || null;
         const ingredients = document.getElementById('recipeIngredients').value;
-        const instructions = document.getElementById('recipeInstructions').value;
+        // Extract HTML from Quill editor instead of textarea
+        const instructions = quill ? quill.root.innerHTML : document.getElementById('recipeInstructions').value;
 
         // Visual Feedback (disable button)
         const submitBtn = recipeForm.querySelector('button[type="submit"]');
@@ -2155,7 +2164,11 @@ function openViewModal(recipe) {
         instructionsHtml = `
             <div class="instructions-section">
                 <h4>${t('instructions')}</h4>
-                <p>${recipe.instructions}</p>
+                <div class="ql-snow">
+                    <div class="ql-editor" style="padding: 0;">
+                        ${recipe.instructions}
+                    </div>
+                </div>
             </div>
         `;
     }

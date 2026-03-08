@@ -2110,6 +2110,56 @@ select:focus {
     border-radius: 20px;
 }
 
+/* =========================================
+   Quill.js Rich Text Editor Styling
+   ========================================= */
+
+.ql-toolbar.ql-snow {
+    border: 1px solid var(--color-border) !important;
+    border-bottom: none !important;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    background-color: #fafafa;
+    font-family: var(--font-body);
+}
+
+.ql-container.ql-snow {
+    border: 1px solid var(--color-border) !important;
+    border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+    font-family: var(--font-body) !important;
+    font-size: 1rem !important;
+}
+
+.ql-editor {
+    min-height: 150px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.ql-editor.ql-blank::before {
+    color: #a09d96;
+    font-style: italic;
+}
+
+.ql-editor h1, 
+.ql-editor h2 {
+    font-family: var(--font-heading);
+    color: var(--color-primary);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.ql-editor p {
+    margin-bottom: 0.5rem;
+}
+
+/* View Mode Quill Overrides */
+.view-modal-content .ql-editor {
+    padding: 0;
+    min-height: auto;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .app-header {
