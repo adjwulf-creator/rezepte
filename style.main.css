@@ -2104,7 +2104,7 @@ select:focus {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     background: rgba(255, 255, 255, 0.95); /* Light transparent background */
     backdrop-filter: blur(8px); /* Frosty glass effect */
     -webkit-backdrop-filter: blur(8px);
@@ -2124,7 +2124,7 @@ select:focus {
 
 .lightbox img {
     max-width: 90%;
-    max-height: 85vh;
+    max-height: 85dvh;
     object-fit: contain;
     border-radius: var(--radius-sm);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
