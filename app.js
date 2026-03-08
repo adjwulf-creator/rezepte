@@ -1627,6 +1627,183 @@ function setupEventListeners() {
         }
     });
 
+    // Settings - Bulk Optimize Images
+    const optimizeImagesBtn = document.getElementById('optimizeImagesBtn');
+    const optimizeImagesProgress = document.getElementById('optimizeImagesProgress');
+
+    if (optimizeImagesBtn) {
+        optimizeImagesBtn.addEventListener('click', async () => {
+            if (!confirm(t('optimize_images_confirm') || 'Dies komprimiert alle alten Bilder dauerhaft, um Speicherplatz zu sparen. Fortfahren?')) return;
+
+            optimizeImagesBtn.disabled = true;
+            optimizeImagesProgress.classList.remove('hidden');
+            optimizeImagesProgress.style.color = 'var(--color-primary)';
+
+            try {
+                // Fetch all user recipes to check their images
+                const { data: allRecipes, error: fetchErr } = await sbClient
+                    .from('recipes')
+                    .select('*')
+                    .eq('user_id', currentUser.id);
+
+                if (fetchErr) throw fetchErr;
+
+                let optimizedCount = 0;
+                let errorCount = 0;
+                let totalImagesToCheck = 0;
+
+                // First count how many images exist to give progress info
+                for (const recipe of allRecipes) {
+                    if (recipe.images && recipe.images.length > 0) totalImagesToCheck += recipe.images.length;
+                    else if (recipe.imageData) totalImagesToCheck += 1;
+                }
+
+                if (totalImagesToCheck === 0) {
+                    optimizeImagesProgress.textContent = "Keine Bilder zum Optimieren gefunden.";
+                    optimizeImagesBtn.disabled = false;
+                    return;
+                }
+
+                let processedImages = 0;
+
+                for (const recipe of allRecipes) {
+                    let hasChanges = false;
+                    let newImages = [];
+                    let newImageData = null;
+
+                    const imagesToProcess = recipe.images && recipe.images.length > 0
+                        ? recipe.images
+                        : (recipe.imageData ? [recipe.imageData] : []);
+
+                    for (const imgUrl of imagesToProcess) {
+                        processedImages++;
+                        optimizeImagesProgress.textContent = `Vorgang läuft... (${processedImages}/${totalImagesToCheck}) Bitte warten...`;
+
+                        try {
+                            // 1. Fetch raw image bytes from storage
+                            const res = await fetch(imgUrl);
+                            if (!res.ok) throw new Error("Fetch failed");
+                            const blob = await res.blob();
+
+                            // Fast skip for images that are already tiny (e.g., < 300KB)
+                            if (blob.size < 300 * 1024) {
+                                newImages.push(imgUrl);
+                                if (imgUrl === recipe.imageData) newImageData = imgUrl;    
+                                continue;
+                            }
+
+                            // 2. Compress via Canvas
+                            const file = new File([blob], `optimize_${Date.now()}.jpg`, { type: blob.type });
+                            
+                            // Using the previously accessible compressImage logic
+                            // Fallback canvas pipeline inline since compressImage might be scoped differently
+                            const compressedBlob = await new Promise((resolve, reject) => {
+                                const reader = new FileReader();
+                                reader.readAsDataURL(file);
+                                reader.onload = event => {
+                                    const img = new Image();
+                                    img.src = event.target.result;
+                                    img.onload = () => {
+                                        let width = img.width;
+                                        let height = img.height;
+                                        const maxWidth = 1600;
+                                        const maxHeight = 1600;
+
+                                        if (width > height) {
+                                            if (width > maxWidth) {
+                                                height = Math.round((height *= maxWidth / width));
+                                                width = maxWidth;
+                                            }
+                                        } else {
+                                            if (height > maxHeight) {
+                                                width = Math.round((width *= maxHeight / height));
+                                                height = maxHeight;
+                                            }
+                                        }
+
+                                        const canvas = document.createElement('canvas');
+                                        canvas.width = width;
+                                        canvas.height = height;
+                                        const ctx = canvas.getContext('2d');
+                                        ctx.drawImage(img, 0, 0, width, height);
+
+                                        canvas.toBlob((cblob) => {
+                                            if (cblob) resolve(cblob);
+                                            else reject("Canvas to Blob failed");
+                                        }, 'image/jpeg', 0.8);
+                                    };
+                                    img.onerror = error => reject(error);
+                                };
+                                reader.onerror = error => reject(error);
+                            });
+
+                            const compressedFile = new File([compressedBlob], `opt_${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+                            // 3. Upload new optimized file
+                            const fileName = `opt-${Date.now()}-${Math.random().toString(36).substring(2, 10)}.jpg`;
+                            const { error: uploadErr } = await sbClient.storage
+                                .from('recipe-images')
+                                .upload(fileName, compressedFile);
+
+                            if (uploadErr) throw uploadErr;
+
+                            const { data: publicUrlData } = sbClient.storage
+                                .from('recipe-images')
+                                .getPublicUrl(fileName);
+
+                            const newUrl = publicUrlData.publicUrl;
+                            newImages.push(newUrl);
+
+                            if (imgUrl === recipe.imageData || (imagesToProcess.length === 1 && !recipe.imageData)) {
+                                newImageData = newUrl;
+                            }
+
+                            hasChanges = true;
+                            optimizedCount++;
+
+                            // 4. Delete the old giant file from Supabase storage
+                            const oldUrlParts = imgUrl.split('/');
+                            const oldFileName = oldUrlParts[oldUrlParts.length - 1];
+                            // Best effort delete
+                            await sbClient.storage.from('recipe-images').remove([oldFileName]).catch(() => {});
+
+                        } catch (err) {
+                            console.error("Failed to optimize image:", imgUrl, err);
+                            errorCount++;
+                            // Fallback to original URL
+                            newImages.push(imgUrl);
+                            if (imgUrl === recipe.imageData) newImageData = imgUrl; 
+                        }
+                    }
+
+                    // 5. Update DB if changes were made
+                    if (hasChanges) {
+                        const updatePayload = { images: newImages };
+                        if (newImageData) updatePayload.imageData = newImageData;
+
+                        const { error: updateErr } = await sbClient
+                            .from('recipes')
+                            .update(updatePayload)
+                            .eq('id', recipe.id);
+                        
+                        if (updateErr) console.error("Failed to update recipe DB entry", updateErr);
+                    }
+                }
+
+                optimizeImagesProgress.textContent = `Fertig! ${optimizedCount} Bild(er) komprimiert. ${errorCount > 0 ? `(${errorCount} Fehler)` : ''}`;
+                // Reload ui
+                await loadRecipes();
+
+            } catch (error) {
+                console.error(error);
+                optimizeImagesProgress.style.color = 'var(--color-accent)';
+                optimizeImagesProgress.textContent = "Ein unerwarteter Fehler ist aufgetreten: " + error.message;
+            } finally {
+                optimizeImagesBtn.disabled = false;
+            }
+        });
+    }
+
     // Settings - Add Category
     categoryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
