@@ -181,28 +181,12 @@ function updateLayoutVariables() {
 // Global Modal Transition Helpers
 function showModal(modal) {
     if (!modal) return;
-    
-    // 1. Remove hidden to apply 'display: flex'
     modal.classList.remove('hidden');
-    
-    // 2. Wait for the browser to actually paint the block
-    requestAnimationFrame(() => {
-        setTimeout(() => {
-            // 3. Apply the class that triggers the CSS opacity/blur transition
-            modal.classList.add('show');
-        }, 10);
-    });
 }
 
 function hideModal(modal) {
     if (!modal) return;
-    modal.classList.remove('show');
-    // Wait for the 0.7s transition to finish before actually hiding
-    setTimeout(() => {
-        if (!modal.classList.contains('show')) {
-            modal.classList.add('hidden');
-        }
-    }, 700);
+    modal.classList.add('hidden');
 }
 
 window.addEventListener('resize', updateLayoutVariables);
@@ -2607,9 +2591,6 @@ function openViewModal(recipe) {
     }
 
     viewModal.classList.remove('hidden');
-    // Force reflow and add trigger class to trigger CSS transition correctly
-    void viewModal.offsetHeight;
-    viewModal.classList.add('show');
 }
 
 // Function to handle clicking a thumbnail in the view modal
@@ -2631,8 +2612,6 @@ function openLightbox(index) {
     if (currentLightboxImages.length === 0) return;
     currentLightboxIndex = index;
     lightboxModal.classList.remove('hidden');
-    void lightboxModal.offsetHeight;
-    lightboxModal.classList.add('show');
 }
 
 function updateLightboxView() {
@@ -2650,10 +2629,7 @@ function updateLightboxView() {
 }
 
 function closeLightbox() {
-    lightboxModal.classList.remove('show');
-    setTimeout(() => {
-        if (!lightboxModal.classList.contains('show')) lightboxModal.classList.add('hidden');
-    }, 700);
+    lightboxModal.classList.add('hidden');
     lightboxImage.src = '';
 }
 

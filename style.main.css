@@ -1194,24 +1194,15 @@ select:focus {
     width: 100%;
     height: 100%;
     background-color: rgba(44, 62, 80, 0.6);
-    backdrop-filter: blur(0px);
-    -webkit-backdrop-filter: blur(0px);
-    display: none;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2100;
-    opacity: 0;
-    transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
+    opacity: 1;
     overscroll-behavior: contain;
     touch-action: none;
-}
-
-.modal.show {
-    display: flex;
-    opacity: 1;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 /* Specific styling for folder modal to match header color */
@@ -2113,17 +2104,8 @@ select:focus {
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    opacity: 0;
-    display: none;
-    transition: opacity 0.5s ease, backdrop-filter 0.5s ease, -webkit-backdrop-filter 0.5s ease;
-}
-
-.lightbox.show {
-    display: flex;
     opacity: 1;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    transition: opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
 }
 
 .lightbox.hidden {
