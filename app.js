@@ -171,6 +171,18 @@ function adaptMobileLayout() {
 
 window.addEventListener('resize', adaptMobileLayout);
 
+function updateLayoutVariables() {
+    const header = document.querySelector('.app-header');
+    if (header) {
+        document.documentElement.style.setProperty('--header-height', `${header.offsetHeight}px`);
+    }
+}
+
+window.addEventListener('resize', updateLayoutVariables);
+document.addEventListener('DOMContentLoaded', updateLayoutVariables);
+// Call once immediately in case DOMContentLoaded already fired or for initial parsing
+updateLayoutVariables();
+
 function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {

@@ -352,7 +352,7 @@ button {
 }
 
 .sidebar {
-    width: 280px;
+    width: 300px;
     flex-shrink: 0;
     background: var(--color-surface);
     border-radius: var(--radius-md);
@@ -362,8 +362,8 @@ button {
     display: flex;
     flex-direction: column;
     position: sticky;
-    top: 100px; /* Accounts for header height + padding */
-    max-height: calc(100vh - 150px); /* Leaves more space at the bottom */
+    top: calc(var(--header-height, 80px) + 2rem);
+    max-height: calc(100vh - var(--header-height, 80px) - 3rem);
 }
 
 .sidebar-sticky-section {
@@ -407,6 +407,7 @@ button {
     gap: 0.6rem;
     width: 100%;
     margin-bottom: 0.5rem;
+    white-space: nowrap;
 }
 
 .sidebar-title-btn i {
