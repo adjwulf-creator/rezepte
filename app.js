@@ -1324,7 +1324,6 @@ function renderRecipes() {
                         ${tagsHtml}
                     </div>
                     <p class="recipe-description">${recipe.ingredients}</p>
-                    <p class="recipe-instructions-intro">${recipe.instructions || ''}</p>
                 </div>
             `;
 
