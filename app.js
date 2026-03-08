@@ -258,15 +258,19 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         });
 
         if (shouldBeModalActive) {
-            // Calculate scrollbar width to prevent layout shift
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            document.body.style.paddingRight = `${scrollbarWidth}px`;
-            const header = document.querySelector('.app-header');
-            if (header) {
-                // Keep header right padding in sync to prevent header jump
-                header.style.paddingRight = `${scrollbarWidth + 16}px`; // 16px is default padding
-            }
             document.body.classList.add('modal-active');
+            
+            // On iOS Safari, clientWidth takes a frame to update after overflow:hidden
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    let scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                    if (scrollbarWidth > 0) {
+                        document.body.style.paddingRight = `${scrollbarWidth}px`;
+                        const header = document.querySelector('.app-header');
+                        if (header) header.style.paddingRight = `${scrollbarWidth + 16}px`;
+                    }
+                });
+            });
         } else {
             document.body.style.paddingRight = '';
             const header = document.querySelector('.app-header');
