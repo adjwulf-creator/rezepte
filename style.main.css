@@ -2100,7 +2100,9 @@ select:focus {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.95);
+    background: rgba(255, 255, 255, 0.95); /* Light transparent background */
+    backdrop-filter: blur(8px); /* Frosty glass effect */
+    -webkit-backdrop-filter: blur(8px);
     z-index: 3000;
     display: flex;
     align-items: center;
@@ -2157,8 +2159,8 @@ select:focus {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    background: rgba(0, 0, 0, 0.05); /* Darker semi-transparent for light theme */
+    color: var(--color-text);
     border: none;
     padding: 1.5rem 1rem;
     cursor: pointer;
@@ -2169,7 +2171,7 @@ select:focus {
 }
 
 .lightbox-nav:hover {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.15);
 }
 
 .lightbox-nav.prev {
@@ -2183,10 +2185,11 @@ select:focus {
 .lightbox-counter {
     position: absolute;
     bottom: 20px;
-    color: white;
+    color: var(--color-text);
     font-size: 1.1rem;
+    font-weight: 500;
     font-family: inherit;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.05);
     padding: 0.5rem 1rem;
     border-radius: 20px;
 }

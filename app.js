@@ -2353,6 +2353,46 @@ function prevLightboxImage() {
     updateLightboxView();
 }
 
+// Lightbox Swipe Gestures
+let lightboxTouchStartX = 0;
+let lightboxTouchStartY = 0;
+
+const lightboxModalDom = document.getElementById('lightboxModal');
+if (lightboxModalDom) {
+    lightboxModalDom.addEventListener('touchstart', (e) => {
+        lightboxTouchStartX = e.changedTouches[0].screenX;
+        lightboxTouchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    lightboxModalDom.addEventListener('touchend', (e) => {
+        const touchEndX = e.changedTouches[0].screenX;
+        const touchEndY = e.changedTouches[0].screenY;
+        
+        const deltaX = touchEndX - lightboxTouchStartX;
+        const deltaY = touchEndY - lightboxTouchStartY;
+        
+        // Ensure a minimum swipe distance to avoid accidental triggers
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal Swipe
+            if (Math.abs(deltaX) > 50 && currentLightboxImages.length > 1) {
+                if (deltaX > 0) {
+                    // Swiped right -> Previous image
+                    prevLightboxImage();
+                } else {
+                    // Swiped left -> Next image
+                    nextLightboxImage();
+                }
+            }
+        } else {
+            // Vertical Swipe
+            if (deltaY > 50) { 
+                // Swiped down -> Close
+                closeLightbox();
+            }
+        }
+    }, { passive: true });
+}
+
 function applyViewState() {
     localStorage.setItem('recipeBook_viewMode', currentViewMode);
 
