@@ -1237,15 +1237,17 @@ select:focus {
 
 /* Re-trigger animation cleanly when modal opens */
 .modal:not(.hidden) .modal-content {
-    animation: modalFadeIn 0.3s ease forwards;
+    animation: modalFadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes modalFadeIn {
     from {
         opacity: 0;
+        transform: translateY(30px) scale(0.98);
     }
     to {
         opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
