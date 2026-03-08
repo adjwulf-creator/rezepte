@@ -1194,8 +1194,8 @@ select:focus {
     width: 100%;
     height: 100%;
     background-color: rgba(44, 62, 80, 0.6);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1203,7 +1203,7 @@ select:focus {
     /* Higher than header and dropdowns */
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.4s, backdrop-filter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.4s, backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     overscroll-behavior: contain;
     touch-action: none;
 }
