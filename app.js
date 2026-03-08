@@ -2662,15 +2662,43 @@ function triggerLightboxAnimation(animationClass) {
 // Lightbox Swipe Gestures
 let lightboxTouchStartX = 0;
 let lightboxTouchStartY = 0;
+let isLightboxZooming = false;
 
 const lightboxModalDom = document.getElementById('lightboxModal');
 if (lightboxModalDom) {
     lightboxModalDom.addEventListener('touchstart', (e) => {
+        // If more than one finger is touching, it's a pinch-to-zoom or multi-touch gesture, not a swipe
+        if (e.touches.length > 1) {
+            isLightboxZooming = true;
+            return;
+        }
+        
+        // Reset zoom flag if starting a clean single-touch gesture
+        if (e.touches.length === 1) {
+            isLightboxZooming = false;
+        }
+
         lightboxTouchStartX = e.changedTouches[0].screenX;
         lightboxTouchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
 
+    lightboxModalDom.addEventListener('touchmove', (e) => {
+        // Continually monitor during the move; if a second finger comes down, cancel the swipe
+        if (e.touches.length > 1) {
+            isLightboxZooming = true;
+        }
+    }, { passive: true });
+
     lightboxModalDom.addEventListener('touchend', (e) => {
+        // If this gesture involved zooming at any point, completely ignore the swipe logic
+        if (isLightboxZooming) {
+            // Only reset once all fingers are off the screen to prevent accidental triggers on release
+            if (e.touches.length === 0) {
+                isLightboxZooming = false;
+            }
+            return;
+        }
+
         const touchEndX = e.changedTouches[0].screenX;
         const touchEndY = e.changedTouches[0].screenY;
         
