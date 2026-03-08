@@ -182,6 +182,8 @@ h4 {
     border: none;
     box-shadow: none;
     background: transparent;
+    position: static;
+    max-height: none;
 }
 
 .hide-on-desktop {
@@ -359,7 +361,9 @@ button {
     padding: 1.5rem;
     display: flex;
     flex-direction: column;
-    max-height: calc(100vh - 4rem);
+    position: sticky;
+    top: 100px; /* Accounts for header height + padding */
+    max-height: calc(100vh - 120px); /* Leaves space at the bottom */
 }
 
 .sidebar-sticky-section {
