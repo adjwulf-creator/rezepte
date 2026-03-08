@@ -1682,26 +1682,7 @@ select:focus {
     isolation: isolate;
 }
 
-/* Explicit rule for the button when inside the image wrapper */
-.recipe-detail-image-wrapper #closeViewModalBtn {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    z-index: 2000;
-    /* Super high z-index inside the new stacking context */
-    background: white;
-    /* Ensure visibility */
-    display: flex;
-    /* Prevent inline block rendering bugs */
-}
-
-/* Fallback if no image */
-.recipe-detail-header>#closeViewModalBtn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 10;
-}
+/* Close button is now in its own flex row above the image - no absolute positioning needed */
 
 .recipe-detail-image {
     width: 100%;
