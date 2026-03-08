@@ -264,7 +264,8 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
                     let scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-                    if (scrollbarWidth > 0) {
+                    // Only apply on desktop. Mobile browsers use floating scrollbars that don't affect layout width.
+                    if (scrollbarWidth > 0 && window.innerWidth > 768) {
                         document.body.style.paddingRight = `${scrollbarWidth}px`;
                         const header = document.querySelector('.app-header');
                         if (header) header.style.paddingRight = `${scrollbarWidth + 16}px`;
