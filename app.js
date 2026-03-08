@@ -114,6 +114,7 @@ const deleteRecipeBtn = document.getElementById('deleteRecipeBtn');
 
 let currentViewRecipeId = null;
 let editingRecipeId = null;
+let quill; // Global Quill instance
 let isFolderEditMode = false;
 let isFolderWiggling = false; // Track wiggle state
 let draggedFolderItem = null;
@@ -2322,7 +2323,24 @@ function applyViewState() {
 }
 
 // Boot up
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize Quill Rich Text Editor
+    quill = new Quill('#editor-container', {
+        theme: 'snow',
+        placeholder: 'Zubereitungsschritte hier eingeben...',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, false] }],
+                ['bold', 'italic', 'underline'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['clean']
+            ]
+        }
+    });
+
+    // Run the rest of the boot sequence
+    await initApp();
+});
 
 // Service Worker Registration and Auto-Update Logic
 if ('serviceWorker' in navigator) {
