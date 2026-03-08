@@ -1717,7 +1717,16 @@ function setupEventListeners() {
         recipeModal.classList.remove('hidden');
     });
 
-    const closeAddModal = () => recipeModal.classList.add('hidden');
+    const closeAddModal = () => {
+        recipeModal.classList.add('hidden');
+        // Reset fullscreen state if active
+        const container = document.querySelector('.textarea-container.fullscreen');
+        if (container) {
+            container.classList.remove('fullscreen');
+            const icon = container.querySelector('.fullscreen-toggle-btn i');
+            if (icon) icon.className = 'fa-solid fa-expand';
+        }
+    };
     closeModalBtn.addEventListener('click', closeAddModal);
     cancelBtn.addEventListener('click', closeAddModal);
 
@@ -1729,6 +1738,24 @@ function setupEventListeners() {
     // recipeModal.addEventListener('pointerdown', (e) => {
     //     if (e.target === recipeModal) closeAddModal();
     // });
+
+    // Fullscreen Toggle for Ingredients
+    const ingredientsFullscreenBtn = document.getElementById('ingredientsFullscreenBtn');
+    if (ingredientsFullscreenBtn) {
+        ingredientsFullscreenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const container = ingredientsFullscreenBtn.closest('.textarea-container');
+            const icon = ingredientsFullscreenBtn.querySelector('i');
+            if (container) {
+                container.classList.toggle('fullscreen');
+                if (container.classList.contains('fullscreen')) {
+                    icon.className = 'fa-solid fa-compress';
+                } else {
+                    icon.className = 'fa-solid fa-expand';
+                }
+            }
+        });
+    }
 
     // View Modal
     const closeViewModal = () => {

@@ -12,7 +12,7 @@
     <title>Inna´s Rezepte</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="app_icon_192.png">
-    <link rel="stylesheet" href="style.main.css?v=307">
+    <link rel="stylesheet" href="style.main.css?v=308">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -223,8 +223,13 @@
 
                 <div class="form-group">
                     <label for="recipeIngredients" data-i18n="recipe_ingredients_label">Zutaten (Eine pro Zeile)</label>
-                    <textarea id="recipeIngredients" rows="5" data-i18n-placeholder="recipe_ingredients_placeholder"
-                        placeholder="- 2 Zucchini&#10;- 1 Aubergine&#10;- 3 Tomaten"></textarea>
+                    <div class="textarea-container">
+                        <button type="button" id="ingredientsFullscreenBtn" class="fullscreen-toggle-btn" title="Vollbild-Modus">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                        <textarea id="recipeIngredients" rows="5" data-i18n-placeholder="recipe_ingredients_placeholder"
+                            placeholder="- 2 Zucchini&#10;- 1 Aubergine&#10;- 3 Tomaten"></textarea>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -438,7 +443,7 @@
     <!-- Quill.js Library -->
     <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
     <script src="translations.js?v=100"></script>
-    <script src="app.js?v=264"></script>
+    <script src="app.js?v=265"></script>
 </body>
 
 </html>
