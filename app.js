@@ -661,7 +661,7 @@ function renderSettingsCategoryList() {
         li.innerHTML = `
             <input type="text" class="category-input" value="${cat.name}" data-id="${cat.id}" data-original="${cat.name}">
             <div class="folder-actions" style="display:flex">
-                <button class="save-cat-btn hidden" title="Speichern" data-id="${cat.id}"><i class="fa-solid fa-check" style="color:var(--color-primary)"></i></button>
+                <button class="save-cat-btn hidden" title="Umbenennen" data-id="${cat.id}"><i class="fa-solid fa-pen" style="color:var(--color-primary)"></i></button>
                 <button class="delete-cat-btn" title="Löschen" data-id="${cat.id}"><i class="fa-solid fa-trash-can"></i></button>
             </div>
         `;

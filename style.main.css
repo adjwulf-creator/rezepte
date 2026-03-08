@@ -1386,6 +1386,20 @@ select:focus {
 
 .add-category-form input {
     flex-grow: 1;
+    padding: 0.8rem 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    font-size: 16px; /* Prevents iOS Safari from auto-zooming on focus */
+    font-family: var(--font-body);
+    color: var(--color-text);
+    background-color: var(--color-surface);
+    transition: var(--transition);
+}
+
+.add-category-form input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(122, 107, 168, 0.1);
 }
 
 .close-btn {
