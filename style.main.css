@@ -1518,6 +1518,27 @@ select:focus {
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+/* Quill Editor Fullscreen Adjustments */
+.textarea-container.fullscreen .ql-toolbar {
+    padding-right: 5rem !important; /* Make room for the toggle button */
+    border-radius: 0 !important;
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    background: var(--color-surface);
+}
+
+.textarea-container.fullscreen .ql-container {
+    height: calc(100dvh - 66px) !important; /* Total viewport minus approx toolbar height */
+    border-radius: 0 !important;
+    border: none !important;
+    font-size: 1.1rem !important;
+}
+
+.textarea-container.fullscreen .ql-editor {
+    padding: 1.5rem !important;
+}
+
 .file-upload-container {
     margin-bottom: 1rem;
 }

@@ -12,7 +12,7 @@
     <title>Inna´s Rezepte</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="app_icon_192.png">
-    <link rel="stylesheet" href="style.main.css?v=308">
+    <link rel="stylesheet" href="style.main.css?v=309">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -234,7 +234,12 @@
 
                 <div class="form-group">
                     <label for="recipeInstructions" data-i18n="recipe_instructions_label">Zubereitung</label>
-                    <div id="editor-container" style="height: 200px; background: white; border-radius: 0 0 var(--radius-sm) var(--radius-sm);"></div>
+                    <div class="textarea-container">
+                        <button type="button" id="instructionsFullscreenBtn" class="fullscreen-toggle-btn" title="Vollbild-Modus">
+                            <i class="fa-solid fa-expand"></i>
+                        </button>
+                        <div id="editor-container" style="height: 200px; background: white; border-radius: 0 0 var(--radius-sm) var(--radius-sm);"></div>
+                    </div>
                     <!-- Hidden input to store Quill HTML for HTML5 form validation if needed, though we handle it in JS -->
                     <input type="hidden" id="recipeInstructions">
                 </div>
@@ -443,7 +448,7 @@
     <!-- Quill.js Library -->
     <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
     <script src="translations.js?v=100"></script>
-    <script src="app.js?v=265"></script>
+    <script src="app.js?v=266"></script>
 </body>
 
 </html>

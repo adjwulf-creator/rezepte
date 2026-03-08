@@ -1757,6 +1757,24 @@ function setupEventListeners() {
         });
     }
 
+    // Fullscreen Toggle for Instructions (Quill)
+    const instructionsFullscreenBtn = document.getElementById('instructionsFullscreenBtn');
+    if (instructionsFullscreenBtn) {
+        instructionsFullscreenBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const container = instructionsFullscreenBtn.closest('.textarea-container');
+            const icon = instructionsFullscreenBtn.querySelector('i');
+            if (container) {
+                container.classList.toggle('fullscreen');
+                if (container.classList.contains('fullscreen')) {
+                    icon.className = 'fa-solid fa-compress';
+                } else {
+                    icon.className = 'fa-solid fa-expand';
+                }
+            }
+        });
+    }
+
     // View Modal
     const closeViewModal = () => {
         viewModal.classList.add('hidden');
