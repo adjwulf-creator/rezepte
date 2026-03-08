@@ -1073,7 +1073,8 @@ select:focus {
     overflow: hidden;
 }
 
-.recipe-grid.list-view .recipe-description {
+.recipe-grid.list-view .recipe-description,
+.recipe-grid.list-view .ql-snow {
     display: none;
 }
 
