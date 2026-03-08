@@ -1689,16 +1689,10 @@ select:focus {
     height: 300px;
     object-fit: cover;
     border-radius: var(--radius-md);
-    /* Still keep explicit border-radius */
     cursor: pointer;
     display: block;
     margin: 0;
     padding: 0;
-    /* Fix weird iOS Safari image height jumps by strictly rendering bounds */
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    /* Remove shadow here, moved to wrapper */
 }
 
 .recipe-detail-image:hover {
