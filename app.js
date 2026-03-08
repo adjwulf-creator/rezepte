@@ -2086,12 +2086,13 @@ function openViewModal(recipe) {
         ? currentLightboxImages.indexOf(initialMainImageUrl)
         : 0;
 
+    const closeButtonHtml = `<div style="display:flex;justify-content:flex-end;margin-bottom:0.5rem;"><button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button></div>`;
+
     const mainImageHtml = initialMainImageUrl
-        ? `<div class="recipe-detail-image-wrapper" style="position:relative;width:100%;display:block;">
-            <button class="close-btn" id="closeViewModalBtn" style="position:absolute;top:10px;right:10px;z-index:9999;"><i class="fa-solid fa-times"></i></button>
+        ? `<div class="recipe-detail-image-wrapper">
             <img src="${initialMainImageUrl}" alt="${recipe.title}" class="recipe-detail-image" id="mainRecipeViewImage" onclick="openLightbox(${currentLightboxIndex})">
            </div>`
-        : `<button class="close-btn" id="closeViewModalBtn"><i class="fa-solid fa-times"></i></button>`;
+        : '';
 
     let galleryHtml = '';
     if (currentLightboxImages.length > 1) {
@@ -2150,6 +2151,7 @@ function openViewModal(recipe) {
 
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
+            ${closeButtonHtml}
             ${mainImageHtml}
             ${galleryHtml}
             <h2 class="recipe-detail-title">${recipe.title}</h2>
