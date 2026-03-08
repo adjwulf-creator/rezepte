@@ -2346,11 +2346,26 @@ function closeLightbox() {
 function nextLightboxImage() {
     currentLightboxIndex = (currentLightboxIndex + 1) % currentLightboxImages.length;
     updateLightboxView();
+    triggerLightboxAnimation('slide-in-right');
 }
 
 function prevLightboxImage() {
     currentLightboxIndex = (currentLightboxIndex - 1 + currentLightboxImages.length) % currentLightboxImages.length;
     updateLightboxView();
+    triggerLightboxAnimation('slide-in-left');
+}
+
+function triggerLightboxAnimation(animationClass) {
+    if (!lightboxImage) return;
+    
+    // Remove existing animation classes to reset state
+    lightboxImage.classList.remove('slide-in-right', 'slide-in-left');
+    
+    // Trigger reflow to restart animation
+    void lightboxImage.offsetWidth; 
+    
+    // Add the new animation class
+    lightboxImage.classList.add(animationClass);
 }
 
 // Lightbox Swipe Gestures
@@ -2385,8 +2400,8 @@ if (lightboxModalDom) {
             }
         } else {
             // Vertical Swipe
-            if (deltaY > 50) { 
-                // Swiped down -> Close
+            if (Math.abs(deltaY) > 50) { 
+                // Swiped up or down -> Close
                 closeLightbox();
             }
         }

@@ -2123,6 +2123,25 @@ select:focus {
     object-fit: contain;
     border-radius: var(--radius-sm);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    will-change: transform, opacity;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+.lightbox img.slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.lightbox img.slide-in-left {
+    animation: slideInLeft 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 .lightbox-close {
