@@ -1203,7 +1203,7 @@ select:focus {
     /* Higher than header and dropdowns */
     opacity: 1;
     visibility: visible;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), visibility 0.4s, backdrop-filter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), -webkit-backdrop-filter 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
     overscroll-behavior: contain;
     touch-action: none;
 }
@@ -1219,6 +1219,8 @@ select:focus {
 .modal.hidden {
     opacity: 0;
     visibility: hidden;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
 }
 
 .modal-content {
@@ -1243,7 +1245,7 @@ select:focus {
 @keyframes modalFadeIn {
     from {
         opacity: 0;
-        transform: translateY(30px) scale(0.98);
+        transform: translateY(15px) scale(0.99);
     }
     to {
         opacity: 1;
