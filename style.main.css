@@ -68,6 +68,11 @@ body.mobile-dropdown-active {
     /* iOS scroll chaining prevention */
 }
 
+/* Hide the floating + button when a dropdown is active on mobile */
+body.mobile-dropdown-active #addRecipeBtn {
+    display: none !important;
+}
+
 /* Interaction Lock: Prevent background clicks when modal is open */
 body.modal-active .app-header,
 body.modal-active .app-main {

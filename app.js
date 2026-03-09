@@ -1698,7 +1698,7 @@ function setupEventListeners() {
                 // Mobile: Toggle behavior like other dropdowns
                 if (!shoppingListModal.classList.contains('hidden')) {
                     shoppingListModal.classList.add('hidden');
-                    document.body.classList.remove('modal-active');
+                    document.body.classList.remove('mobile-dropdown-active');
                     return;
                 }
 
@@ -1722,11 +1722,14 @@ function setupEventListeners() {
             }
             
             showModal(shoppingListModal);
-            document.body.classList.add('modal-active');
 
-            // Position it under the header exactly like mobile folders/settings
             if (isMobile) {
+                // Use dropdown class (no blur) instead of modal class
+                document.body.classList.remove('modal-active');
+                document.body.classList.add('mobile-dropdown-active');
                 positionDropdown(shoppingListModal.querySelector('.modal-content'));
+            } else {
+                document.body.classList.add('modal-active');
             }
         });
     }
