@@ -471,6 +471,7 @@ async function checkUser() {
                 await loadCategories();
                 await loadRecipes();
                 await loadShoppingList();
+                setupShoppingListRealtime();
             })();
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
@@ -481,12 +482,32 @@ async function checkUser() {
             categories = [];
             shoppingListDB = [];
             currentFolderId = 'all';
+            
+            if (shoppingListSubscription) {
+                sbClient.removeChannel(shoppingListSubscription);
+                shoppingListSubscription = null;
+            }
+
             renderFolders();
             renderCategories();
             renderRecipes();
             renderShoppingList();
         }
     });
+}
+
+let shoppingListSubscription = null;
+
+function setupShoppingListRealtime() {
+    if (!currentUser || shoppingListSubscription) return;
+
+    shoppingListSubscription = sbClient
+        .channel('public:shopping_list')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'shopping_list', filter: `user_id=eq.${currentUser.id}` }, payload => {
+            console.log('Realtime shopping list update received:', payload);
+            loadShoppingList(); 
+        })
+        .subscribe();
 }
 
 // Holen der Einkaufsliste aus Supabase
