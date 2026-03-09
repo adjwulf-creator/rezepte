@@ -195,17 +195,13 @@ document.addEventListener('DOMContentLoaded', updateLayoutVariables);
 // Call once immediately in case DOMContentLoaded already fired or for initial parsing
 updateLayoutVariables();
 
-function positionDropdown(dropdown, fillHeight = false) {
+function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
-        const availableHeight = `calc(100dvh - ${header.offsetHeight}px)`;
-        dropdown.style.maxHeight = availableHeight;
-        if (fillHeight) {
-            dropdown.style.height = availableHeight;
-        } else {
-            dropdown.style.height = 'auto';
-        }
+        dropdown.style.bottom = '0';
+        dropdown.style.maxHeight = 'none';
+        dropdown.style.height = 'auto';
     }
 }
 
@@ -1729,7 +1725,7 @@ function setupEventListeners() {
 
             // Mobile: Position immediately if needed
             if (isMobile) {
-                positionDropdown(shoppingListModal.querySelector('.modal-content'), true);
+                positionDropdown(shoppingListModal.querySelector('.modal-content'));
             }
 
             // Show modal immediately for instant feedback

@@ -161,9 +161,8 @@ h4 {
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
-    bottom: auto;
-    max-height: 80vh;
-    max-height: 80dvh;
+    bottom: 0px;
+    max-height: none;
     border-bottom-left-radius: var(--radius-lg);
     border-bottom-right-radius: var(--radius-lg);
     overflow-y: auto;
@@ -541,7 +540,7 @@ button {
     border-top: 1px dashed var(--color-border) !important;
     margin-top: 0 !important;
     padding-top: 0.75rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));
 }
 
 .compact-btn {
