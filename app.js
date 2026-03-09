@@ -210,6 +210,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         mobileDropdownFolders.classList.toggle('hidden');
         mobileDropdownControls.classList.add('hidden');
         if (window.innerWidth <= 768 && settingsModal) settingsModal.classList.add('hidden');
+        if (window.innerWidth <= 768 && shoppingListModal) shoppingListModal.classList.add('hidden');
 
         const foldersOpen = !mobileDropdownFolders.classList.contains('hidden');
         if (foldersOpen) positionDropdown(mobileDropdownFolders);
@@ -220,6 +221,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         mobileDropdownControls.classList.toggle('hidden');
         mobileDropdownFolders.classList.add('hidden');
         if (window.innerWidth <= 768 && settingsModal) settingsModal.classList.add('hidden');
+        if (window.innerWidth <= 768 && shoppingListModal) shoppingListModal.classList.add('hidden');
 
         const controlsOpen = !mobileDropdownControls.classList.contains('hidden');
         if (controlsOpen) positionDropdown(mobileDropdownControls);
