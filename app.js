@@ -1608,10 +1608,24 @@ function setupEventListeners() {
     const closeShoppingListBtn = document.getElementById('closeShoppingListBtn');
     
     if (shoppingListBtn) {
-        shoppingListBtn.addEventListener('click', (e) => {
+        shoppingListBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
             if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+            
+            // Sync with backend before opening to ensure cross-device consistency
+            if (currentUser) {
+                const icon = shoppingListBtn.querySelector('i');
+                if (icon) {
+                    const origClass = icon.className;
+                    icon.className = 'fa-solid fa-spinner fa-spin';
+                    await loadShoppingList();
+                    icon.className = origClass;
+                } else {
+                    await loadShoppingList();
+                }
+            }
+            
             showModal(shoppingListModal);
             document.body.classList.add('modal-active'); // Stop body scroll
         });
@@ -1692,6 +1706,13 @@ function setupEventListeners() {
             clearCompletedBtn.innerHTML = origHTML;
         });
     }
+
+    // Auto-sync data when returning to the app (cross-device sync)
+    document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === 'visible' && currentUser) {
+            loadShoppingList();
+        }
+    });
 
     // Close mobile dropdowns when clicking outside
     document.addEventListener('click', (e) => {
