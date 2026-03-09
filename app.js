@@ -1638,12 +1638,17 @@ function setupEventListeners() {
     if (burgerMenuBtn && collapsibleActions) {
         burgerMenuBtn.addEventListener('click', (e) => {
             e.stopPropagation();
-            collapsibleActions.classList.toggle('is-open');
+            const isNowOpen = collapsibleActions.classList.toggle('is-open');
             
             const icon = burgerMenuBtn.querySelector('i');
             if (icon) {
-                if (collapsibleActions.classList.contains('is-open')) {
+                if (isNowOpen) {
                     icon.classList.replace('fa-bars', 'fa-xmark');
+                    // Automatically scroll to the right-most icons (Cart, Settings) so they are immediately accessible.
+                    // The user can swipe left to reach the Search bar.
+                    setTimeout(() => {
+                        collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
+                    }, 50);
                 } else {
                     icon.classList.replace('fa-xmark', 'fa-bars');
                 }

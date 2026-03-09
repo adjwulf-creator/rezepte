@@ -2473,17 +2473,36 @@ select:focus {
         transform: translateY(-50%) translateX(20px) scale(0.9);
         height: 48px;
         width: max-content; 
-        max-width: calc(100vw - 75px); /* Maximally expand without bleeding */
+        max-width: calc(100vw - 80px); /* Strictly confine width */
         padding: 0 0.5rem;
         border-radius: 24px;
         background-color: var(--color-surface);
         box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+        /* Swipeable Carousel / Rundell settings */
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        overscroll-behavior-x: contain;
+        scrollbar-width: none; /* Firefox */
         
         /* Animation Base */
         opacity: 0;
         pointer-events: none;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         z-index: 104; 
+    }
+
+    /* Hide scrollbar for Chrome/Safari */
+    .collapsible-actions::-webkit-scrollbar {
+        display: none;
+    }
+
+    .collapsible-actions > * {
+        flex-shrink: 0; /* Prevent icons from getting squished */
+        scroll-snap-align: start; /* Snap items precisely */
     }
 
     .collapsible-actions.is-open {
@@ -2585,8 +2604,7 @@ select:focus {
 
     .search-bar.is-expanded {
         width: 170px;
-        max-width: 170px;
-        flex: 1 1 50px; /* Allow shrinking if space is scarce */
+        flex: 0 0 170px; /* Restore fixed width since carousel allows scrolling */
         background-color: var(--color-surface);
         border: 1px solid var(--color-border);
     }
