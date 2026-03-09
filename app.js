@@ -2467,7 +2467,6 @@ function openViewModal(recipe, isSharedView = false) {
         `;
     } else {
         actionButtonsHtml = `
-        actionButtonsHtml = `
             <div class="recipe-view-actions">
                 <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
                 <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
