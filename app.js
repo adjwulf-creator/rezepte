@@ -1661,24 +1661,18 @@ function setupEventListeners() {
                         requestAnimationFrame(step);
                     }
 
-                    // Scroll hint animation: wait for the CSS open transition to finish
+                    // Scroll hint: start at search (left), sweep right to cart
                     setTimeout(() => {
-                        // 1. Instantly jump to far right
-                        collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
-                        
-                        // 2. Smoothly sweep to far left
+                        collapsibleActions.scrollLeft = 0; // Ensure we start at the left
                         setTimeout(() => {
-                            carouselSmoothScroll(collapsibleActions, 0, 400);
-                            
-                            // 3. Smoothly sweep back to far right
-                            setTimeout(() => {
-                                carouselSmoothScroll(collapsibleActions, collapsibleActions.scrollWidth, 400);
-                            }, 500);
+                            carouselSmoothScroll(collapsibleActions, collapsibleActions.scrollWidth, 600);
                         }, 100);
-                    }, 350); // Wait for the 300ms CSS open transition to complete
+                    }, 350); // Wait for CSS open transition
 
                 } else {
                     icon.classList.replace('fa-xmark', 'fa-bars');
+                    // Reset scroll position so animation replays on next open
+                    collapsibleActions.scrollLeft = 0;
                 }
             }
             
