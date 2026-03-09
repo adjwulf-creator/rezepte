@@ -371,7 +371,48 @@ async function initApp() {
     setupEventListeners();
     setupFolderItemListenersOnce(); // New function for one-time listeners
     applyViewState();
-    await checkUser();
+
+    // Handle Share URL Routing
+    const urlParams = new URLSearchParams(window.location.search);
+    const shareId = urlParams.get('share');
+    
+    if (shareId) {
+        // Bypass normal boot seq, hide login
+        loginOverlay.classList.add('hidden');
+        await renderSharedRecipe(shareId);
+        
+        // Background check auth so we know if they can save it immediately
+        const { data: { session } } = await sbClient.auth.getSession();
+        if (session) {
+            currentUser = session.user;
+            applyAppName(currentUser.user_metadata?.app_name);
+        }
+    } else {
+        await checkUser();
+    }
+}
+
+async function renderSharedRecipe(id) {
+    try {
+        const { data: recipe, error } = await sbClient
+            .from('recipes')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error) {
+            console.error("Shared recipe fetch error:", error);
+            throw new Error("Rezept konnte nicht gefunden werden oder ist nicht mehr geteilt.");
+        }
+
+        // We got it, show in view modal but as read-only
+        openViewModal(recipe, true);
+    } catch (err) {
+        alert(err.message);
+        // Fallback to normal app
+        window.history.replaceState({}, document.title, window.location.pathname);
+        await checkUser();
+    }
 }
 
 function syncLanguageHeaders() {
@@ -2222,6 +2263,50 @@ function setupEventListeners() {
         }
     });
 
+    // Share Recipe (Delegated)
+    viewModal.addEventListener('click', async (e) => {
+        const btn = e.target.closest('#shareRecipeBtn');
+        if (!btn || !currentViewRecipeId) return;
+
+        btn.disabled = true;
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+        try {
+            // Update Supabase to allow public viewing
+            const { error } = await sbClient
+                .from('recipes')
+                .update({ is_shared: true })
+                .eq('id', currentViewRecipeId);
+
+            if (error) throw error;
+
+            // Generate link
+            const shareUrl = `${window.location.origin}${window.location.pathname}?share=${currentViewRecipeId}`;
+            
+            // Copy to clipboard
+            await navigator.clipboard.writeText(shareUrl);
+            
+            // Visual feedback
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Link kopiert!';
+            btn.style.backgroundColor = 'var(--color-secondary)';
+            btn.style.color = 'white';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalContent;
+                btn.style.backgroundColor = '';
+                btn.style.color = '';
+                btn.disabled = false;
+            }, 3000);
+
+        } catch (error) {
+            console.error("Share error:", error);
+            alert("Fehler beim Erstellen des Teilen-Links: " + JSON.stringify(error));
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
+    });
+
     // Close modals on outside click (desktop only)
     // On mobile, modals are fullscreen so there's no backdrop to click.
     // iOS Safari also fires phantom clicks during scroll gestures which would close modals.
@@ -2261,7 +2346,7 @@ function setupEventListeners() {
 }
 
 // Open Recipe View Modal
-function openViewModal(recipe) {
+function openViewModal(recipe, isSharedView = false) {
     currentViewRecipeId = recipe.id;
 
     // Persistence: Load checked state from DB (can be array or JSON string)
@@ -2357,6 +2442,24 @@ function openViewModal(recipe) {
         ? viewCategories.map(c => `<span class="recipe-tag"><i class="fa-solid fa-tag"></i> ${c}</span>`).join('')
         : '';
 
+    let actionButtonsHtml = '';
+    if (isSharedView) {
+        actionButtonsHtml = `
+            <div class="recipe-view-actions" style="justify-content: center; margin-top: 1rem;">
+                <button class="primary-btn" id="saveSharedRecipeBtn" style="font-size: 1.1rem; padding: 0.8rem 2rem; width: 100%;"><i class="fa-solid fa-download"></i> In mein Kochbuch speichern</button>
+            </div>
+        `;
+    } else {
+        actionButtonsHtml = `
+            <div class="recipe-view-actions">
+                <button class="secondary-btn" id="shareRecipeBtn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-share-nodes"></i> Teilen</button>
+                <div style="flex-grow: 1;"></div>
+                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
+                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
+            </div>
+        `;
+    }
+
     viewRecipeDetails.innerHTML = `
         <div class="recipe-detail-header">
             ${closeButtonHtml}
@@ -2367,10 +2470,7 @@ function openViewModal(recipe) {
                 <span><i class="fa-regular fa-calendar"></i> ${new Date(recipe.createdAt).toLocaleDateString(currentLang === 'ua' ? 'uk-UA' : 'de-DE')}</span>
                 <div class="recipe-tags-container" style="margin:0;">${viewTagsHtml}</div>
             </div>
-            <div class="recipe-view-actions">
-                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
-                <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
-            </div>
+            ${actionButtonsHtml}
         </div>
         <div class="recipe-detail-body">
             ${ingredientsHtml}
@@ -2392,6 +2492,9 @@ function openViewModal(recipe) {
             const currentChecked = Array.from(checkboxes)
                 .filter(box => box.checked)
                 .map(box => parseInt(box.dataset.index));
+
+            // Don't save to DB if in Shared View mode
+            if (isSharedView) return;
 
             // 1. Update local memory immediately (both the passed object and the global array item)
             recipe.checked_ingredients = currentChecked;
@@ -2434,6 +2537,54 @@ function openViewModal(recipe) {
     }
 
     viewModal.classList.remove('hidden');
+
+    // Attach listener for Save Shared Recipe
+    if (isSharedView) {
+        const saveSharedBtn = document.getElementById('saveSharedRecipeBtn');
+        if (saveSharedBtn) {
+            saveSharedBtn.addEventListener('click', async () => {
+                // If not logged in, force login overlay
+                if (!currentUser) {
+                    alert("Bitte logge dich ein oder erstelle einen Account, um dieses Rezept zu speichern!");
+                    loginOverlay.classList.remove('hidden');
+                    hideModal(viewModal);
+                    return;
+                }
+
+                saveSharedBtn.disabled = true;
+                saveSharedBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichere...';
+
+                try {
+                    // Create a copy for the current user, removing the id, changing user_id, and removing is_shared
+                    const recipeCopy = { ...recipe };
+                    delete recipeCopy.id; // DB auto-generates this
+                    recipeCopy.user_id = currentUser.id;
+                    recipeCopy.is_shared = false;
+                    recipeCopy.folder_id = null; // Put in root namespace
+                    recipeCopy.createdAt = Date.now();
+                    recipeCopy.order_index = 0;
+
+                    const { error } = await sbClient.from('recipes').insert([recipeCopy]);
+                    if (error) throw error;
+
+                    saveSharedBtn.innerHTML = '<i class="fa-solid fa-check"></i> Gespeichert!';
+                    saveSharedBtn.style.backgroundColor = 'var(--color-secondary)';
+                    
+                    setTimeout(() => {
+                        // Strip the URL parameter and reload so the app runs normally as the logged in user
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        window.location.reload();
+                    }, 1500);
+
+                } catch (err) {
+                    console.error("Save shared error:", err);
+                    alert("Konnte nicht gespeichert werden: " + err.message);
+                    saveSharedBtn.disabled = false;
+                    saveSharedBtn.innerHTML = '<i class="fa-solid fa-download"></i> In mein Kochbuch speichern';
+                }
+            });
+        }
+    }
 }
 
 // Function to handle clicking a thumbnail in the view modal
