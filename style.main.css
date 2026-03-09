@@ -2467,15 +2467,17 @@ select:focus {
 
     .collapsible-actions {
         position: absolute;
-        right: 45px; /* right next to the burger menu (assuming burger menu width + gap) */
-        top: 0;
-        bottom: 0;
-        padding-right: 0.5rem;
+        right: 90px; /* Safely to the left of burger + add buttons */
+        top: 50%;
+        transform: translateY(-50%) translateX(20px) scale(0.9);
+        height: 48px;
+        padding: 0 0.5rem;
+        border-radius: 24px;
         background-color: var(--color-surface);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         
         /* Animation Base */
         opacity: 0;
-        transform: translateX(20px);
         pointer-events: none;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         z-index: 104; 
@@ -2483,7 +2485,7 @@ select:focus {
 
     .collapsible-actions.is-open {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(-50%) translateX(0) scale(1);
         pointer-events: auto;
     }
 
@@ -2535,16 +2537,54 @@ select:focus {
     .search-actions {
         width: 100%;
         gap: 0.5rem;
+        position: relative; /* Required for layout */
     }
 
     .search-bar {
-        width: 100%;
-        flex: 1;
+        width: 40px;
+        height: 40px;
+        flex: 0 0 40px;
+        padding: 0;
+        justify-content: center;
+        background-color: transparent;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
     }
 
-    .search-bar input,
-    .search-bar input:focus {
+    .search-bar i {
+        position: static;
+        margin: 0;
+        font-size: 1.25rem;
+        color: var(--color-text); /* Matches action icons */
+    }
+
+    .search-bar input {
+        width: 0;
+        padding: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .search-bar.is-expanded {
         width: 100%;
+        flex: 1;
+        background-color: var(--color-bg);
+        border: 1px solid var(--color-border);
+        padding: 0.5rem 1rem 0.5rem 2.8rem;
+    }
+
+    .search-bar.is-expanded i {
+        position: absolute;
+        left: 1rem;
+        color: var(--color-text-light); /* Normal input state */
+    }
+
+    .search-bar.is-expanded input {
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
     }
 
     .hide-on-mobile {

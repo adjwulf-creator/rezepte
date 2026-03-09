@@ -2014,6 +2014,26 @@ function setupEventListeners() {
 
     // Search & Filter
     searchInput.addEventListener('input', renderRecipes);
+    
+    // Mobile search bar expansion
+    const searchBarContainer = document.querySelector('.search-bar');
+    if (searchBarContainer) {
+        searchBarContainer.addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                searchBarContainer.classList.add('is-expanded');
+                setTimeout(() => searchInput.focus(), 50); // Small delay for animation
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && searchBarContainer.classList.contains('is-expanded')) {
+                if (!searchBarContainer.contains(e.target) && searchInput.value.trim() === '') {
+                    searchBarContainer.classList.remove('is-expanded');
+                }
+            }
+        });
+    }
+
     // Note: Category filter change events are handled in renderCategories() via checkbox listeners
 
     // Sort — custom dropdown
