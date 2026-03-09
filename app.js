@@ -2273,19 +2273,35 @@ function setupEventListeners() {
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
         try {
-            // Update Supabase to allow public viewing
+            const shareUrl = `${window.location.origin}${window.location.pathname}?share=${currentViewRecipeId}`;
+            
+            // Robust clipboard copy with fallback for iOS PWA
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(shareUrl);
+                } else {
+                    throw new Error("Clipboard API not available");
+                }
+            } catch (clipboardErr) {
+                // Fallback for iOS Safari PWA
+                const textArea = document.createElement("textarea");
+                textArea.value = shareUrl;
+                textArea.style.position = "fixed"; 
+                textArea.style.left = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                document.execCommand('copy');
+                textArea.remove();
+            }
+
+            // Update Supabase to allow public viewing AFTER clipboard
             const { error } = await sbClient
                 .from('recipes')
                 .update({ is_shared: true })
                 .eq('id', currentViewRecipeId);
 
             if (error) throw error;
-
-            // Generate link
-            const shareUrl = `${window.location.origin}${window.location.pathname}?share=${currentViewRecipeId}`;
-            
-            // Copy to clipboard
-            await navigator.clipboard.writeText(shareUrl);
             
             // Visual feedback
             btn.innerHTML = '<i class="fa-solid fa-check"></i> Link kopiert!';
@@ -2301,7 +2317,7 @@ function setupEventListeners() {
 
         } catch (error) {
             console.error("Share error:", error);
-            alert("Fehler beim Erstellen des Teilen-Links: " + JSON.stringify(error));
+            alert("Fehler beim Erstellen des Teilen-Links: " + JSON.stringify(error, Object.getOwnPropertyNames(error)));
             btn.innerHTML = originalContent;
             btn.disabled = false;
         }
