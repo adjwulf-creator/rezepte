@@ -1247,7 +1247,13 @@ select:focus {
 
 .recipe-grid.list-view .card-header {
     margin-bottom: 0;
-    gap: 0.2rem;
+    gap: 0.5rem;
+}
+
+.collapsible-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
 }
 
 .card-content h3 {
@@ -2430,7 +2436,60 @@ select:focus {
 /* Responsive */
 @media (max-width: 768px) {
     .app-header {
-        padding: 0.6rem 1rem;
+        padding: 1rem;
+    }
+
+    /* Burger Menu Styles */
+    #burgerMenuBtn {
+        display: inline-flex !important;
+    }
+    
+    #burgerBadge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background-color: var(--color-accent);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 9px;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+    #burgerBadge:not(.hidden) {
+        display: flex;
+    }
+
+    .collapsible-actions {
+        position: absolute;
+        right: 45px; /* right next to the burger menu (assuming burger menu width + gap) */
+        top: 0;
+        bottom: 0;
+        padding-right: 0.5rem;
+        background-color: var(--color-surface);
+        
+        /* Animation Base */
+        opacity: 0;
+        transform: translateX(20px);
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        z-index: 104; 
+    }
+
+    .collapsible-actions.is-open {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: auto;
+    }
+
+    /* Hide individual cart badge on mobile inside collapsible actions, let burger menu show it */
+    #shoppingListBtn #cartBadge {
+        display: none !important;
     }
 
     .logo {

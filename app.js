@@ -602,17 +602,23 @@ function renderShoppingList() {
 }
 
 function updateCartBadge(count) {
-    const badge = document.getElementById('cartBadge');
-    if (!badge) return;
-    
-    if (count > 0) {
-        badge.textContent = count > 99 ? '99+' : count;
-        badge.classList.remove('hidden');
-        badge.classList.add('pop');
-        setTimeout(() => badge.classList.remove('pop'), 200);
-    } else {
-        badge.classList.add('hidden');
-    }
+    const desktopBadge = document.getElementById('cartBadge');
+    const burgerBadge = document.getElementById('burgerBadge');
+
+    const toggleBadge = (badge) => {
+        if (!badge) return;
+        if (count > 0) {
+            badge.textContent = count > 99 ? '99+' : count;
+            badge.classList.remove('hidden');
+            badge.classList.add('pop');
+            setTimeout(() => badge.classList.remove('pop'), 200);
+        } else {
+            badge.classList.add('hidden');
+        }
+    };
+
+    toggleBadge(desktopBadge);
+    toggleBadge(burgerBadge);
 }
 
 // Holen der Rezepte aus Supabase
@@ -1625,6 +1631,30 @@ function setupRecipeDragListeners() {
 
 // Setup all event listeners
 function setupEventListeners() {
+    // Burger Menu Trigger
+    const burgerMenuBtn = document.getElementById('burgerMenuBtn');
+    const collapsibleActions = document.getElementById('collapsibleActions');
+    
+    if (burgerMenuBtn && collapsibleActions) {
+        burgerMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            collapsibleActions.classList.toggle('is-open');
+            
+            const icon = burgerMenuBtn.querySelector('i');
+            if (icon) {
+                if (collapsibleActions.classList.contains('is-open')) {
+                    icon.classList.replace('fa-bars', 'fa-xmark');
+                } else {
+                    icon.classList.replace('fa-xmark', 'fa-bars');
+                }
+            }
+            
+            // Close other dropdowns
+            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+            if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+        });
+    }
+
     // Shopping List Modal Triggers
     const shoppingListBtn = document.getElementById('shoppingListBtn');
     const shoppingListModal = document.getElementById('shoppingListModal');
@@ -1751,6 +1781,14 @@ function setupEventListeners() {
         }
         if (!isClickInsideControlsBtn && !isClickInsideControlsDropdown && mobileDropdownControls) {
             mobileDropdownControls.classList.add('hidden');
+        }
+
+        const collapsibleActions = document.getElementById('collapsibleActions');
+        const burgerMenuBtn = document.getElementById('burgerMenuBtn');
+        if (collapsibleActions && burgerMenuBtn && !collapsibleActions.contains(e.target) && !burgerMenuBtn.contains(e.target)) {
+            collapsibleActions.classList.remove('is-open');
+            const icon = burgerMenuBtn.querySelector('i');
+            if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
         }
     });
 
