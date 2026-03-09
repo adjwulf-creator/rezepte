@@ -1254,6 +1254,7 @@ select:focus {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    justify-content: flex-end; /* Ensure items stay right-aligned */
 }
 
 .card-content h3 {
@@ -2471,6 +2472,8 @@ select:focus {
         top: 50%;
         transform: translateY(-50%) translateX(20px) scale(0.9);
         height: 48px;
+        width: max-content; /* Ensure it expands horizontally */
+        max-width: calc(100vw - 110px); /* Prevent bleeding off the left screen edge */
         padding: 0 0.5rem;
         border-radius: 24px;
         background-color: var(--color-surface);
