@@ -1727,23 +1727,22 @@ function setupEventListeners() {
                 if (settingsModal && !settingsModal.classList.contains('hidden')) settingsModal.classList.add('hidden');
             }
 
-            // Sync with backend before opening
-            if (currentUser) {
-                const icon = shoppingListBtn.querySelector('i');
-                if (icon) {
-                    const origClass = icon.className;
-                    icon.className = 'fa-solid fa-spinner fa-spin';
-                    await loadShoppingList();
-                    icon.className = origClass;
-                } else {
-                    await loadShoppingList();
-                }
-            }
-            
-            showModal(shoppingListModal);
-
+            // Mobile: Position immediately if needed
             if (isMobile) {
                 positionDropdown(shoppingListModal.querySelector('.modal-content'), true);
+            }
+
+            // Show modal immediately for instant feedback
+            showModal(shoppingListModal);
+
+            // Sync with backend in parallel/background
+            if (currentUser) {
+                const icon = shoppingListBtn.querySelector('i');
+                const isCartIcon = icon && icon.classList.contains('fa-cart-shopping');
+                
+                // Only show spinner if not already in "X" mode (e.g. on mobile where it toggles to X)
+                // Actually, let's just sync in background to keep UI snappy
+                loadShoppingList().catch(err => console.error("Error syncing shopping list:", err));
             }
         });
     }
