@@ -16,6 +16,7 @@ const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 let recipes = [];
 let folders = [];
 let categories = [];
+let shoppingListDB = []; 
 let currentFolderId = 'all';
 
 let currentLang = localStorage.getItem('appLang') || 'de';
@@ -469,6 +470,7 @@ async function checkUser() {
                 await loadFolders();
                 await loadCategories();
                 await loadRecipes();
+                await loadShoppingList();
             })();
         } else if (event === 'SIGNED_OUT') {
             currentUser = null;
@@ -477,12 +479,117 @@ async function checkUser() {
             recipes = [];
             folders = [];
             categories = [];
+            shoppingListDB = [];
             currentFolderId = 'all';
             renderFolders();
             renderCategories();
             renderRecipes();
+            renderShoppingList();
         }
     });
+}
+
+// Holen der Einkaufsliste aus Supabase
+async function loadShoppingList() {
+    if (!currentUser) return;
+
+    const { data, error } = await sbClient
+        .from('shopping_list')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .order('created_at', { ascending: true });
+
+    if (error) {
+        console.error("Error loading shopping list:", error);
+        return;
+    }
+
+    shoppingListDB = data || [];
+    renderShoppingList();
+}
+
+// Einkaufsliste rendern
+function renderShoppingList() {
+    const listUl = document.getElementById('shoppingListUl');
+    const badge = document.getElementById('cartBadge');
+    
+    if (!listUl || !badge) return;
+
+    listUl.innerHTML = '';
+    let uncheckedCount = 0;
+
+    shoppingListDB.forEach(item => {
+        if (!item.is_checked) uncheckedCount++;
+
+        const li = document.createElement('li');
+        li.className = `shopping-item ${item.is_checked ? 'is-checked' : ''}`;
+        
+        li.innerHTML = `
+            <div class="shopping-item-left">
+                <input type="checkbox" class="shopping-checkbox" ${item.is_checked ? 'checked' : ''}>
+                <span class="shopping-text">${item.item_text}</span>
+            </div>
+            <button class="shopping-delete-btn"><i class="fa-solid fa-trash-can"></i></button>
+        `;
+
+        // Checkbox Toggle
+        const checkbox = li.querySelector('.shopping-checkbox');
+        checkbox.addEventListener('change', async () => {
+            const newState = checkbox.checked;
+            item.is_checked = newState;
+            if (newState) {
+                li.classList.add('is-checked');
+                uncheckedCount--;
+            } else {
+                li.classList.remove('is-checked');
+                uncheckedCount++;
+            }
+            updateCartBadge(uncheckedCount);
+
+            const { error } = await sbClient
+                .from('shopping_list')
+                .update({ is_checked: newState })
+                .eq('id', item.id);
+            
+            if (error) console.error("Error updating shopping item:", error);
+        });
+
+        // Individual Delete
+        const delBtn = li.querySelector('.shopping-delete-btn');
+        delBtn.addEventListener('click', async () => {
+            li.style.opacity = '0.5';
+            const { error } = await sbClient
+                .from('shopping_list')
+                .delete()
+                .eq('id', item.id);
+
+            if (!error) {
+                shoppingListDB = shoppingListDB.filter(i => i.id !== item.id);
+                renderShoppingList(); // Re-render entirely to fix counts
+            } else {
+                console.error("Error deleting shopping item:", error);
+                li.style.opacity = '1';
+            }
+        });
+
+        listUl.appendChild(li);
+    });
+
+    updateCartBadge(uncheckedCount);
+}
+
+function updateCartBadge(count) {
+    const badge = document.getElementById('cartBadge');
+    if (!badge) return;
+    
+    if (count > 0) {
+        badge.textContent = count > 99 ? '99+' : count;
+        badge.classList.remove('hidden');
+        badge.classList.add('pop');
+        setTimeout(() => badge.classList.remove('pop'), 200);
+    } else {
+        badge.classList.add('hidden');
+    }
 }
 
 // Holen der Rezepte aus Supabase
@@ -1495,6 +1602,97 @@ function setupRecipeDragListeners() {
 
 // Setup all event listeners
 function setupEventListeners() {
+    // Shopping List Modal Triggers
+    const shoppingListBtn = document.getElementById('shoppingListBtn');
+    const shoppingListModal = document.getElementById('shoppingListModal');
+    const closeShoppingListBtn = document.getElementById('closeShoppingListBtn');
+    
+    if (shoppingListBtn) {
+        shoppingListBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+            if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+            showModal(shoppingListModal);
+            document.body.classList.add('modal-active'); // Stop body scroll
+        });
+    }
+
+    if (closeShoppingListBtn) {
+        closeShoppingListBtn.addEventListener('click', () => {
+            hideModal(shoppingListModal);
+            document.body.classList.remove('modal-active');
+        });
+    }
+
+    // Shopping List Manual Add
+    const shoppingListForm = document.getElementById('shoppingListForm');
+    if (shoppingListForm) {
+        shoppingListForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('newShoppingItemInput');
+            const val = input.value.trim();
+            if (!val || !currentUser) return;
+            
+            const btn = shoppingListForm.querySelector('button');
+            btn.disabled = true;
+            
+            const newItem = {
+                user_id: currentUser.id,
+                item_text: val,
+                is_checked: false
+            };
+
+            const { data, error } = await sbClient
+                .from('shopping_list')
+                .insert([newItem])
+                .select();
+
+            if (!error && data && data.length > 0) {
+                shoppingListDB.push(data[0]);
+                input.value = '';
+                renderShoppingList();
+            } else {
+                console.error("Error adding shopping item:", error);
+            }
+            btn.disabled = false;
+        });
+    }
+
+    // Shopping List Clear Completed
+    const clearCompletedBtn = document.getElementById('clearCompletedShoppingBtn');
+    if (clearCompletedBtn) {
+        clearCompletedBtn.addEventListener('click', async () => {
+            const checkedItems = shoppingListDB.filter(i => i.is_checked);
+            if (checkedItems.length === 0) return;
+
+            const errDiv = document.getElementById('shoppingActionError');
+            errDiv.classList.add('hidden');
+            
+            const origHTML = clearCompletedBtn.innerHTML;
+            clearCompletedBtn.disabled = true;
+            clearCompletedBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Zerstöre...';
+
+            const idsToDelete = checkedItems.map(i => i.id);
+
+            const { error } = await sbClient
+                .from('shopping_list')
+                .delete()
+                .in('id', idsToDelete);
+
+            if (!error) {
+                shoppingListDB = shoppingListDB.filter(i => !i.is_checked);
+                renderShoppingList();
+            } else {
+                console.error("Error clearing shopping list:", error);
+                errDiv.textContent = 'Fehler beim Löschen. Bitte später erneut versuchen.';
+                errDiv.classList.remove('hidden');
+            }
+
+            clearCompletedBtn.disabled = false;
+            clearCompletedBtn.innerHTML = origHTML;
+        });
+    }
+
     // Close mobile dropdowns when clicking outside
     document.addEventListener('click', (e) => {
         if (document.body.classList.contains('modal-active')) return; // Let modal handle its own state
@@ -2331,6 +2529,7 @@ function setupEventListeners() {
         if (e.target === recipeModal) hideModal(recipeModal);
         if (e.target === viewModal) closeViewModal();
         if (e.target === folderModal) closeFolderModal();
+        if (e.target === document.getElementById('shoppingListModal')) hideModal(document.getElementById('shoppingListModal'));
         if (e.target === settingsModal) {
             hideModal(settingsModal);
             passwordMessage.classList.add('hidden');
@@ -2420,21 +2619,29 @@ function openViewModal(recipe, isSharedView = false) {
                 const checkedAttr = isChecked ? 'checked' : '';
                 const checkedClass = isChecked ? 'is-checked' : '';
                 return `
-                <li class="ingredient-item">
-                    <label class="ingredient-checkbox-label ${checkedClass}">
+                <li class="ingredient-item" style="display:flex; justify-content:space-between; align-items:center;">
+                    <label class="ingredient-checkbox-label ${checkedClass}" style="flex:1;">
                         <input type="checkbox" class="ingredient-checkbox" data-index="${index}" ${checkedAttr}>
-                        <span class="ingredient-text">${i.trim()}</span>
+                        <span class="ingredient-text" data-raw-ingredient="${i.trim().replace(/"/g, '&quot;')}">${i.trim()}</span>
                     </label>
+                    ${!isSharedView ? `<button class="icon-btn add-to-cart-btn" data-ingredient="${i.trim().replace(/"/g, '&quot;')}" style="color:var(--color-primary); margin-left:10px; width:30px; height:30px; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><i class="fa-solid fa-plus"></i></button>` : ''}
                 </li>
             `;
             })
             .join('');
+        
+        let batchAddBtnHtml = '';
+        if (!isSharedView) {
+            batchAddBtnHtml = `<div style="margin-top:1rem; display:flex; justify-content:flex-end;"><button class="secondary-btn" id="addAllMissingToCartBtn" style="font-size:0.85rem; padding: 0.5rem 1rem;"><i class="fa-solid fa-cart-plus"></i> Fehlende auf Einkaufsliste</button></div>`;
+        }
+
         ingredientsHtml = `
             <div class="ingredients-list">
                 <h4>${t('ingredients')}</h4>
                 <ul class="no-bullets">
                     ${ingredientsItems}
                 </ul>
+                ${batchAddBtnHtml}
             </div>
         `;
     }
@@ -2544,6 +2751,108 @@ function openViewModal(recipe, isSharedView = false) {
         cb.addEventListener('change', handleChange);
         cb.addEventListener('input', handleChange);
     });
+
+    if (!isSharedView) {
+        // Handle individual Add to Cart clicks
+        const addBtns = viewRecipeDetails.querySelectorAll('.add-to-cart-btn');
+        addBtns.forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!currentUser) return;
+                
+                const rawIngredient = btn.getAttribute('data-ingredient');
+                if (!rawIngredient) return;
+
+                const origHtml = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+                btn.disabled = true;
+
+                const newItem = {
+                    user_id: currentUser.id,
+                    item_text: rawIngredient,
+                    is_checked: false
+                };
+
+                const { data, error } = await sbClient.from('shopping_list').insert([newItem]).select();
+                
+                if (!error && data && data.length > 0) {
+                    shoppingListDB.push(data[0]);
+                    renderShoppingList();
+                    btn.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    btn.style.color = 'var(--color-secondary)';
+                } else {
+                    btn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                    btn.style.color = 'var(--color-accent)';
+                }
+                
+                setTimeout(() => {
+                    btn.innerHTML = origHtml;
+                    btn.style.color = 'var(--color-primary)';
+                    btn.disabled = false;
+                }, 2000);
+            });
+        });
+
+        // Handle Add All Missing to Cart click
+        const addAllBtn = viewRecipeDetails.querySelector('#addAllMissingToCartBtn');
+        if (addAllBtn) {
+            addAllBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (!currentUser) return;
+
+                const origHtml = addAllBtn.innerHTML;
+                addAllBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Hinzufügen...';
+                addAllBtn.disabled = true;
+
+                // Find all unchecked checkboxes and get their corresponding ingredient text
+                const missingIngredients = Array.from(checkboxes)
+                    .filter(cb => !cb.checked)
+                    .map(cb => {
+                        const labelSpan = cb.closest('label').querySelector('.ingredient-text');
+                        return labelSpan ? labelSpan.getAttribute('data-raw-ingredient') : null;
+                    })
+                    .filter(Boolean);
+
+                if (missingIngredients.length === 0) {
+                    addAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> Alle Zutaten sind bereits abgehakt!';
+                    setTimeout(() => {
+                        addAllBtn.innerHTML = origHtml;
+                        addAllBtn.disabled = false;
+                    }, 3000);
+                    return;
+                }
+
+                // Prepare batch insert
+                const newItems = missingIngredients.map(text => ({
+                    user_id: currentUser.id,
+                    item_text: text,
+                    is_checked: false
+                }));
+
+                const { data, error } = await sbClient.from('shopping_list').insert(newItems).select();
+
+                if (!error && data) {
+                    shoppingListDB.push(...data);
+                    renderShoppingList();
+                    addAllBtn.innerHTML = '<i class="fa-solid fa-check"></i> Zur Liste hinzugefügt!';
+                    addAllBtn.classList.replace('secondary-btn', 'primary-btn');
+                    addAllBtn.style.backgroundColor = 'var(--color-secondary)';
+                    addAllBtn.style.color = 'white';
+                } else {
+                    addAllBtn.innerHTML = '<i class="fa-solid fa-xmark"></i> Fehler beim Hinzufügen';
+                    console.error("Batch add error:", error);
+                }
+
+                setTimeout(() => {
+                    addAllBtn.innerHTML = origHtml;
+                    addAllBtn.classList.replace('primary-btn', 'secondary-btn');
+                    addAllBtn.style.backgroundColor = '';
+                    addAllBtn.style.color = '';
+                    addAllBtn.disabled = false;
+                }, 3000);
+            });
+        }
+    }
 
     // Reset scroll position
     const viewModalContent = viewModal.querySelector('.view-modal-content');
