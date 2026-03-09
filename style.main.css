@@ -2546,7 +2546,6 @@ select:focus {
         height: 40px;
         flex: 0 0 40px;
         padding: 0;
-        justify-content: center;
         background-color: transparent;
         border: none;
         border-radius: 20px;
@@ -2556,38 +2555,51 @@ select:focus {
     }
 
     .search-bar i {
-        position: static;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
         margin: 0;
         font-size: 1.25rem;
         color: var(--color-text); /* Matches action icons */
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .search-bar input {
-        width: 0;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 40px;
+        height: 40px;
+        border: none !important;
+        margin: 0;
         padding: 0;
         opacity: 0;
         visibility: hidden;
+        background-color: transparent !important;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .search-bar.is-expanded {
         width: 170px;
         flex: 0 0 170px;
-        background-color: var(--color-bg);
+        background-color: var(--color-surface);
         border: 1px solid var(--color-border);
-        padding: 0.5rem 1rem 0.5rem 2.8rem;
     }
 
     .search-bar.is-expanded i {
-        position: absolute;
         left: 1rem;
-        color: var(--color-text-light); /* Normal input state */
+        transform: translate(0, -50%);
+        color: var(--color-text-light); 
     }
 
     .search-bar.is-expanded input {
+        position: relative;
         width: 100%;
+        height: 100%;
         opacity: 1;
         visibility: visible;
+        padding: 0 1rem 0 2.8rem;
     }
 
     .hide-on-mobile {
