@@ -235,9 +235,10 @@ if (mobileFoldersBtn && mobileControlsBtn) {
         const foldersOpen = mobileDropdownFolders && !mobileDropdownFolders.classList.contains('hidden');
         const controlsOpen = mobileDropdownControls && !mobileDropdownControls.classList.contains('hidden');
         const settingsOpen = settingsModal && !settingsModal.classList.contains('hidden');
+        const shoppingListOpen = shoppingListModal && !shoppingListModal.classList.contains('hidden');
         const isMobile = window.innerWidth <= 768;
 
-        if (foldersOpen || controlsOpen || (settingsOpen && isMobile)) {
+        if (foldersOpen || controlsOpen || (settingsOpen && isMobile) || (shoppingListOpen && isMobile)) {
             document.body.classList.add('mobile-dropdown-active');
         } else {
             document.body.classList.remove('mobile-dropdown-active');
@@ -280,7 +281,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
 
         const openModals = Array.from(document.querySelectorAll('.modal:not(.hidden)'));
         const shouldBeModalActive = openModals.some(modal => {
-            if (isMobile && modal.id === 'settingsModal') return false;
+            if (isMobile && (modal.id === 'settingsModal' || modal.id === 'shoppingListModal')) return false;
             return true;
         });
 
@@ -1724,12 +1725,7 @@ function setupEventListeners() {
             showModal(shoppingListModal);
 
             if (isMobile) {
-                // Use dropdown class (no blur) instead of modal class
-                document.body.classList.remove('modal-active');
-                document.body.classList.add('mobile-dropdown-active');
                 positionDropdown(shoppingListModal.querySelector('.modal-content'));
-            } else {
-                document.body.classList.add('modal-active');
             }
         });
     }

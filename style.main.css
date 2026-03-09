@@ -91,6 +91,15 @@ body.mobile-dropdown-active .app-main {
 
 body.mobile-dropdown-active .app-header {
     filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+/* Force header sharp if accidentally combined with other classes */
+body.mobile-dropdown-active.modal-active .app-header {
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
 }
 
 h1,
