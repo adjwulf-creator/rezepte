@@ -1690,10 +1690,23 @@ function setupEventListeners() {
     if (shoppingListBtn) {
         shoppingListBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
-            if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-            
-            // Sync with backend before opening to ensure cross-device consistency
+            const isMobile = window.innerWidth <= 768;
+
+            if (isMobile) {
+                // Mobile: Toggle behavior like other dropdowns
+                if (!shoppingListModal.classList.contains('hidden')) {
+                    shoppingListModal.classList.add('hidden');
+                    document.body.classList.remove('modal-active');
+                    return;
+                }
+
+                // Close other dropdowns first
+                if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+                if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+                if (settingsModal && !settingsModal.classList.contains('hidden')) settingsModal.classList.add('hidden');
+            }
+
+            // Sync with backend before opening
             if (currentUser) {
                 const icon = shoppingListBtn.querySelector('i');
                 if (icon) {
@@ -1707,7 +1720,12 @@ function setupEventListeners() {
             }
             
             showModal(shoppingListModal);
-            document.body.classList.add('modal-active'); // Stop body scroll
+            document.body.classList.add('modal-active');
+
+            // Position it under the header exactly like mobile folders/settings
+            if (isMobile) {
+                positionDropdown(shoppingListModal.querySelector('.modal-content'));
+            }
         });
     }
 
@@ -1908,6 +1926,10 @@ function setupEventListeners() {
             // Close other dropdowns first
             if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+            if (shoppingListModal && !shoppingListModal.classList.contains('hidden')) {
+                shoppingListModal.classList.add('hidden');
+                document.body.classList.remove('modal-active');
+            }
         }
 
         showModal(settingsModal);
