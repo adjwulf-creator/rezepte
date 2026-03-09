@@ -2467,11 +2467,11 @@ function openViewModal(recipe, isSharedView = false) {
         `;
     } else {
         actionButtonsHtml = `
+        actionButtonsHtml = `
             <div class="recipe-view-actions">
-                <button class="secondary-btn" id="shareRecipeBtn" style="padding: 0.5rem 1rem;"><i class="fa-solid fa-share-nodes"></i> Teilen</button>
-                <div style="flex-grow: 1;"></div>
-                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
                 <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
+                <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
+                <button class="secondary-btn" id="shareRecipeBtn"><i class="fa-solid fa-share-nodes"></i> Teilen</button>
             </div>
         `;
     }
