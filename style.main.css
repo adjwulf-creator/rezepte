@@ -2473,7 +2473,7 @@ select:focus {
         transform: translateY(-50%) translateX(20px) scale(0.9);
         height: 48px;
         width: max-content; 
-        max-width: calc(100vw - 120px); /* Guarantee generous visual space from left screen edge */
+        max-width: calc(100vw - 90px); /* Let it stretch slightly closer to the left edge */
         padding: 0; /* Remove padding to avoid clipping on iOS, use child margins */
         border-radius: 24px;
         background-color: var(--color-surface);
@@ -2520,8 +2520,13 @@ select:focus {
         pointer-events: auto;
     }
 
-    /* Hide individual cart badge on mobile inside collapsible actions, let burger menu show it */
-    #shoppingListBtn #cartBadge {
+    /* Hide individual cart badge inside collapsed actions, but show it when expanded */
+    .collapsible-actions:not(.is-open) #shoppingListBtn #cartBadge {
+        display: none !important;
+    }
+
+    /* Hide the burger badge when the menu is open, as it transfers to the cart icon */
+    .collapsible-actions.is-open ~ #burgerMenuBtn #burgerBadge {
         display: none !important;
     }
 

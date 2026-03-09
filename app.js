@@ -1644,11 +1644,17 @@ function setupEventListeners() {
             if (icon) {
                 if (isNowOpen) {
                     icon.classList.replace('fa-bars', 'fa-xmark');
-                    // Automatically scroll to the right-most icons (Cart, Settings) so they are immediately accessible.
-                    // The user can swipe left to reach the Search bar.
+                    
+                    // Introductory animation: Start from left (search bar) to prove it's there
+                    collapsibleActions.style.scrollBehavior = 'auto'; // Disable temporarily for instant reposition
+                    collapsibleActions.scrollLeft = 0; 
+                    
+                    // Sweep to the right smoothly so user sees they can scroll
                     setTimeout(() => {
+                        collapsibleActions.style.scrollBehavior = 'smooth';
                         collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
-                    }, 50);
+                    }, 250); // Small delay to let the menu open first
+
                 } else {
                     icon.classList.replace('fa-xmark', 'fa-bars');
                 }
