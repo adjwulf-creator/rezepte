@@ -2939,6 +2939,8 @@ select:focus {
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
         padding: 1rem;
         max-height: 100dvh;
+        height: auto; /* Let it grow or be constrained by JS maxHeight */
+        min-height: 0; /* Override any modal defaults */
         border-radius: 0;
         border: none;
         border-bottom-left-radius: var(--radius-lg);
@@ -2947,7 +2949,8 @@ select:focus {
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: contain;
-        display: block;
+        display: flex;
+        flex-direction: column;
         transform-origin: top center;
         transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
         opacity: 1;

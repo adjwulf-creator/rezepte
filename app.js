@@ -195,13 +195,17 @@ document.addEventListener('DOMContentLoaded', updateLayoutVariables);
 // Call once immediately in case DOMContentLoaded already fired or for initial parsing
 updateLayoutVariables();
 
-function positionDropdown(dropdown) {
+function positionDropdown(dropdown, fillHeight = false) {
     const header = document.querySelector('.app-header');
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
-        // Ensure dropdowns never exceed the visible screen area (100dvh total) minus the header height.
-        // This mathematically guarantees the bottom scrolling edge stays on-screen and fully reachable.
-        dropdown.style.maxHeight = `calc(100dvh - ${header.offsetHeight}px)`;
+        const availableHeight = `calc(100dvh - ${header.offsetHeight}px)`;
+        dropdown.style.maxHeight = availableHeight;
+        if (fillHeight) {
+            dropdown.style.height = availableHeight;
+        } else {
+            dropdown.style.height = 'auto';
+        }
     }
 }
 
@@ -276,6 +280,18 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             } else {
                 if (icon) icon.className = 'fa-solid fa-gear';
                 settingsBtn.classList.remove('active-dropdown-btn');
+            }
+        }
+
+        // Add shopping list button icon sync
+        if (shoppingListBtn) {
+            const icon = shoppingListBtn.querySelector('i');
+            if (shoppingListOpen && isMobile) {
+                if (icon) icon.className = 'fa-solid fa-xmark';
+                shoppingListBtn.classList.add('active-dropdown-btn');
+            } else {
+                if (icon) icon.className = 'fa-solid fa-cart-shopping';
+                shoppingListBtn.classList.remove('active-dropdown-btn');
             }
         }
 
@@ -1725,7 +1741,7 @@ function setupEventListeners() {
             showModal(shoppingListModal);
 
             if (isMobile) {
-                positionDropdown(shoppingListModal.querySelector('.modal-content'));
+                positionDropdown(shoppingListModal.querySelector('.modal-content'), true);
             }
         });
     }
