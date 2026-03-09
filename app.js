@@ -451,6 +451,8 @@ async function checkUser() {
         await loadFolders();
         await loadCategories();
         await loadRecipes();
+        await loadShoppingList();
+        setupShoppingListRealtime();
     } else {
         // Not logged in
         currentUser = null;
