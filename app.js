@@ -1844,7 +1844,17 @@ function setupEventListeners() {
 
         const collapsibleActions = document.getElementById('collapsibleActions');
         const burgerMenuBtn = document.getElementById('burgerMenuBtn');
-        if (collapsibleActions && burgerMenuBtn && !collapsibleActions.contains(e.target) && !burgerMenuBtn.contains(e.target)) {
+        const shoppingListModal = document.getElementById('shoppingListModal');
+        const settingsModal = document.getElementById('settingsModal');
+
+        const isInsideShoppingList = shoppingListModal && shoppingListModal.contains(e.target);
+        const isInsideSettings = settingsModal && settingsModal.contains(e.target);
+
+        if (collapsibleActions && burgerMenuBtn && 
+            !collapsibleActions.contains(e.target) && 
+            !burgerMenuBtn.contains(e.target) &&
+            !isInsideShoppingList &&
+            !isInsideSettings) {
             if (collapsibleActions.classList.contains('is-open')) {
                 collapsibleActions.classList.remove('is-open');
                 const icon = burgerMenuBtn.querySelector('i');
