@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recipe-book-v68';
+const CACHE_NAME = 'recipe-book-v69';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',

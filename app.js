@@ -1644,23 +1644,37 @@ function setupEventListeners() {
             if (icon) {
                 if (isNowOpen) {
                     icon.classList.replace('fa-bars', 'fa-xmark');
-                    // Scroll hint animation: wait for the CSS open transition (300ms) to finish
-                    // then do a left-right sweep so the user sees it's scrollable
+                    // Safari-compatible smooth scroll helper (requestAnimationFrame-based)
+                    function carouselSmoothScroll(el, to, duration) {
+                        const start = el.scrollLeft;
+                        const change = to - start;
+                        const startTime = performance.now();
+                        function easeInOutCubic(t) {
+                            return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+                        }
+                        function step(now) {
+                            const elapsed = now - startTime;
+                            const progress = Math.min(elapsed / duration, 1);
+                            el.scrollLeft = start + change * easeInOutCubic(progress);
+                            if (progress < 1) requestAnimationFrame(step);
+                        }
+                        requestAnimationFrame(step);
+                    }
+
+                    // Scroll hint animation: wait for the CSS open transition to finish
                     setTimeout(() => {
-                        // 1. Instantly jump to the far right (no smooth)
-                        collapsibleActions.style.scrollBehavior = 'auto';
+                        // 1. Instantly jump to far right
                         collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
                         
-                        // 2. Smoothly sweep to the far left 
+                        // 2. Smoothly sweep to far left
                         setTimeout(() => {
-                            collapsibleActions.style.scrollBehavior = 'smooth';
-                            collapsibleActions.scrollLeft = 0;
+                            carouselSmoothScroll(collapsibleActions, 0, 400);
                             
-                            // 3. Smoothly sweep back to the right
+                            // 3. Smoothly sweep back to far right
                             setTimeout(() => {
-                                collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
-                            }, 400);
-                        }, 50);
+                                carouselSmoothScroll(collapsibleActions, collapsibleActions.scrollWidth, 400);
+                            }, 500);
+                        }, 100);
                     }, 350); // Wait for the 300ms CSS open transition to complete
 
                 } else {
