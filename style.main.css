@@ -2538,6 +2538,7 @@ select:focus {
         width: 100%;
         gap: 0.5rem;
         position: relative; /* Required for layout */
+        justify-content: flex-end;
     }
 
     .search-bar {
@@ -2548,8 +2549,10 @@ select:focus {
         justify-content: center;
         background-color: transparent;
         border: none;
+        border-radius: 20px;
         cursor: pointer;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        position: relative;
     }
 
     .search-bar i {
@@ -2564,12 +2567,12 @@ select:focus {
         padding: 0;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.3s ease;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     }
 
     .search-bar.is-expanded {
-        width: 100%;
-        flex: 1;
+        width: 170px;
+        flex: 0 0 170px;
         background-color: var(--color-bg);
         border: 1px solid var(--color-border);
         padding: 0.5rem 1rem 0.5rem 2.8rem;
