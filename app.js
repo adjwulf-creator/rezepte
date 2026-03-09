@@ -1695,9 +1695,11 @@ function setupEventListeners() {
                 }
             }
             
-            // Close other dropdowns
+            // Close other dropdowns whenever burger state changes (or specifically on close)
             if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+            if (settingsModal) settingsModal.classList.add('hidden');
+            if (shoppingListModal) shoppingListModal.classList.add('hidden');
         });
     }
 
@@ -1848,9 +1850,17 @@ function setupEventListeners() {
         const collapsibleActions = document.getElementById('collapsibleActions');
         const burgerMenuBtn = document.getElementById('burgerMenuBtn');
         if (collapsibleActions && burgerMenuBtn && !collapsibleActions.contains(e.target) && !burgerMenuBtn.contains(e.target)) {
-            collapsibleActions.classList.remove('is-open');
-            const icon = burgerMenuBtn.querySelector('i');
-            if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
+            if (collapsibleActions.classList.contains('is-open')) {
+                collapsibleActions.classList.remove('is-open');
+                const icon = burgerMenuBtn.querySelector('i');
+                if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
+                
+                // Also close dropdowns when burger menu is closed via outside click
+                if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
+                if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
+                if (settingsModal) settingsModal.classList.add('hidden');
+                if (shoppingListModal) shoppingListModal.classList.add('hidden');
+            }
         }
     });
 
