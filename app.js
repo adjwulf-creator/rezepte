@@ -1644,16 +1644,24 @@ function setupEventListeners() {
             if (icon) {
                 if (isNowOpen) {
                     icon.classList.replace('fa-bars', 'fa-xmark');
-                    
-                    // Introductory animation: Start from left (search bar) to prove it's there
-                    collapsibleActions.style.scrollBehavior = 'auto'; // Disable temporarily for instant reposition
-                    collapsibleActions.scrollLeft = 0; 
-                    
-                    // Sweep to the right smoothly so user sees they can scroll
+                    // Scroll hint animation: wait for the CSS open transition (300ms) to finish
+                    // then do a left-right sweep so the user sees it's scrollable
                     setTimeout(() => {
-                        collapsibleActions.style.scrollBehavior = 'smooth';
+                        // 1. Instantly jump to the far right (no smooth)
+                        collapsibleActions.style.scrollBehavior = 'auto';
                         collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
-                    }, 250); // Small delay to let the menu open first
+                        
+                        // 2. Smoothly sweep to the far left 
+                        setTimeout(() => {
+                            collapsibleActions.style.scrollBehavior = 'smooth';
+                            collapsibleActions.scrollLeft = 0;
+                            
+                            // 3. Smoothly sweep back to the right
+                            setTimeout(() => {
+                                collapsibleActions.scrollLeft = collapsibleActions.scrollWidth;
+                            }, 400);
+                        }, 50);
+                    }, 350); // Wait for the 300ms CSS open transition to complete
 
                 } else {
                     icon.classList.replace('fa-xmark', 'fa-bars');

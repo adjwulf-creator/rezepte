@@ -2473,7 +2473,7 @@ select:focus {
         transform: translateY(-50%) translateX(20px) scale(0.9);
         height: 48px;
         width: max-content; 
-        max-width: calc(100vw - 90px); /* Let it stretch slightly closer to the left edge */
+        max-width: calc(100vw - 105px); /* Symmetric: ~20px gap on left edge matches ~20px gap to burger on right */
         padding: 0; /* Remove padding to avoid clipping on iOS, use child margins */
         border-radius: 24px;
         background-color: var(--color-surface);
