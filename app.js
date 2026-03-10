@@ -3196,7 +3196,18 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').then(registration => {
             console.log('ServiceWorker registration successful with scope: ', registration.scope);
 
-            // Listen for waiting service workers (updates ready)
+            // Periodically check for updates (every 1 hour)
+            setInterval(() => {
+                registration.update();
+            }, 1000 * 60 * 60);
+
+            // Handle the case where the worker is already waiting (happens if user closed app while it was downloading)
+            if (registration.waiting) {
+                console.log("PWA update already waiting. Forcing activation...");
+                registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            }
+
+            // Listen for new waiting service workers (updates downloading now)
             registration.addEventListener('updatefound', () => {
                 const newWorker = registration.installing;
                 if (!newWorker) return;
@@ -3221,7 +3232,19 @@ if ('serviceWorker' in navigator) {
             if (!refreshing) {
                 console.log("New Service Worker activated. Reloading app...");
                 refreshing = true;
-                window.location.reload(true);
+                
+                // Clear all older caches before reloading to guarantee fresh assets
+                caches.keys().then((cacheNames) => {
+                    return Promise.all(
+                        cacheNames.map((cacheName) => {
+                            if (cacheName.startsWith('recipe-book-v') && cacheName !== CACHE_NAME) {
+                                return caches.delete(cacheName);
+                            }
+                        })
+                    );
+                }).then(() => {
+                    window.location.reload(true);
+                });
             }
         });
     });

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'recipe-book-v88';
+const CACHE_NAME = 'recipe-book-v89';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
@@ -12,13 +12,20 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-    self.skipWaiting(); // Force the waiting service worker to become the active service worker
+    // We do NOT call self.skipWaiting() here automatically if we want to control the update flow from the app
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then((cache) => {
                 return cache.addAll(ASSETS_TO_CACHE);
             })
     );
+});
+
+// Listen for message from the main app to force an update
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // Specialized Cache for Images to isolate them from HTML/JS updates
