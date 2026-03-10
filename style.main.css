@@ -61,8 +61,7 @@ body {
 }
 
 /* Background Locking without breaking Safari's transparent bottom bar */
-body.modal-active,
-body.mobile-dropdown-active {
+body.modal-active {
     overflow: hidden;
     /* Desktop lock */
     overscroll-behavior: none;
