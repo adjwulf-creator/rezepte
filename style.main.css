@@ -87,33 +87,6 @@ body.mobile-dropdown-active .app-main {
     pointer-events: none !important;
 }
 
-/* Force html + body background to match the overlay tint when dropdown is open.
-   Safari's bottom toolbar renders the actual page pixels behind it,
-   and the html background extends into that area. */
-html:has(body.mobile-dropdown-active) {
-    background-color: #f0ece6;
-}
-
-body.mobile-dropdown-active {
-    background-color: #f0ece6;
-    background-image: none; /* Remove dot pattern so the area is uniform */
-}
-
-/* Overlay to blur background without breaking Safari's native translucent bottom bar */
-body.mobile-dropdown-active::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: -150px; /* Extend past viewport to cover area behind Safari's bottom bar */
-    background: rgba(250, 247, 242, 0.55);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    z-index: 94;
-    pointer-events: none;
-}
-
 body.mobile-dropdown-active .app-header {
     filter: none !important;
     backdrop-filter: none !important;
@@ -178,8 +151,9 @@ h4 {
     left: 0;
     right: 0;
     width: 100%;
-    background: rgba(250, 247, 242, 0.96);
-    /* Slightly more opaque, but without heavy blur to let Safari's bottom bar settle faster */
+    background: rgba(250, 247, 242, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
@@ -2912,7 +2886,9 @@ select:focus {
         right: 0;
         width: 100%;
         margin: 0;
-        background: var(--color-surface); /* Solid background for performance */
+        background: rgba(250, 247, 242, 0.75);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         padding: 1rem;
         will-change: transform, opacity; /* Hardware acceleration hint */
@@ -2980,7 +2956,9 @@ select:focus {
         right: 0;
         width: 100%;
         margin: 0;
-        background: var(--color-surface); /* Solid background for performance */
+        background: rgba(250, 247, 242, 0.75);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         will-change: transform, opacity; /* Hardware acceleration hint */
         padding: 0.15rem 1rem 1rem 1rem;
