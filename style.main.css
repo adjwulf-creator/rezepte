@@ -2777,9 +2777,8 @@ select:focus {
     }
 
     body.mobile-dropdown-active .content-area {
-        filter: none;
-        opacity: 1;
-        /* No blur on mobile dropdowns so the OS bottom bar can react immediately */
+        filter: blur(4px);
+        opacity: 0.7;
         pointer-events: none;
         user-select: none;
     }
