@@ -62,8 +62,7 @@ body {
 
 /* Background Locking without breaking Safari's transparent bottom bar */
 body.modal-active {
-    overflow: hidden;
-    /* Desktop lock */
+    /* overflow: hidden removed to ensure Safari keeps recognizing background scrolling */
     overscroll-behavior: none;
     /* iOS scroll chaining prevention */
 }
@@ -173,7 +172,7 @@ h4 {
     padding: 1.5rem;
     z-index: 95;
     bottom: auto;
-    max-height: 85vh;
+    max-height: calc(100dvh - 200px);
     border-bottom-left-radius: var(--radius-lg);
     border-bottom-right-radius: var(--radius-lg);
     padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
@@ -2904,13 +2903,13 @@ select:focus {
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         padding: 1rem;
         will-change: transform, opacity; /* Hardware acceleration hint */
-        max-height: 100dvh;
+        max-height: calc(100dvh - 200px);
         height: auto; /* Let it grow or be constrained by JS maxHeight */
         min-height: 0; /* Override any modal defaults */
-        border-radius: 0;
+        border-radius: var(--radius-lg);
         border: none;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
         padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
         overflow-y: auto;
         overflow-x: hidden;
@@ -2973,14 +2972,11 @@ select:focus {
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         will-change: transform, opacity; /* Hardware acceleration hint */
         padding: 0.15rem 1rem 1rem 1rem;
-        /* Adjusted top padding to precisely 0.15rem. 
-           (0.15rem + 0.6rem tab-btn padding = 0.75rem visually matched to "Meine Ordner") */
-        max-height: 100dvh;
-        /* Matches Meine Ordner height constraint */
-        border-radius: 0;
+        max-height: calc(100dvh - 200px);
+        border-radius: var(--radius-lg);
         border: none;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
         padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
         overflow-y: auto;
         overflow-x: hidden;
