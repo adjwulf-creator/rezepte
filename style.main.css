@@ -2498,93 +2498,17 @@ select:focus {
         padding: 1rem;
     }
 
-    /* Burger Menu Styles */
-    #burgerMenuBtn {
-        display: inline-flex !important;
-    }
-    
-    #burgerBadge {
-        position: absolute;
-        top: -5px;
-        right: -5px;
-        background-color: var(--color-accent);
-        color: white;
-        font-size: 0.65rem;
-        font-weight: 700;
-        min-width: 18px;
-        height: 18px;
-        border-radius: 9px;
-        display: none;
-        align-items: center;
-        justify-content: center;
-        padding: 0 4px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-    #burgerBadge:not(.hidden) {
+    .search-actions {
         display: flex;
+        justify-content: flex-end;
+        gap: 0.4rem; /* Tighter gap for mobile */
+        width: 100%;    
     }
 
-    .collapsible-actions {
-        position: absolute;
-        right: 70px; /* Safely keep distance from the burger menu */
-        top: 50%;
-        transform: translateY(-50%) translateX(20px) scale(0.9);
-        height: 48px;
-        width: max-content; 
-        max-width: calc(100vw - 105px); /* Symmetric: ~20px gap on left edge matches ~20px gap to burger on right */
-        padding: 0; /* Remove padding to avoid clipping on iOS, use child margins */
-        border-radius: 24px;
-        background-color: var(--color-surface);
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-
-        /* Swipeable Carousel / Rundell settings */
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        scroll-snap-type: x mandatory;
-        overscroll-behavior-x: contain;
-        scrollbar-width: none; /* Firefox */
-        
-        /* Animation Base */
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        z-index: 104; 
-    }
-
-    /* Hide scrollbar for Chrome/Safari */
-    .collapsible-actions::-webkit-scrollbar {
-        display: none;
-    }
-
-    .collapsible-actions > * {
-        flex-shrink: 0; /* Prevent icons from getting squished */
-        scroll-snap-align: center; /* Snap items nicely in view */
-    }
-
-    /* Solves iOS Safari bug that completely ignores margin/padding at the end of scroll containers */
-    .collapsible-actions::before,
-    .collapsible-actions::after {
-        content: "";
-        display: block;
-        width: 0.8rem;
-        flex-shrink: 0;
-    }
-
-    .collapsible-actions.is-open {
-        opacity: 1;
-        transform: translateY(-50%) translateX(0) scale(1);
-        pointer-events: auto;
-    }
-
-    /* Hide individual cart badge inside collapsed actions, but show it when expanded */
-    .collapsible-actions:not(.is-open) #shoppingListBtn #cartBadge {
-        display: none !important;
-    }
-
-    /* Hide the burger badge when the menu is open, as it transfers to the cart icon */
-    .collapsible-actions.is-open ~ #burgerMenuBtn #burgerBadge {
-        display: none !important;
+    .icon-btn {
+        width: 36px; /* Slightly smaller for mobile */
+        height: 36px;
+        font-size: 1.1rem;
     }
 
     .logo {

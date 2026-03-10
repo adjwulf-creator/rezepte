@@ -618,7 +618,6 @@ function renderShoppingList() {
 
 function updateCartBadge(count) {
     const desktopBadge = document.getElementById('cartBadge');
-    const burgerBadge = document.getElementById('burgerBadge');
 
     const toggleBadge = (badge) => {
         if (!badge) return;
@@ -633,7 +632,6 @@ function updateCartBadge(count) {
     };
 
     toggleBadge(desktopBadge);
-    toggleBadge(burgerBadge);
 }
 
 // Holen der Rezepte aus Supabase
@@ -1646,58 +1644,7 @@ function setupRecipeDragListeners() {
 
 // Setup all event listeners
 function setupEventListeners() {
-    // Burger Menu Trigger
-    const burgerMenuBtn = document.getElementById('burgerMenuBtn');
-    const collapsibleActions = document.getElementById('collapsibleActions');
-    
-    if (burgerMenuBtn && collapsibleActions) {
-        burgerMenuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isNowOpen = collapsibleActions.classList.toggle('is-open');
-            
-            const icon = burgerMenuBtn.querySelector('i');
-            if (icon) {
-                if (isNowOpen) {
-                    icon.classList.replace('fa-bars', 'fa-xmark');
-                    // Safari-compatible smooth scroll helper (requestAnimationFrame-based)
-                    function carouselSmoothScroll(el, to, duration) {
-                        const start = el.scrollLeft;
-                        const change = to - start;
-                        const startTime = performance.now();
-                        function easeInOutCubic(t) {
-                            return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
-                        }
-                        function step(now) {
-                            const elapsed = now - startTime;
-                            const progress = Math.min(elapsed / duration, 1);
-                            el.scrollLeft = start + change * easeInOutCubic(progress);
-                            if (progress < 1) requestAnimationFrame(step);
-                        }
-                        requestAnimationFrame(step);
-                    }
 
-                    // Scroll hint: start at search (left), sweep right to cart
-                    setTimeout(() => {
-                        collapsibleActions.scrollLeft = 0; // Ensure we start at the left
-                        setTimeout(() => {
-                            carouselSmoothScroll(collapsibleActions, collapsibleActions.scrollWidth, 600);
-                        }, 100);
-                    }, 350); // Wait for CSS open transition
-
-                } else {
-                    icon.classList.replace('fa-xmark', 'fa-bars');
-                    // Reset scroll position so animation replays on next open
-                    collapsibleActions.scrollLeft = 0;
-                }
-            }
-            
-            // Close other dropdowns whenever burger state changes (or specifically on close)
-            if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
-            if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-            if (settingsModal) settingsModal.classList.add('hidden');
-            if (shoppingListModal) shoppingListModal.classList.add('hidden');
-        });
-    }
 
     // Shopping List Modal Triggers
     const shoppingListBtn = document.getElementById('shoppingListBtn');
@@ -1842,31 +1789,11 @@ function setupEventListeners() {
             mobileDropdownControls.classList.add('hidden');
         }
 
-        const collapsibleActions = document.getElementById('collapsibleActions');
-        const burgerMenuBtn = document.getElementById('burgerMenuBtn');
         const shoppingListModal = document.getElementById('shoppingListModal');
         const settingsModal = document.getElementById('settingsModal');
 
         const isInsideShoppingList = shoppingListModal && shoppingListModal.contains(e.target);
         const isInsideSettings = settingsModal && settingsModal.contains(e.target);
-
-        if (collapsibleActions && burgerMenuBtn && 
-            !collapsibleActions.contains(e.target) && 
-            !burgerMenuBtn.contains(e.target) &&
-            !isInsideShoppingList &&
-            !isInsideSettings) {
-            if (collapsibleActions.classList.contains('is-open')) {
-                collapsibleActions.classList.remove('is-open');
-                const icon = burgerMenuBtn.querySelector('i');
-                if (icon) icon.classList.replace('fa-xmark', 'fa-bars');
-                
-                // Also close dropdowns when burger menu is closed via outside click
-                if (mobileDropdownFolders) mobileDropdownFolders.classList.add('hidden');
-                if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
-                if (settingsModal) settingsModal.classList.add('hidden');
-                if (shoppingListModal) shoppingListModal.classList.add('hidden');
-            }
-        }
     });
 
     // Auth - Toggle Mode

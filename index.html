@@ -12,7 +12,7 @@
     <title>Inna´s Rezepte</title>
     <link rel="manifest" href="manifest.json">
     <link rel="apple-touch-icon" href="app_icon_192.png">
-    <link rel="stylesheet" href="style.main.css?v=369">
+    <link rel="stylesheet" href="style.main.css?v=370">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,35 +45,26 @@
             </div>
             <div class="header-actions">
                 <div class="search-actions">
-                    <!-- Action buttons grouped for mobile collapsing -->
-                    <div id="collapsibleActions" class="collapsible-actions">
-                        <div class="search-bar">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder"
-                                placeholder="Suche...">
-                        </div>
-                        <button id="mobileFoldersBtn" class="icon-btn hide-on-desktop" data-i18n-title="folders_title"
-                            title="Meine Ordner">
-                            <i class="fa-regular fa-folder-open"></i>
-                        </button>
-                        <button id="mobileControlsBtn" class="icon-btn hide-on-desktop" data-i18n-title="tooltip_filter"
-                            title="Filter & Ansicht">
-                            <i class="fa-solid fa-sliders"></i>
-                        </button>
-                        <button id="settingsBtn" class="icon-btn settings-btn" data-i18n-title="settings_title"
-                            title="Einstellungen">
-                            <i class="fa-solid fa-gear"></i>
-                        </button>
-                        <button class="icon-btn" id="shoppingListBtn" aria-label="Einkaufsliste" title="Einkaufsliste" style="position:relative;">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span class="cart-badge hidden" id="cartBadge">0</span>
-                        </button>
+                    <div class="search-bar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" data-i18n-placeholder="search_placeholder"
+                            placeholder="Suche...">
                     </div>
-
-                    <!-- Burger Menu Button (Mobile Only) -->
-                    <button id="burgerMenuBtn" class="icon-btn hide-on-desktop" aria-label="Menü" style="position:relative; z-index: 105;">
-                        <i class="fa-solid fa-bars"></i>
-                        <span class="cart-badge hidden" id="burgerBadge">0</span>
+                    <button id="mobileFoldersBtn" class="icon-btn hide-on-desktop" data-i18n-title="folders_title"
+                        title="Meine Ordner">
+                        <i class="fa-regular fa-folder-open"></i>
+                    </button>
+                    <button id="mobileControlsBtn" class="icon-btn hide-on-desktop" data-i18n-title="tooltip_filter"
+                        title="Filter & Ansicht">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+                    <button id="settingsBtn" class="icon-btn settings-btn" data-i18n-title="settings_title"
+                        title="Einstellungen">
+                        <i class="fa-solid fa-gear"></i>
+                    </button>
+                    <button class="icon-btn" id="shoppingListBtn" aria-label="Einkaufsliste" title="Einkaufsliste" style="position:relative;">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="cart-badge hidden" id="cartBadge">0</span>
                     </button>
 
                     <button id="addRecipeBtn" class="primary-btn">
