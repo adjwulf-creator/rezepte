@@ -164,8 +164,9 @@ h4 {
     z-index: 95;
     bottom: 0px;
     max-height: none;
-    border-bottom-left-radius: var(--radius-lg);
-    border-bottom-right-radius: var(--radius-lg);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow-x: hidden;
@@ -2879,8 +2880,9 @@ select:focus {
         min-height: 0; /* Override any modal defaults */
         border-radius: 0;
         border: none;
-        border-bottom-left-radius: var(--radius-lg);
-        border-bottom-right-radius: var(--radius-lg);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
@@ -2948,8 +2950,9 @@ select:focus {
         /* Matches Meine Ordner height constraint */
         border-radius: 0;
         border: none;
-        border-bottom-left-radius: var(--radius-lg);
-        border-bottom-right-radius: var(--radius-lg);
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom)); /* Fluid transition to Safari bar */
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
