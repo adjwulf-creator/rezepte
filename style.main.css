@@ -555,7 +555,7 @@ button {
     flex-shrink: 0;
 }
 
-.shopping-modal-actions {
+.modal-actions.shopping-modal-actions {
     justify-content: center;
     border-top: 1px dashed var(--color-border) !important;
     margin-top: 0 !important;
