@@ -176,7 +176,7 @@ h4 {
     transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
     opacity: 1;
     visibility: visible;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
 }
 
 #mobileDropdownFolders {
@@ -195,7 +195,7 @@ h4 {
 .mobile-dropdown-content.hidden {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px) scale(0.98);
+    transform: translateY(-10px);
     pointer-events: none;
 }
 
@@ -2883,13 +2883,13 @@ select:focus {
         transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
         opacity: 1;
         visibility: visible;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 
     #shoppingListModal.hidden .modal-content {
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px) scale(0.98);
+        transform: translateY(-10px);
         pointer-events: none;
     }
 
@@ -2950,13 +2950,13 @@ select:focus {
         transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
         opacity: 1;
         visibility: visible;
-        transform: translateY(0) scale(1);
+        transform: translateY(0);
     }
 
     #settingsModal.hidden .modal-content {
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px) scale(0.98);
+        transform: translateY(-10px);
         pointer-events: none;
     }
 
