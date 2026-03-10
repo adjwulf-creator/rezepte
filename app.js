@@ -1495,7 +1495,8 @@ function setupFolderItemListeners() {
 // Render the grid based on current filters and search
 function renderRecipes() {
     const searchTerm = searchInput.value.toLowerCase();
-    const selectedCategories = getSelectedFilterCategories();
+    const isSearching = searchTerm.length > 0;
+    const selectedCategories = isSearching ? [] : getSelectedFilterCategories();
     const sortBy = getCurrentSortValue();
 
     // Filter
@@ -1506,7 +1507,9 @@ function renderRecipes() {
         const recipeCategories = (recipe.category || '').split(',').map(c => c.trim()).filter(Boolean);
         const matchesCategory = selectedCategories.length === 0 ||
             selectedCategories.every(sel => recipeCategories.includes(sel));
-        const matchesFolder = currentFolderId === 'all' || String(recipe.folder_id) === String(currentFolderId);
+        const matchesFolder = isSearching
+            ? true
+            : (currentFolderId === 'all' || String(recipe.folder_id) === String(currentFolderId));
         return matchesSearch && matchesCategory && matchesFolder;
     });
 
@@ -2024,6 +2027,21 @@ function setupEventListeners() {
     const clearSearchBtn = document.getElementById('clearSearchBtn');
     
     searchInput.addEventListener('input', () => {
+        // When searching, always search globally across all folders and categories
+        if (searchInput.value.length > 0) {
+            // Reset folder to "All"
+            currentFolderId = 'all';
+            renderFolders();
+
+            // Clear all active category filters
+            if (categoryFilterDropdown) {
+                categoryFilterDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    cb.checked = false;
+                });
+                updateFilterHeader();
+            }
+        }
+
         if (clearSearchBtn) {
             if (searchInput.value.length > 0) {
                 clearSearchBtn.classList.add('visible');

@@ -154,11 +154,8 @@ h4 {
     left: 0;
     right: 0;
     width: 100%;
-    background: rgba(250, 247, 242, 0.9);
-    /* Reduced transparency */
-    /* Lighter opacity matches modal */
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    background: rgba(250, 247, 242, 0.96);
+    /* Slightly more opaque, but without heavy blur to let Safari's bottom bar settle faster */
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     z-index: 95;
@@ -2754,11 +2751,18 @@ select:focus {
         /* Removed height: 100dvh; because it clips the document under Safari's bottom bar, breaking its blur */
     }
 
-    body.mobile-dropdown-active .content-area,
     body.modal-active .content-area {
         filter: blur(4px);
         opacity: 0.7;
-        /* Unified opacity to prevent Safari bottom bar rendering discrepancies */
+        /* Keep subtle blur only for full modals */
+        pointer-events: none;
+        user-select: none;
+    }
+
+    body.mobile-dropdown-active .content-area {
+        filter: none;
+        opacity: 1;
+        /* No blur on mobile dropdowns so the OS bottom bar can react immediately */
         pointer-events: none;
         user-select: none;
     }
@@ -2784,9 +2788,8 @@ select:focus {
     .mobile-dropdown-content .sidebar-sticky-section {
         position: sticky;
         top: 0;
-        background: rgba(250, 247, 242, 0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        background: rgba(250, 247, 242, 0.96);
+        /* Removed backdrop blur here as well to avoid fighting Safari's own translucency animations */
         z-index: 10;
         margin: 0;
         padding: 0 1.5rem;
