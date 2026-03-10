@@ -2860,11 +2860,10 @@ select:focus {
         right: 0;
         width: 100%;
         margin: 0;
-        background: rgba(250, 247, 242, 0.9);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        background: var(--color-surface); /* Solid background for performance */
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         padding: 1rem;
+        will-change: transform, opacity; /* Hardware acceleration hint */
         max-height: 100dvh;
         height: auto; /* Let it grow or be constrained by JS maxHeight */
         min-height: 0; /* Override any modal defaults */
@@ -2927,11 +2926,9 @@ select:focus {
         right: 0;
         width: 100%;
         margin: 0;
-        background: rgba(250, 247, 242, 0.9);
-        /* Reduced transparency */
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        background: var(--color-surface); /* Solid background for performance */
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05); /* Lighter shadow */
+        will-change: transform, opacity; /* Hardware acceleration hint */
         padding: 0.15rem 1rem 1rem 1rem;
         /* Adjusted top padding to precisely 0.15rem. 
            (0.15rem + 0.6rem tab-btn padding = 0.75rem visually matched to "Meine Ordner") */
