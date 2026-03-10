@@ -721,6 +721,22 @@ function renderCategories() {
     // Populate Filter multi-select dropdown
     if (categoryFilterDropdown) {
         categoryFilterDropdown.innerHTML = '';
+
+        // "Alle Kategorien entfernen" Helper oben im Dropdown
+        const clearBtn = document.createElement('button');
+        clearBtn.type = 'button';
+        clearBtn.className = 'multi-select-clear';
+        clearBtn.textContent = 'Alle Kategorien entfernen';
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            categoryFilterDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            updateFilterHeader();
+            renderRecipes();
+        });
+        categoryFilterDropdown.appendChild(clearBtn);
+
         categories.forEach(cat => {
             const label = document.createElement('label');
             label.className = 'multi-select-option';
@@ -743,11 +759,6 @@ function renderCategories() {
                 if (d !== categoryFilterDropdown) d.classList.add('hidden');
             });
             categoryFilterDropdown.classList.toggle('hidden');
-
-            // Force iOS Safari repaint by rendering while visible
-            if (!categoryFilterDropdown.classList.contains('hidden')) {
-                renderCategories();
-            }
         });
         // Close when clicking outside
         document.addEventListener('click', (e) => {

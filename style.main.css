@@ -955,6 +955,23 @@ button {
     padding: 0.5rem 0;
 }
 
+.multi-select-clear {
+    display: block;
+    width: 100%;
+    padding: 0.35rem 1rem 0.5rem;
+    border: none;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    background: transparent;
+    text-align: left;
+    font-size: 0.8rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+}
+
+.multi-select-clear:hover {
+    background-color: rgba(0,0,0,0.02);
+}
+
 .multi-select-dropdown.hidden {
     display: none;
 }
