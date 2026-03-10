@@ -85,8 +85,22 @@ body.modal-active .app-main {
 
 /* Specific blur for mobile dropdowns: Blur recipes, but KEEP HEADER SHARP */
 body.mobile-dropdown-active .app-main {
-    filter: blur(4px);
     pointer-events: none !important;
+}
+
+/* Overlay to blur background without breaking Safari's native translucent bottom bar */
+body.mobile-dropdown-active::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(250, 247, 242, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 90;
+    pointer-events: auto;
 }
 
 body.mobile-dropdown-active .app-header {
@@ -2775,8 +2789,6 @@ select:focus {
     }
 
     body.mobile-dropdown-active .content-area {
-        filter: blur(4px);
-        opacity: 0.7;
         pointer-events: none;
         user-select: none;
     }
