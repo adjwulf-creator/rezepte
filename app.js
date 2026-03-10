@@ -200,16 +200,11 @@ function positionDropdown(dropdown) {
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
         
-        // Let CSS handle height for controls dropdown so it can shrink to content
-        if (dropdown.id !== 'mobileDropdownControls') {
-            dropdown.style.bottom = '0';
-            dropdown.style.maxHeight = 'none';
-            dropdown.style.height = 'auto';
-        } else {
-            dropdown.style.bottom = '';
-            dropdown.style.maxHeight = '';
-            dropdown.style.height = '';
-        }
+        // Let CSS handle height for all mobile dropdowns so they can shrink to content
+        // We clear any inline styles that might have been set previously
+        dropdown.style.bottom = '';
+        dropdown.style.maxHeight = '';
+        dropdown.style.height = '';
     }
 }
 

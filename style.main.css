@@ -99,7 +99,7 @@ body.mobile-dropdown-active::after {
     background: rgba(250, 247, 242, 0.4);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    z-index: 90;
+    z-index: 94;
     pointer-events: auto;
 }
 
@@ -2865,12 +2865,9 @@ select:focus {
     #mobileDropdownFolders {
         height: auto;
         bottom: auto;
-        /* Allow height limiting */
-        max-height: 100vh;
-        /* Adjust height limit */
-        max-height: 100dvh;
-        border-bottom-left-radius: 0;
-        border-bottom-right-radius: 0;
+        /* Inheriting max-height from .mobile-dropdown-content for consistency */
+        border-bottom-left-radius: var(--radius-lg);
+        border-bottom-right-radius: var(--radius-lg);
         box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
     }
 
