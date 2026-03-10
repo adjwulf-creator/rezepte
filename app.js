@@ -199,9 +199,17 @@ function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {
         dropdown.style.top = header.offsetHeight + 'px';
-        dropdown.style.bottom = '0';
-        dropdown.style.maxHeight = 'none';
-        dropdown.style.height = 'auto';
+        
+        // Let CSS handle height for controls dropdown so it can shrink to content
+        if (dropdown.id !== 'mobileDropdownControls') {
+            dropdown.style.bottom = '0';
+            dropdown.style.maxHeight = 'none';
+            dropdown.style.height = 'auto';
+        } else {
+            dropdown.style.bottom = '';
+            dropdown.style.maxHeight = '';
+            dropdown.style.height = '';
+        }
     }
 }
 
