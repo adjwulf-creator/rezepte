@@ -2021,24 +2021,26 @@ function setupEventListeners() {
     });
 
     // Search & Filter
-    searchInput.addEventListener('input', renderRecipes);
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
     
-    // Mobile search bar expansion
-    const searchBarContainer = document.querySelector('.search-bar');
-    if (searchBarContainer) {
-        searchBarContainer.addEventListener('click', () => {
-            if (window.innerWidth <= 768) {
-                searchBarContainer.classList.add('is-expanded');
-                setTimeout(() => searchInput.focus(), 50); // Small delay for animation
+    searchInput.addEventListener('input', () => {
+        if (clearSearchBtn) {
+            if (searchInput.value.length > 0) {
+                clearSearchBtn.classList.add('visible');
+            } else {
+                clearSearchBtn.classList.remove('visible');
             }
-        });
+        }
+        renderRecipes();
+    });
 
-        document.addEventListener('click', (e) => {
-            if (window.innerWidth <= 768 && searchBarContainer.classList.contains('is-expanded')) {
-                if (!searchBarContainer.contains(e.target) && searchInput.value.trim() === '') {
-                    searchBarContainer.classList.remove('is-expanded');
-                }
-            }
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            searchInput.value = '';
+            clearSearchBtn.classList.remove('visible');
+            renderRecipes();
+            searchInput.focus();
         });
     }
 

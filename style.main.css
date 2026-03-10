@@ -266,18 +266,32 @@ h4 {
     align-items: center;
 }
 
-.search-bar i {
+.search-bar .search-icon {
     position: absolute;
     left: 1rem;
     color: var(--color-text-light);
 }
 
+.search-bar .clear-search {
+    position: absolute;
+    right: 1rem;
+    color: var(--color-text-light);
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: none;
+    z-index: 10;
+}
+
+.search-bar .clear-search.visible {
+    display: block;
+}
+
 .search-bar input {
-    padding: 0.6rem 1rem 0.6rem 2.5rem;
+    padding: 0.6rem 2.5rem 0.6rem 2.5rem; /* Symmetric padding to make room for X */
     border: 1px solid var(--color-border);
     border-radius: 30px;
     font-family: var(--font-body);
-    font-size: 0.95rem;
+    font-size: 16px; /* Must be 16px to avoid iOS auto-zoom */
     width: 250px;
     background-color: var(--color-bg);
     transition: var(--transition);
@@ -285,9 +299,8 @@ h4 {
 
 .search-bar input:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(122, 107, 168, 0.2);
-    width: 300px;
+    border-color: var(--color-border);
+    width: 250px;
 }
 
 /* Buttons */
@@ -2565,68 +2578,18 @@ select:focus {
     }
 
     .search-bar {
-        width: auto;
-        height: auto;
-        flex: 0 0 auto;
-        padding: 0.6rem 1.5rem;
-        background-color: #efefef; /* Match default iOS button pill */
-        border: none;
-        border-radius: 30px;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        position: relative;
-    }
-
-    .search-bar i {
-        position: static;
-        margin: 0;
-        font-size: 1.25rem;
-        color: var(--color-secondary); /* Matches action icons */
-        transform: none;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        width: 100%;
+        flex: 1;
+        min-width: 0; /* Allows flex item to shrink below content size if necessary */
     }
 
     .search-bar input {
-        position: absolute;
-        left: 0;
-        top: 0;
         width: 100%;
-        height: 100%;
-        border: none !important;
-        margin: 0;
-        padding: 0;
-        opacity: 0;
-        visibility: hidden;
-        background-color: transparent !important;
-        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        padding: 0.6rem 2.2rem 0.6rem 2.2rem;
     }
 
-    .search-bar.is-expanded {
-        width: 170px;
-        flex: 0 0 170px;
-        background-color: var(--color-surface);
-        border: 1px solid var(--color-border);
-        padding: 0.6rem 1.5rem 0.6rem 2.5rem; /* Make room for the absolute icon inside expanded search */
-    }
-
-    .search-bar.is-expanded i {
-        position: absolute; /* Re-absolute for expanded state */
-        left: 1rem;
-        transform: translate(0, -50%);
-        top: 50%;
-        color: var(--color-text-light); 
-    }
-
-    .search-bar.is-expanded input {
-        position: relative;
+    .search-bar input:focus {
         width: 100%;
-        height: 100%;
-        opacity: 1;
-        visibility: visible;
-        padding: 0; /* Reset internal padding */
     }
 
     .hide-on-mobile {
