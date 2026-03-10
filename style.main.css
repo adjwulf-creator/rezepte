@@ -2762,7 +2762,6 @@ select:focus {
         animation: modalFadeIn 0.3s ease forwards;
     }
 
-    body.mobile-dropdown-active,
     body.modal-active {
         overflow: hidden;
         /* Removed height: 100dvh; because it clips the document under Safari's bottom bar, breaking its blur */
