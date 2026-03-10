@@ -347,21 +347,32 @@ document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { p
 document.addEventListener('touchmove', (e) => {
     if (!document.body.classList.contains('mobile-dropdown-active')) return;
 
-    // Allow scrolling inside any scrollable dropdown/modal content
+    // Walk up from the touch target to find if we're inside a scrollable dropdown element
     let target = e.target;
-    while (target && target !== document.body) {
-        const style = window.getComputedStyle(target);
-        const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && target.scrollHeight > target.clientHeight;
-        const isDropdownContent = target.classList.contains('mobile-dropdown-content') ||
-                                  target.classList.contains('modal-content') ||
-                                  target.classList.contains('folder-list') ||
-                                  target.classList.contains('shopping-list-items') ||
-                                  target.classList.contains('multi-select-dropdown');
-        if (isScrollable || isDropdownContent) return; // Allow scroll inside dropdown
+    while (target && target !== document.body && target !== document.documentElement) {
+        // Check if this element is a scrollable container inside a dropdown
+        const isInsideDropdown = target.closest('.mobile-dropdown-content') || target.closest('.modal-content');
+        if (isInsideDropdown) {
+            const scrollable = target.closest('.mobile-dropdown-content, .modal-content, .folder-list, .shopping-list-items, .tab-content, .controls');
+            if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
+                // Allow scroll, but contain it at boundaries
+                const atTop = scrollable.scrollTop <= 0;
+                const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
+                
+                // Determine scroll direction
+                if (e.touches && e.touches.length > 0) {
+                    // Allow if not at boundary, or scrolling away from boundary
+                    return; // Let it scroll inside the dropdown
+                }
+            }
+            // Inside dropdown but not scrollable area - still block background
+            e.preventDefault();
+            return;
+        }
         target = target.parentElement;
     }
 
-    // Block background scroll
+    // Not inside any dropdown - block background scroll
     e.preventDefault();
 }, { passive: false });
 
