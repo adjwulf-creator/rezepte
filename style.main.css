@@ -57,6 +57,7 @@ body {
     min-height: 100vh;
     min-height: 100dvh;
     touch-action: manipulation;
+    scrollbar-gutter: stable; /* Prevent horizontal shifts when scrollbar appears */
 }
 
 /* Background Locking without breaking Safari's transparent bottom bar */
@@ -176,7 +177,10 @@ h4 {
     transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translate3d(0, 0, 0); /* Force GPU, prevent Safari subpixel shift */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    will-change: transform, opacity;
 }
 
 #mobileDropdownFolders {
@@ -190,12 +194,13 @@ h4 {
 #mobileDropdownControls {
     padding: 2.2rem;
     overflow: visible;
+    bottom: auto; /* Allow the filter menu to height-wrap its content instead of stretching to bottom */
 }
 
 .mobile-dropdown-content.hidden {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(-10px);
+    transform: translate3d(0, -10px, 0); /* Consistent 3D for hardware acceleration */
     pointer-events: none;
 }
 
@@ -2888,13 +2893,15 @@ select:focus {
         transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0); /* Force GPU, prevent Safari subpixel shift */
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
     #shoppingListModal.hidden .modal-content {
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px);
+        transform: translate3d(0, -10px, 0); /* Consistent 3D for hardware acceleration */
         pointer-events: none;
     }
 
@@ -2949,19 +2956,18 @@ select:focus {
         overscroll-behavior: contain;
         display: block;
         transform-origin: top center;
-        bottom: 0;
-        max-height: none;
-        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
         transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0); /* Force GPU, prevent Safari subpixel shift */
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
     }
 
     #settingsModal.hidden .modal-content {
         opacity: 0;
         visibility: hidden;
-        transform: translateY(-10px);
+        transform: translate3d(0, -10px, 0);
         pointer-events: none;
     }
 
