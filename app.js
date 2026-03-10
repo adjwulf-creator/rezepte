@@ -337,6 +337,28 @@ let isTouchScrolling = false;
 document.addEventListener('touchmove', () => { isTouchScrolling = true; }, { passive: true });
 document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { passive: true });
 
+// Scroll lock for mobile dropdowns: block background scroll but allow scrolling inside dropdown content
+document.addEventListener('touchmove', (e) => {
+    if (!document.body.classList.contains('mobile-dropdown-active')) return;
+
+    // Allow scrolling inside any scrollable dropdown/modal content
+    let target = e.target;
+    while (target && target !== document.body) {
+        const style = window.getComputedStyle(target);
+        const isScrollable = (style.overflowY === 'auto' || style.overflowY === 'scroll') && target.scrollHeight > target.clientHeight;
+        const isDropdownContent = target.classList.contains('mobile-dropdown-content') ||
+                                  target.classList.contains('modal-content') ||
+                                  target.classList.contains('folder-list') ||
+                                  target.classList.contains('shopping-list-items') ||
+                                  target.classList.contains('multi-select-dropdown');
+        if (isScrollable || isDropdownContent) return; // Allow scroll inside dropdown
+        target = target.parentElement;
+    }
+
+    // Block background scroll
+    e.preventDefault();
+}, { passive: false });
+
 // Close mobile dropdowns when clicking outside the header (capture phase to intercept before other handlers)
 document.addEventListener('click', (e) => {
     const isMobile = window.innerWidth <= 768;

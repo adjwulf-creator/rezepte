@@ -95,11 +95,11 @@ body.mobile-dropdown-active::after {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(250, 247, 242, 0.4);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(250, 247, 242, 0.55);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
     z-index: 94;
-    pointer-events: auto;
+    pointer-events: none;
 }
 
 body.mobile-dropdown-active .app-header {
