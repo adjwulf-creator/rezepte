@@ -87,6 +87,18 @@ body.mobile-dropdown-active .app-main {
     pointer-events: none !important;
 }
 
+/* Force html + body background to match the overlay tint when dropdown is open.
+   Safari's bottom toolbar renders the actual page pixels behind it,
+   and the html background extends into that area. */
+html:has(body.mobile-dropdown-active) {
+    background-color: #f0ece6;
+}
+
+body.mobile-dropdown-active {
+    background-color: #f0ece6;
+    background-image: none; /* Remove dot pattern so the area is uniform */
+}
+
 /* Overlay to blur background without breaking Safari's native translucent bottom bar */
 body.mobile-dropdown-active::after {
     content: '';
