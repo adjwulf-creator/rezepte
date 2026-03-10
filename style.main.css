@@ -526,6 +526,7 @@ button {
 .shopping-ul {
     flex: 1;
     overflow-y: auto;
+    scrollbar-gutter: stable; /* Prevent layout shift when scrollbar appears */
     padding-right: 5px;
     margin-bottom: 0;
 }
@@ -609,6 +610,10 @@ button {
     cursor: pointer;
     padding: 0.5rem;
     transition: color 0.2s;
+    min-width: 36px; /* Fixed width to prevent layout shift before icon font loads */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .shopping-delete-btn:hover {
