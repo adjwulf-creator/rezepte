@@ -243,8 +243,14 @@ if (mobileFoldersBtn && mobileControlsBtn) {
 
         if (foldersOpen || controlsOpen || (settingsOpen && isMobile) || (shoppingListOpen && isMobile)) {
             document.body.classList.add('mobile-dropdown-active');
+            // Match Safari's bottom toolbar to the blur overlay color
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            if (themeMeta) themeMeta.setAttribute('content', '#f5f1eb');
         } else {
             document.body.classList.remove('mobile-dropdown-active');
+            // Restore original theme color
+            const themeMeta = document.querySelector('meta[name="theme-color"]');
+            if (themeMeta) themeMeta.setAttribute('content', '#FAF7F2');
         }
 
         // Robustly synchronize the button icons with the actual dropdown hidden states
