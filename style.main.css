@@ -203,6 +203,9 @@ h4 {
     visibility: hidden;
     transform: translate3d(0, -10px, 0); /* Consistent 3D for hardware acceleration */
     pointer-events: none;
+    bottom: auto;           /* Release bottom anchoring when closed so Safari bar can fade faster */
+    max-height: 0;          /* Collapse height to avoid influencing viewport bottom color */
+    padding-bottom: 0;      /* Remove extra safe-area padding when closed */
 }
 
 .mobile-dropdown-content .sidebar,
