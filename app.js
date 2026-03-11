@@ -195,6 +195,8 @@ document.addEventListener('DOMContentLoaded', updateLayoutVariables);
 // Call once immediately in case DOMContentLoaded already fired or for initial parsing
 updateLayoutVariables();
 
+let dropdownResizeObserver = null;
+
 function positionDropdown(dropdown) {
     const header = document.querySelector('.app-header');
     if (header) {
@@ -205,6 +207,22 @@ function positionDropdown(dropdown) {
         dropdown.style.bottom = '';
         dropdown.style.maxHeight = '';
         dropdown.style.height = '';
+
+        if (!dropdownResizeObserver) {
+            dropdownResizeObserver = new ResizeObserver(entries => {
+                for (let entry of entries) {
+                    const target = entry.target;
+                    const isHidden = target.classList.contains('hidden') || 
+                                     (target.closest('.modal') && target.closest('.modal').classList.contains('hidden'));
+                    if (!isHidden) {
+                        const rect = target.getBoundingClientRect();
+                        document.documentElement.style.setProperty('--dropdown-bottom', rect.bottom + 'px');
+                    }
+                }
+            });
+        }
+        dropdownResizeObserver.disconnect();
+        dropdownResizeObserver.observe(dropdown);
     }
 }
 
