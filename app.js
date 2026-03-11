@@ -347,32 +347,15 @@ document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { p
 document.addEventListener('touchmove', (e) => {
     if (!document.body.classList.contains('mobile-dropdown-active')) return;
 
-    // Walk up from the touch target to find if we're inside a scrollable dropdown element
-    let target = e.target;
-    while (target && target !== document.body && target !== document.documentElement) {
-        // Check if this element is a scrollable container inside a dropdown
-        const isInsideDropdown = target.closest('.mobile-dropdown-content') || target.closest('.modal-content');
-        if (isInsideDropdown) {
-            const scrollable = target.closest('.mobile-dropdown-content, .modal-content, .folder-list, .shopping-list-items, .tab-content, .controls');
-            if (scrollable && scrollable.scrollHeight > scrollable.clientHeight) {
-                // Allow scroll, but contain it at boundaries
-                const atTop = scrollable.scrollTop <= 0;
-                const atBottom = scrollable.scrollTop + scrollable.clientHeight >= scrollable.scrollHeight - 1;
-                
-                // Determine scroll direction
-                if (e.touches && e.touches.length > 0) {
-                    // Allow if not at boundary, or scrolling away from boundary
-                    return; // Let it scroll inside the dropdown
-                }
-            }
-            // Inside dropdown but not scrollable area - still block background
-            e.preventDefault();
-            return;
-        }
-        target = target.parentElement;
+    // If touch is inside any dropdown or modal content, allow scrolling
+    const target = e.target;
+    if (target.closest('.mobile-dropdown-content') ||
+        target.closest('.modal-content') ||
+        target.closest('.app-header')) {
+        return; // Allow natural scrolling inside dropdown/modal/header
     }
 
-    // Not inside any dropdown - block background scroll
+    // Touch is on the background - block scroll
     e.preventDefault();
 }, { passive: false });
 
