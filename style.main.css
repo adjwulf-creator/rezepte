@@ -61,11 +61,20 @@ body {
 }
 
 /* Background Locking without breaking Safari's transparent bottom bar */
+html.modal-active,
 body.modal-active,
 body.mobile-dropdown-active {
     /* overflow: hidden removed to ensure Safari keeps recognizing background scrolling */
     overscroll-behavior: none;
     /* iOS scroll chaining prevention */
+}
+
+@media (min-width: 769px) {
+    html.modal-active,
+    body.modal-active {
+        overflow: hidden !important;
+        height: 100% !important;
+    }
 }
 
 /* Hide the floating + button when a dropdown is active on mobile */

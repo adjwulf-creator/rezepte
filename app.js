@@ -320,32 +320,44 @@ if (mobileFoldersBtn && mobileControlsBtn) {
             }
         }
 
-        const openModals = Array.from(document.querySelectorAll('.modal:not(.hidden)'));
+        const openModals = Array.from(document.querySelectorAll('.modal:not(.hidden), .lightbox:not(.hidden)'));
         const shouldBeModalActive = openModals.some(modal => {
             if (isMobile && (modal.id === 'settingsModal' || modal.id === 'shoppingListModal')) return false;
             return true;
         });
 
         if (shouldBeModalActive) {
-            document.body.classList.add('modal-active');
-            
-            // On iOS Safari, clientWidth takes a frame to update after overflow:hidden
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => {
-                    let scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-                    // Only apply on desktop. Mobile browsers use floating scrollbars that don't affect layout width.
-                    if (scrollbarWidth > 0 && window.innerWidth > 768) {
-                        document.body.style.paddingRight = `${scrollbarWidth}px`;
-                        const header = document.querySelector('.app-header');
-                        if (header) header.style.paddingRight = `${scrollbarWidth + 16}px`;
+            if (!document.body.classList.contains('modal-active')) {
+                // Calculate scrollbar width before locking to avoid layout shift
+                const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+                
+                document.body.classList.add('modal-active');
+                document.documentElement.classList.add('modal-active');
+                
+                if (scrollbarWidth > 0 && window.innerWidth > 768) {
+                    document.body.style.paddingRight = `${scrollbarWidth}px`;
+                    const header = document.querySelector('.app-header');
+                    if (header) {
+                        // Store original padding if not already stored
+                        if (header.style.paddingRight && !header.dataset.origPadding) {
+                            header.dataset.origPadding = header.style.paddingRight;
+                        }
+                        // To keep it simple, we just set paddingRight to 2rem (default) + scrollbarWidth
+                        header.style.paddingRight = `calc(2rem + ${scrollbarWidth}px)`;
                     }
-                });
-            });
+                }
+            }
         } else {
-            document.body.style.paddingRight = '';
-            const header = document.querySelector('.app-header');
-            if (header) header.style.paddingRight = '';
-            document.body.classList.remove('modal-active');
+            if (document.body.classList.contains('modal-active')) {
+                document.body.classList.remove('modal-active');
+                document.documentElement.classList.remove('modal-active');
+                document.body.style.paddingRight = '';
+                const header = document.querySelector('.app-header');
+                if (header) {
+                    header.style.paddingRight = header.dataset.origPadding || '';
+                    delete header.dataset.origPadding;
+                }
+            }
         }
     });
 
@@ -353,8 +365,8 @@ if (mobileFoldersBtn && mobileControlsBtn) {
     if (mobileDropdownControls) overlayObserver.observe(mobileDropdownControls, { attributes: true, attributeFilter: ['class'] });
     if (categoryFilterDropdown) overlayObserver.observe(categoryFilterDropdown, { attributes: true, attributeFilter: ['class'] });
 
-    // Also observe all modals
-    document.querySelectorAll('.modal').forEach(modal => {
+    // Also observe all modals and lightbox
+    document.querySelectorAll('.modal, .lightbox').forEach(modal => {
         overlayObserver.observe(modal, { attributes: true, attributeFilter: ['class'] });
     });
 }
@@ -364,21 +376,34 @@ let isTouchScrolling = false;
 document.addEventListener('touchmove', () => { isTouchScrolling = true; }, { passive: true });
 document.addEventListener('touchstart', () => { isTouchScrolling = false; }, { passive: true });
 
-// Scroll lock for mobile dropdowns: block background scroll but allow scrolling inside dropdown content
-document.addEventListener('touchmove', (e) => {
-    if (!document.body.classList.contains('mobile-dropdown-active')) return;
+// Scroll lock for dropdowns, modals, and lightbox: block background scroll but allow scrolling inside scrollable content
+const preventBackgroundScroll = (e) => {
+    const isModalActive = document.body.classList.contains('modal-active');
+    const isDropdownActive = document.body.classList.contains('mobile-dropdown-active');
 
-    // If touch is inside any dropdown or modal content, allow scrolling
+    if (!isModalActive && !isDropdownActive) return;
+
     const target = e.target;
+
+    // Lightbox has no scrollable content - block everything
+    if (target.closest('.lightbox')) {
+        e.preventDefault();
+        return;
+    }
+
+    // If interaction is inside any scrollable container, allow it natively
     if (target.closest('.mobile-dropdown-content') ||
         target.closest('.modal-content') ||
         target.closest('.app-header')) {
-        return; // Allow natural scrolling inside dropdown/modal/header
+        return; 
     }
 
-    // Touch is on the background - block scroll
+    // Cursor/Touch is on the blurred background - block scroll completely
     e.preventDefault();
-}, { passive: false });
+};
+
+document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+document.addEventListener('wheel', preventBackgroundScroll, { passive: false });
 
 // Close mobile dropdowns when clicking outside the header (capture phase to intercept before other handlers)
 document.addEventListener('click', (e) => {
@@ -1753,7 +1778,7 @@ function setupEventListeners() {
     if (closeShoppingListBtn) {
         closeShoppingListBtn.addEventListener('click', () => {
             hideModal(shoppingListModal);
-            document.body.classList.remove('modal-active');
+
         });
     }
 
@@ -1947,7 +1972,7 @@ function setupEventListeners() {
             if (mobileDropdownControls) mobileDropdownControls.classList.add('hidden');
             if (shoppingListModal && !shoppingListModal.classList.contains('hidden')) {
                 shoppingListModal.classList.add('hidden');
-                document.body.classList.remove('modal-active');
+
             }
         }
 
