@@ -105,19 +105,41 @@ body.mobile-dropdown-active.modal-active .app-header {
 body::after {
     content: '';
     position: fixed;
-    top: var(--dropdown-bottom, var(--header-height, 80px));
+    top: var(--header-height, 80px);
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: -50px; /* Slight overflow just in case */
     z-index: 90;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+    
+    /* Der Blur füllt den Hintergrund des Dropdowns aus und blendet in 150px sanft aus.
+       WICHTIG: no-repeat verhindert, dass der Verlauf unten hart neu beginnt! */
+    mask-image: linear-gradient(
+        to bottom, 
+        black 0px, 
+        black calc(var(--dropdown-fade-start, 0px) + 15px), 
+        rgba(0,0,0,0.7) calc(var(--dropdown-fade-start, 0px) + 60px),
+        rgba(0,0,0,0.2) calc(var(--dropdown-fade-start, 0px) + 100px),
+        transparent calc(var(--dropdown-fade-start, 0px) + 150px)
+    );
+    -webkit-mask-image: linear-gradient(
+        to bottom, 
+        black 0px, 
+        black calc(var(--dropdown-fade-start, 0px) + 15px), 
+        rgba(0,0,0,0.7) calc(var(--dropdown-fade-start, 0px) + 60px),
+        rgba(0,0,0,0.2) calc(var(--dropdown-fade-start, 0px) + 100px),
+        transparent calc(var(--dropdown-fade-start, 0px) + 150px)
+    );
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    
     pointer-events: none; /* Verhindert Klick-Blockaden */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.15s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.15s;
+    transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.3s;
 }
 
 body.mobile-dropdown-active::after {
@@ -179,9 +201,9 @@ h4 {
     background: rgba(250, 247, 242, 0.75);
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08),
-               0 30px 60px rgba(0, 0, 0, 0.12),
-               0 80px 150px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05),
+               0 25px 50px rgba(0, 0, 0, 0.06),
+               0 50px 100px rgba(0, 0, 0, 0.05);
     padding: 1.5rem;
     z-index: 95;
     bottom: auto;
@@ -2881,9 +2903,9 @@ select:focus {
         /* Inheriting max-height from .mobile-dropdown-content for consistency */
         border-bottom-left-radius: var(--radius-lg);
         border-bottom-right-radius: var(--radius-lg);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08),
-                   0 20px 50px rgba(0, 0, 0, 0.12),
-                   0 40px 80px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05),
+                   0 25px 50px rgba(0, 0, 0, 0.06),
+                   0 50px 100px rgba(0, 0, 0, 0.05);
     }
 
     /* Make Shopping List Modal behave like a mobile dropdown */
@@ -2919,9 +2941,9 @@ select:focus {
         background: rgba(250, 247, 242, 0.75);
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08),
-                   0 20px 50px rgba(0, 0, 0, 0.12),
-                   0 40px 80px rgba(0, 0, 0, 0.06); /* Lighter shadow */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05),
+                   0 25px 50px rgba(0, 0, 0, 0.06),
+                   0 50px 100px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         padding: 1rem;
         will-change: transform, opacity; /* Hardware acceleration hint */
         max-height: calc(100dvh - 200px);
@@ -2991,9 +3013,9 @@ select:focus {
         background: rgba(250, 247, 242, 0.75);
         backdrop-filter: blur(20px) saturate(180%);
         -webkit-backdrop-filter: blur(20px) saturate(180%);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08),
-                   0 20px 50px rgba(0, 0, 0, 0.12),
-                   0 40px 80px rgba(0, 0, 0, 0.06); /* Lighter shadow */
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05),
+                   0 25px 50px rgba(0, 0, 0, 0.06),
+                   0 50px 100px rgba(0, 0, 0, 0.05); /* Lighter shadow */
         will-change: transform, opacity; /* Hardware acceleration hint */
         padding: 0.15rem 1rem 1rem 1rem;
         max-height: calc(100dvh - 200px);

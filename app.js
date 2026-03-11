@@ -216,7 +216,9 @@ function positionDropdown(dropdown) {
                                      (target.closest('.modal') && target.closest('.modal').classList.contains('hidden'));
                     if (!isHidden) {
                         const rect = target.getBoundingClientRect();
+                        const headerHeight = document.querySelector('.app-header')?.offsetHeight || 80;
                         document.documentElement.style.setProperty('--dropdown-bottom', rect.bottom + 'px');
+                        document.documentElement.style.setProperty('--dropdown-fade-start', Math.max(0, rect.bottom - headerHeight) + 'px');
                     }
                 }
             });
