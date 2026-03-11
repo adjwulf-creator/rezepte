@@ -331,6 +331,7 @@ if (mobileFoldersBtn && mobileControlsBtn) {
 
     if (mobileDropdownFolders) overlayObserver.observe(mobileDropdownFolders, { attributes: true, attributeFilter: ['class'] });
     if (mobileDropdownControls) overlayObserver.observe(mobileDropdownControls, { attributes: true, attributeFilter: ['class'] });
+    if (categoryFilterDropdown) overlayObserver.observe(categoryFilterDropdown, { attributes: true, attributeFilter: ['class'] });
 
     // Also observe all modals
     document.querySelectorAll('.modal').forEach(modal => {

@@ -61,7 +61,8 @@ body {
 }
 
 /* Background Locking without breaking Safari's transparent bottom bar */
-body.modal-active {
+body.modal-active,
+body.mobile-dropdown-active {
     /* overflow: hidden removed to ensure Safari keeps recognizing background scrolling */
     overscroll-behavior: none;
     /* iOS scroll chaining prevention */
@@ -2762,7 +2763,8 @@ select:focus {
         animation: modalFadeIn 0.3s ease forwards;
     }
 
-    body.modal-active {
+    body.modal-active,
+    body.mobile-dropdown-active {
         overflow: hidden;
         /* Removed height: 100dvh; because it clips the document under Safari's bottom bar, breaking its blur */
     }
