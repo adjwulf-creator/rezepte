@@ -1064,7 +1064,7 @@ button {
 /* Controls */
 .controls {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 1rem;
     justify-content: space-between;
     margin-bottom: 1.5rem;
@@ -3075,5 +3075,72 @@ select:focus {
     #settingsModal .tab-content.active {
         display: block;
         padding-bottom: 2rem;
+    }
+}
+
+/* Compact mode for tablet/small desktop transition */
+@media (min-width: 769px) and (max-width: 1100px) {
+    .controls {
+        flex-wrap: nowrap;
+        justify-content: center;
+        gap: 3rem;
+        padding: 1rem;
+    }
+    .control-group {
+        position: relative;
+        gap: 0;
+    }
+    .control-group label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        background-color: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        margin: 0;
+        transition: var(--transition);
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .control-group label i {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+    .control-group:hover label {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+    .multi-select {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        margin: 0;
+    }
+    .multi-select-header {
+        opacity: 0; /* invisible but captures the click over the label */
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+    }
+    .multi-select-header span,
+    .multi-select-header .fa-chevron-down {
+        display: none;
+    }
+    .multi-select-dropdown {
+        top: calc(100% + 8px);
+        width: max-content;
+        min-width: 200px;
+    }
+    /* Ensure the last dropdown (Views) opens leftwards to prevent screen overflow */
+    .control-group:last-child .multi-select-dropdown {
+        left: auto;
+        right: -10px;
     }
 }
