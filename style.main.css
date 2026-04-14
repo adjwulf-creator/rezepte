@@ -3090,7 +3090,7 @@ select:focus {
         position: relative;
         gap: 0;
     }
-    .control-group label {
+    .control-group > label {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -3104,11 +3104,11 @@ select:focus {
         cursor: pointer;
         box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
-    .control-group label i {
+    .control-group > label i {
         font-size: 1.1rem;
         margin: 0;
     }
-    .control-group:hover label {
+    .control-group:hover > label {
         border-color: var(--color-primary);
         color: var(--color-primary);
     }
