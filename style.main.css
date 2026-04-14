@@ -1064,6 +1064,8 @@ button {
 /* Controls */
 .controls {
     display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
     justify-content: space-between;
     margin-bottom: 1.5rem;
     background: var(--color-surface);
