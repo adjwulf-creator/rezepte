@@ -2895,7 +2895,7 @@ function openViewModal(recipe, isSharedView = false) {
             <div class="recipe-view-actions">
                 <button class="danger-btn" id="deleteRecipeBtn"><i class="fa-solid fa-trash"></i> <span data-i18n="delete_recipe">${t('delete_recipe')}</span></button>
                 <button class="primary-btn" id="editRecipeBtn"><i class="fa-solid fa-pen"></i> <span data-i18n="edit_recipe">${t('edit_recipe')}</span></button>
-                <button class="secondary-btn" id="shareRecipeBtn"><i class="fa-solid fa-share-nodes"></i> Teilen</button>
+                <button class="secondary-btn" id="shareRecipeBtn"><i class="fa-solid fa-share-nodes"></i> <span data-i18n="btn_share_recipe">${t('btn_share_recipe')}</span></button>
             </div>
         `;
     }

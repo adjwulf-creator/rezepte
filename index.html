@@ -65,7 +65,7 @@
                         title="Filter & Ansicht">
                         <i class="fa-solid fa-sliders"></i>
                     </button>
-                    <button class="icon-btn" id="shoppingListBtn" aria-label="Einkaufsliste" title="Einkaufsliste" style="position:relative;">
+                    <button class="icon-btn" id="shoppingListBtn" aria-label="Einkaufsliste" data-i18n-title="shopping_list_title" title="Einkaufsliste" style="position:relative;">
                         <i class="fa-solid fa-cart-shopping"></i>
                         <span class="cart-badge hidden" id="cartBadge">0</span>
                     </button>
@@ -467,7 +467,7 @@
     <div id="shoppingListModal" class="modal hidden">
         <div class="modal-content shopping-modal-content">
             <div class="modal-header">
-                <h2><i class="fa-solid fa-cart-shopping"></i> Einkaufsliste</h2>
+                <h2><i class="fa-solid fa-cart-shopping"></i> <span data-i18n="shopping_list_title">Einkaufsliste</span></h2>
                 <button class="close-btn" id="closeShoppingListBtn"><i class="fa-solid fa-times"></i></button>
             </div>
             

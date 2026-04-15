@@ -54,6 +54,8 @@ window.translations = {
         shopping_manual_add: "Manuell hinzufügen...",
         shopping_clear_completed: "Erledigte löschen",
         btn_save_shared: "In mein Kochbuch speichern",
+        btn_share_recipe: "Teilen",
+        shopping_list_title: "Einkaufsliste",
 
         // Folder Modal
         folder_modal_title: "Neuer Ordner",
@@ -171,6 +173,8 @@ window.translations = {
         shopping_manual_add: "Додати вручну...",
         shopping_clear_completed: "Видалити виконані",
         btn_save_shared: "Зберегти в кулінарну книгу",
+        btn_share_recipe: "Поділитися",
+        shopping_list_title: "Список покупок",
 
         // Folder Modal
         folder_modal_title: "Нова папка",
