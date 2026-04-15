@@ -2003,14 +2003,14 @@ function setupEventListeners() {
 
         const btn = appNameForm.querySelector('button[type="submit"]');
         btn.disabled = true;
-        btn.textContent = 'Speichert...';
+        btn.textContent = t('btn_saving');
 
         const { data, error } = await sbClient.auth.updateUser({
             data: { app_name: newName }
         });
 
         btn.disabled = false;
-        btn.textContent = 'Name speichern';
+        btn.textContent = t('btn_save_app_name');
         appNameMessage.classList.remove('hidden');
 
         if (error) {
@@ -2058,12 +2058,12 @@ function setupEventListeners() {
 
         const btn = passwordForm.querySelector('button[type="submit"]');
         btn.disabled = true;
-        btn.textContent = 'Speichert...';
+        btn.textContent = t('btn_saving');
 
         const { error } = await sbClient.auth.updateUser({ password: newPass });
 
         btn.disabled = false;
-        btn.textContent = 'Passwort speichern';
+        btn.textContent = t('btn_save_password');
         passwordMessage.classList.remove('hidden');
 
         if (error) {
@@ -2563,7 +2563,7 @@ function setupEventListeners() {
         // Visual Feedback (disable button)
         const submitBtn = recipeForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichern...';
+        submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('btn_saving')}`;
 
         try {
             // 1. Upload new image files
@@ -2632,7 +2632,7 @@ function setupEventListeners() {
             console.error("Superbase Save Error:", error);
         } finally {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Speichern';
+            submitBtn.textContent = t('btn_save_recipe');
         }
     });
 
@@ -2641,10 +2641,10 @@ function setupEventListeners() {
         const btn = e.target.closest('#deleteRecipeBtn');
         if (!btn || !currentViewRecipeId) return;
 
-        if (confirm('Möchtest du dieses Rezept wirklich löschen?')) {
+        if (confirm(t('confirm_delete_recipe'))) {
             btn.disabled = true;
             const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Löschen...';
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> ${t('btn_deleting')}`;
 
             try {
                 // Recipe info to delete associated image
@@ -2887,7 +2887,7 @@ function openViewModal(recipe, isSharedView = false) {
     if (isSharedView) {
         actionButtonsHtml = `
             <div class="recipe-view-actions" style="justify-content: center; margin-top: 1rem;">
-                <button class="primary-btn" id="saveSharedRecipeBtn" style="font-size: 1.1rem; padding: 0.8rem 2rem; width: 100%;"><i class="fa-solid fa-download"></i> In mein Kochbuch speichern</button>
+                <button class="primary-btn" id="saveSharedRecipeBtn" style="font-size: 1.1rem; padding: 0.8rem 2rem; width: 100%;"><i class="fa-solid fa-download"></i> ${t('btn_save_shared')}</button>
             </div>
         `;
     } else {
@@ -3122,7 +3122,7 @@ function openViewModal(recipe, isSharedView = false) {
                     console.error("Save shared error:", err);
                     alert("Konnte nicht gespeichert werden: " + err.message);
                     saveSharedBtn.disabled = false;
-                    saveSharedBtn.innerHTML = '<i class="fa-solid fa-download"></i> In mein Kochbuch speichern';
+                    saveSharedBtn.innerHTML = `<i class="fa-solid fa-download"></i> ${t('btn_save_shared')}`;
                 }
             });
         }

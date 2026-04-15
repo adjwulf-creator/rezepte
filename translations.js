@@ -49,6 +49,11 @@ window.translations = {
         recipe_image_btn: "Bild auswählen",
         btn_cancel: "Abbrechen",
         btn_save_recipe: "Speichern",
+        btn_saving: "Speichern...",
+        btn_deleting: "Löschen...",
+        shopping_manual_add: "Manuell hinzufügen...",
+        shopping_clear_completed: "Erledigte löschen",
+        btn_save_shared: "In mein Kochbuch speichern",
 
         // Folder Modal
         folder_modal_title: "Neuer Ordner",
@@ -161,6 +166,11 @@ window.translations = {
         recipe_image_btn: "Вибрати фото",
         btn_cancel: "Скасувати",
         btn_save_recipe: "Зберегти",
+        btn_saving: "Збереження...",
+        btn_deleting: "Видалення...",
+        shopping_manual_add: "Додати вручну...",
+        shopping_clear_completed: "Видалити виконані",
+        btn_save_shared: "Зберегти в кулінарну книгу",
 
         // Folder Modal
         folder_modal_title: "Нова папка",

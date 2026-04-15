@@ -473,7 +473,7 @@
             
             <div class="shopping-list-add-bar">
                 <form id="shoppingListForm" style="display:flex; width:100%; gap:0.5rem; margin-bottom: 1rem;">
-                    <input type="text" id="newShoppingItemInput" placeholder="Manuell hinzufügen..." required>
+                    <input type="text" id="newShoppingItemInput" data-i18n-placeholder="shopping_manual_add" placeholder="Manuell hinzufügen..." required>
                     <button type="submit" class="primary-btn round-add-btn"><i class="fa-solid fa-plus"></i></button>
                 </form>
             </div>
@@ -485,7 +485,7 @@
             </div>
 
             <div class="modal-actions shopping-modal-actions">
-                <button class="danger-btn compact-btn" id="clearCompletedShoppingBtn"><i class="fa-solid fa-trash-can"></i> Erledigte löschen</button>
+                <button class="danger-btn compact-btn" id="clearCompletedShoppingBtn"><i class="fa-solid fa-trash-can"></i> <span data-i18n="shopping_clear_completed">Erledigte löschen</span></button>
             </div>
             <div id="shoppingActionError" class="modal-message hidden" style="width:100%; text-align:center; margin-top:0.5rem; color: var(--color-accent);"></div>
         </div>
