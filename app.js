@@ -43,6 +43,11 @@ function applyLanguage() {
         el.title = t(el.dataset.i18nTitle);
     });
 
+    const qlEditor = document.querySelector('.ql-editor');
+    if (qlEditor) {
+        qlEditor.setAttribute('data-placeholder', t('recipe_instructions_placeholder'));
+    }
+
     document.documentElement.lang = currentLang;
 
     // Resync select headers
@@ -3288,7 +3293,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize Quill Rich Text Editor
     quill = new Quill('#editor-container', {
         theme: 'snow',
-        placeholder: 'Zubereitungsschritte hier eingeben...',
+        placeholder: t('recipe_instructions_placeholder'),
         modules: {
             toolbar: [
                 [{ 'header': [1, 2, false] }],
