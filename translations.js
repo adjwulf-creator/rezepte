@@ -34,7 +34,7 @@ window.translations = {
         // Recipe Form Modal (Add/Edit)
         add_recipe_title: "Neues Rezept",
         edit_recipe_title: "Rezept bearbeiten",
-        recipe_title_label: "Titel",
+        recipe_title_label: "Titel (Pflichtfeld)",
         recipe_title_placeholder: "z.B. Käsekuchen",
         recipe_category_label: "Kategorien",
         recipe_folder_label: "Ordner",
@@ -153,7 +153,7 @@ window.translations = {
         // Recipe Form Modal (Add/Edit)
         add_recipe_title: "Новий рецепт",
         edit_recipe_title: "Редагувати рецепт",
-        recipe_title_label: "Назва",
+        recipe_title_label: "Назва (обов'язково)",
         recipe_title_placeholder: "напр. Сирник",
         recipe_category_label: "Категорії",
         recipe_folder_label: "Папка",

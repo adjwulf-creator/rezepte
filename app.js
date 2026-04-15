@@ -19,7 +19,13 @@ let categories = [];
 let shoppingListDB = []; 
 let currentFolderId = 'all';
 
-let currentLang = localStorage.getItem('appLang') || 'de';
+let currentLang = localStorage.getItem('appLang');
+
+if (!currentLang) {
+    const browserLang = navigator.language || navigator.userLanguage || '';
+    currentLang = (browserLang.toLowerCase().startsWith('uk') || browserLang.toLowerCase().startsWith('ru')) ? 'ua' : 'de';
+    localStorage.setItem('appLang', currentLang);
+}
 
 function t(key) {
     if (!window.translations || !window.translations[currentLang]) return key;
@@ -453,6 +459,7 @@ async function initApp() {
     setupSingleSelectDropdown(loginLanguageHeader, loginLanguageDropdown, loginLanguageContainer, currentLang, onLanguageChange);
     setupSingleSelectDropdown(settingsLanguageHeader, settingsLanguageDropdown, settingsLanguageContainer, currentLang, onLanguageChange);
 
+    applyLanguage(); // Run language application on boot
     syncLanguageHeaders();
 
     setupEventListeners();
