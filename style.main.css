@@ -2242,6 +2242,55 @@ select:focus {
     /* Slight shadow to ensure visibility over light images */
 }
 
+/* Splash Screen */
+.splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.splash-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.splash-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.splash-content .logo {
+    justify-content: center;
+    margin: 0;
+}
+
+.splash-content .logo h1 {
+    font-size: 2.2rem;
+}
+
+.splash-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(122, 107, 168, 0.2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* Login Overlay */
 .login-overlay {
     position: fixed;

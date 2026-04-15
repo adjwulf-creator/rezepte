@@ -477,6 +477,12 @@ async function initApp() {
     } else {
         await checkUser();
     }
+
+    // Hide splash screen after initialization is complete
+    const splashScreen = document.getElementById('splashScreen');
+    if (splashScreen) {
+        splashScreen.classList.add('hidden');
+    }
 }
 
 async function renderSharedRecipe(id) {
